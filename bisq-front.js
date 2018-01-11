@@ -5,7 +5,7 @@ const child = require('child_process');
 var path = require('path');
 global.appRoot = path.resolve(__dirname);
 
-require('./server/babel.js');
+
 const dev = require('./server/makedev.js');
 var Api = require('./server/api.js');
 const tools = require('./server/tools.js');

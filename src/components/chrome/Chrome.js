@@ -124,7 +124,6 @@ class Chrome extends Component {
 				<div className={classes.drawerHeader}>
 					<Bisq id = 'logo' action = {()=>root('screen','Welcome')} />
 				</div>
-				<Divider />
 				<Wallet root = {root} babel = {babel} wallet = {data.wallet_detail}/>
 				<Divider />
 				<SideDrawer root={root} babel={babel}/>

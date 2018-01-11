@@ -20,6 +20,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/src/resources/lang.json
 nohup.out
 package-lock.json

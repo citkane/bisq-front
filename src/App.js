@@ -48,11 +48,12 @@ class App extends Component {
 			api:api,
 			tools:tools,
 			theme:'light',
-			color:'teal'
+			color:'teal',
+			langList:lang.list
 		}
 	}
 	babel(key,opts){
-		if(!opts.type) opts.type = 'span';
+		if(!opts.type) opts.type = 'text';
 		if(!opts.category || !lang[opts.category][key]){
 			Object.keys(lang).some(function(key2){
 				if(lang[key2][key]){
@@ -84,7 +85,6 @@ class App extends Component {
 		this.setState({
 			Global:G,
 		},()=>{
-
 			if(key === 'theme'||key === 'color') this.makeTheme();
 		})
 	}
