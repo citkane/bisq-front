@@ -1,0 +1,84 @@
+{
+	"chrome":{
+		"Buy BTC":{
+			"en":"Buy BTC"
+		},
+		"Sell BTC":{
+			"en":"Sell BTC"
+		}
+	},
+	"cards":{
+		"buy":{
+			"en":"BUY"
+		},
+		"sell":{
+			"en":"SELL"
+		},
+		"market":{
+			"en":"Market"
+		},
+		"price":{
+			"en":"Price"
+		},
+		"payment method":{
+			"en":"Payment Method"
+		}
+	},
+	"forms":{
+		"Amount to sell":{
+			"en":"Amount to sell"
+		},
+		"Amount to buy":{
+			"en":"Amount to buy"
+		},
+		"Volume is fixed":{
+			"en":"Volume is fixed"
+		},
+		"Market average":{
+			"en":"Market average"
+		},
+		"Fixed price":{
+			"en":"Fixed price"
+		},
+		"trade_step1":{
+			"en":"Confirm trade volume"
+		},
+		"trade_step2":{
+			"en":"Confirm funds and fees"
+		},
+		"trade_step3":{
+			"en":"Confirm security deposit and fees"
+		},
+		"trade_step4":{
+			"en":"Accept conditions and confirm"
+		}
+	},
+	"dialog":{
+		"cancel_title":{
+			"en":"Are you sure you want to cancel this offer?"
+		},
+		"cancel_description":{
+			"en":"Deposits will be returned to your wallet, but you will lose the mining fees you have paid in creating the offer."
+		}
+	},
+	"help":{
+		"terms_title1":{
+			"en":"Terms and conditions"
+		},
+		"terms_text1":{
+			"en":"Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget maximus est, id dignissim quam."
+		},
+		"terms_title2":{
+			"en":"Timelines"
+		},
+		"terms_text2":{
+			"en":"Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar diam eros in elit. Pellentesque convallis laoreet laoreet."
+		},
+		"terms_title3":{
+			"en":"Risks and arbitration"
+		},
+		"terms_text3":{
+			"en":"Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue."
+		}
+	}
+}

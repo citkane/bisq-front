@@ -1,0 +1,10 @@
+{
+	"content":{
+		"Welcome_title":{
+			"en":"Bisq is a decentralised p2p crypto-fiat exchange"
+		},
+		"Welcome_p1":{
+			"en":"You are connected to your own Bisq server at: "
+		}
+	}
+}

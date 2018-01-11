@@ -1,0 +1,18 @@
+.cardrow{
+	display:flex!important;
+	justify-content:space-between;
+	min-height:3em;
+	align-items: center;
+}
+.cardrow span,.card .action{
+	display:flex;
+	align-items: center;
+}
+.card .action{
+	justify-content:flex-end;
+	min-height:4em;
+	align-items:flex-end;
+}
+.cardrow .spacer{
+	width:.5em;
+}

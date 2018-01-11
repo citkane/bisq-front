@@ -1,0 +1,30 @@
+{
+	"chrome":{
+		"Open offers":{
+			"en":"Open offers"
+		},
+		"Open trades":{
+			"en":"Open trades"
+		},
+		"History":{
+			"en":"History"
+		},
+		"Failed":{
+			"en":"Failed"
+		}
+	},
+	"cards":{
+		"buying":{
+			"en":"Buying"
+		},
+		"selling":{
+			"en":"Selling"
+		},
+		"maker":{
+			"en":"Your offer was accepted"
+		},
+		"taker":{
+			"en":"You accepted an offer"
+		}
+	}
+}

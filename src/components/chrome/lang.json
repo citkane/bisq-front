@@ -1,0 +1,33 @@
+{
+	"chrome":{
+		"Market":{
+			"en":"Market"
+		},
+		"Trade":{
+			"en":"Trade"
+		},
+		"Portfolio":{
+			"en":"Portfolio"
+		},
+		"Funds":{
+			"en":"Funds"
+		},
+		"Support":{
+			"en":"Support"
+		},
+		"Welcome":{
+			"en":"Welcome"
+		}
+	},
+	"wallet":{
+		"available":{
+			"en":"Available Balance"
+		},
+		"reserved":{
+			"en":"Reserved in offers"
+		},
+		"locked":{
+			"en":"Locked in trades"
+		}
+	}
+}
