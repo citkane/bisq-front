@@ -50,7 +50,8 @@ class App extends Component {
 			tools:tools,
 			theme:'light',
 			color:'teal',
-			langList:lang.list
+			langList:lang.list,
+			showown:true
 		}
 	}
 	babel(key,opts){
@@ -101,6 +102,7 @@ class App extends Component {
 				screen:this.state.Global.screen,
 				theme:this.state.Global.theme,
 				color:this.state.Global.color,
+				showown:this.state.Global.showown
 			})
 			if(key === 'theme'||key === 'color'||key === 'lang') this.makeTheme();
 		})

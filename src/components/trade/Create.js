@@ -478,6 +478,17 @@ class Create extends Component {
 				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>root('FullScreenDialog')('Create offer to buy',<Form dir = 'BUY' root={root} babel = {babel} data = {data}/>)}>
 					{babel('Create offer to buy BTC',{category:'chrome'})}
 				</Button>
+				<FormGroup>
+					<FormControlLabel
+						control={
+							<Switch
+								checked={root('showown')}
+								onChange={(event,checked) => root('showown',checked)}
+							/>
+						}
+						label={babel("Show your own offers?",{category:'chrome'})}
+					/>
+				</FormGroup>
 			</div>
 		)
 	}

@@ -46,10 +46,12 @@ const styles = theme => ({
 	appBar: {
 		position: 'absolute',
 		//marginLeft:drawerWidth,
-		marginLeft:theme.direction==='rtl'?drawerWidth:'auto',
-		marginRight:theme.direction==='rtl'?drawerWidth:'auto',
+		//marginLeft:theme.direction==='rtl'?drawerWidth:'auto',
+		//marginRight:theme.direction==='ltr'?drawerWidth:'auto',
 		[theme.breakpoints.up('md')]: {
 			width: `calc(100% - ${drawerWidth}px)`,
+			marginRight:theme.direction==='rtl'?drawerWidth:'auto',
+			marginLeft:theme.direction==='ltr'?drawerWidth:'auto'
 		},
 		display:'flex',
 		alignItems:"center",
@@ -86,6 +88,7 @@ const styles = theme => ({
 	},
 	drawerInner:{
 		height:'100%',
+		direction:theme.direction
 	},
 	settings:{
 		cursor:'pointer'
@@ -190,29 +193,28 @@ class Chrome extends Component {
 					</AppBar>
 					<Hidden mdUp>
 						<Drawer
-						type="temporary"
-						anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-						open={this.state.mobileOpen}
-						className={classes.drawerInner}
-						classes={{
-							paper: classes.drawerPaper,
-						}}
-						onClose={this.handleDrawerToggle}
-						ModalProps={{
-							keepMounted: true, // Better open performance on mobile.
-						}}
+							type="temporary"
+							open={this.state.mobileOpen}
+							className={classes.drawerInner}
+							classes={{
+								paper: classes.drawerPaper,
+							}}
+							onClose={this.handleDrawerToggle}
+							ModalProps={{
+								keepMounted: true, // Better open performance on mobile.
+							}}
 						>
 							{drawer}
 						</Drawer>
 					</Hidden>
 					<Hidden mdDown implementation="css" >
 						<Drawer
-						type="permanent"
-						open
-						className={classes.drawerInner}
-						classes={{
-							paper: classes.drawerPaper,
-						}}
+							type="permanent"
+							open
+							className={classes.drawerInner}
+							classes={{
+								paper: classes.drawerPaper,
+							}}
 						>
 							{drawer}
 						</Drawer>

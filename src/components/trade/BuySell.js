@@ -117,8 +117,10 @@ class BuySell extends Component {
 			var owner = trade.offerer.split(':')[1]*1===(process.env.SERVER_PORT*1+1);
 			if(this.props.dir==='OWN'){
 				return owner;
-			}else{
+			}else if(this.props.root('showown')){
 				return trade.direction === this.props.dir;
+			}else{
+				return trade.direction === this.props.dir && !owner
 			}
 		}).map((trade)=>{
 			var owner = trade.offerer.split(':')[1]*1===(process.env.SERVER_PORT*1+1);
