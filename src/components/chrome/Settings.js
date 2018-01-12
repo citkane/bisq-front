@@ -6,6 +6,8 @@ import Typography from 'material-ui/Typography';
 import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import Select from 'material-ui/Select';
+import TranslateIcon from 'material-ui-icons/Translate';
+import Avatar from 'material-ui/Avatar';
 
 const styles = theme => ({
 	paper:{
@@ -15,6 +17,15 @@ const styles = theme => ({
 	formControl:{
 		marginRight:theme.direction==='ltr'?theme.spacing.unit*3:'auto',
 		marginLeft:theme.direction==='rtl'?theme.spacing.unit*3:'auto'
+	},
+	row:{
+		display:'flex',
+		alignItems:'center',
+		marginBottom:theme.spacing.unit*2
+	},
+	avatar:{
+		marginRight:theme.direction === 'ltr'?theme.spacing.unit:0,
+		marginLeft:theme.direction === 'rtl'?theme.spacing.unit:0
 	}
 })
 
@@ -40,7 +51,13 @@ class Settings extends Component {
 		return (
 			<div>
 				<Paper className = {classes.paper}>
-					<Typography type='title' gutterBottom >{babel('language',{category:'form'})}</Typography>
+					<div className = {classes.row}>
+						<Avatar className={classes.avatar}>
+        					<TranslateIcon />
+      					</Avatar>
+						<Typography type='title' >{babel('language',{category:'form'})}</Typography>
+	  				</div>
+
 					<FormControl className={classes.formControl}>
 						<InputLabel htmlFor="language">{babel('language',{category:'form'})}</InputLabel>
 							<Select
@@ -57,7 +74,7 @@ class Settings extends Component {
 					</FormControl>
 				</Paper>
 				<Paper className = {classes.paper}>
-					<Typography type='title' gutterBottom >{babel('Appearance',{category:'form'})}</Typography>
+					<Typography type='title' gutterBottom className = {classes.row}>{babel('Appearance',{category:'form'})}</Typography>
 					<FormControl className={classes.formControl}>
 						<InputLabel htmlFor="theme">{babel('Theme',{category:'form'})}</InputLabel>
 							<Select
