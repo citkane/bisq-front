@@ -3,10 +3,9 @@ import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
-import Bitcoin from '../../resources/icons/Bitcoin.js';
 import Stepper, { Step, StepLabel, StepContent } from 'material-ui/Stepper';
 import ExpansionPanel, {ExpansionPanelDetails,ExpansionPanelSummary} from 'material-ui/ExpansionPanel';
-import {FormControlLabel,FormGroup,FormControl,FormHelperText} from 'material-ui/Form';
+import {FormControlLabel,FormGroup,FormControl} from 'material-ui/Form';
 import Input, {InputLabel} from 'material-ui/Input';
 import Button from 'material-ui/Button';
 import Switch from 'material-ui/Switch';
@@ -105,8 +104,8 @@ class Form extends Component {
 	}
 
 	handleAccount = name => event => {
+		var account;
 		if(name === 'currency'){
-			var account;
 			this.accounts.some((ac)=>{
 				if(event.target.value === ac.currency){
 					account = ac;
@@ -120,7 +119,6 @@ class Form extends Component {
 				accountId:account.id
 			});
 		}else if(name === 'accountId'){
-			var account;
 			this.accounts.some((ac)=>{
 				if(event.target.value === ac.id){
 					account = ac;
@@ -226,8 +224,7 @@ class Form extends Component {
 		})
 	}
 	render(){
-		const {dir,classes,babel,root} = this.props;
-		const tools = root('tools');
+		const {dir,classes,babel} = this.props;
 		function getSteps() {
 			return [
 				babel('Select your trade account',{category:'forms'}),babel('Set your trade amount and price',{category:'forms'}),babel('Confirm and publish',{category:'forms'})
@@ -409,6 +406,7 @@ class Form extends Component {
 							</Paper>
 						</div>
 					)
+				default:
 			}
 		}
 		return (

@@ -61,7 +61,7 @@ tools.prototype.formatTrade = function(trade){
 	}
 	var type = Object.keys(trade)[0];
 	trade = trade[type].trade;
-	console.log(type,trade)
+	//console.log(type,trade)
 	var offer = trade.offer.offerPayload;
 	var account = trade.processModel.tradingPeer.paymentAccountPayload;
 	Object.keys(account).forEach(function(key){

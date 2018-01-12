@@ -160,10 +160,11 @@ class BuySell extends Component {
 					})
 					const fiat = t.currency.type === 'fiat';
 					t.other_amount = fiat?t.other_amount:Math.round((1/t.other_amount)*1000000000000)/1000000000000;
+					var title;
 					if(dir === 'OWN'||t.owner){
-						var title = babel('You want to '+t.direction.toLowerCase(),{category:'cards'});
+						title = babel('You want to '+t.direction.toLowerCase(),{category:'cards'});
 					}else{
-						var title = babel(t.direction==='BUY'?'sell':'buy',{category:'cards'});
+						title = babel(t.direction==='BUY'?'sell':'buy',{category:'cards'});
 					}
 					return (
 						<Grid item lg={3} md = {6} sm = {6} xs = {12} key = {t.offer_id} className = 'card'>

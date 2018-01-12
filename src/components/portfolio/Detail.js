@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
+import Card, {CardContent} from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import Popover from 'material-ui/Popover';
@@ -168,7 +168,7 @@ StartPayment = withStyles(styles)(StartPayment);
 
 class AccountDetails extends Component {
 	render(){
-		const {trade,babel} = this.props;
+		const {trade} = this.props;
 		return (
 			<span>
 				<Typography type = 'body2' component = "span">{trade.method}</Typography>
@@ -206,7 +206,7 @@ class Account extends Component{
 		const {anchorEl} = this.state;
 		const open = !!anchorEl;
 		const label = trade.type[0]==='buying'?babel("Seller account details",{category:'forms'}):babel("Buyer account details",{category:'forms'});
-		console.log(trade)
+		//console.log(trade)
 		return(
 			<div>
 				<Chip

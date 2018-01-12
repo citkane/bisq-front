@@ -135,7 +135,6 @@ class App extends Component {
 		//console.log('theme',this.theme);
 		//console.log('');
 
-		var self = this;
 		var data = {};
 		['currency_list','market_list'].forEach(function(command){
 			socket.on(command, function(data2){

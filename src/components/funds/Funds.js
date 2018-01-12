@@ -34,7 +34,7 @@ class Funds extends Component {
 		this.babel = this.props.babel;
 	}
 	render(){
-		const {root,babel,data,classes} = this.props
+		const {root,data,classes} = this.props
 		var wallet = data.wallet_tx_list;
 		const tools = root('tools');
 		wallet = wallet.map((trans)=>{

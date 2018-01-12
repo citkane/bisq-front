@@ -7,7 +7,6 @@ import TradeIcon from 'material-ui-icons/ShoppingCart';
 import FolderIcon from 'material-ui-icons/Folder';
 import WalletIcon from 'material-ui-icons/AccountBalanceWallet';
 import SupportIcon from 'material-ui-icons/Forum';
-import Typography from 'material-ui/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 

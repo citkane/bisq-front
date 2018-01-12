@@ -12,7 +12,7 @@ const styles = theme => ({
 class Support extends Component {
 
 	render(){
-		const {classes,babel,root} = this.props;
+		const {classes} = this.props;
 		return(
 			<div className = {classes.root}>
 				To Do

@@ -13,7 +13,7 @@ const styles = theme => ({
 class Welcome extends Component {
 
 	render(){
-		const {classes,babel,root} = this.props;
+		const {classes,babel} = this.props;
 		return(
 			<div className = {classes.root}>
 				<Typography type='title' gutterBottom color='primary'>{babel('Welcome_title',{category:'content'})}</Typography>
