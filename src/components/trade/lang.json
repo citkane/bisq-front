@@ -5,14 +5,32 @@
 		},
 		"Sell BTC":{
 			"en":"Sell BTC"
+		},
+		"Create offer to sell BTC":{
+			"en":"Create offer to sell BTC"
+		},
+		"Create offer to buy BTC":{
+			"en":"Create offer to buy BTC"
+		},
+		"Create offer to sell":{
+			"en":"Create offer to sell"
+		},
+		"Create offer to buy":{
+			"en":"Create offer to buy"
 		}
 	},
 	"cards":{
 		"buy":{
-			"en":"BUY"
+			"en":"Buy"
 		},
 		"sell":{
-			"en":"SELL"
+			"en":"Sell"
+		},
+		"BUY":{
+			"en":"Buy"
+		},
+		"SELL":{
+			"en":"Sell"
 		},
 		"market":{
 			"en":"Market"
@@ -22,6 +40,18 @@
 		},
 		"payment method":{
 			"en":"Payment Method"
+		},
+		"You want to buy":{
+			"en":"You want to buy"
+		},
+		"You want to sell":{
+			"en":"You want to sell"
+		},
+		"cost":{
+			"en":"cost"
+		},
+		"Cancel Offer":{
+			"en":"Cancel Offer"
 		}
 	},
 	"forms":{
@@ -51,6 +81,99 @@
 		},
 		"trade_step4":{
 			"en":"Accept conditions and confirm"
+		},
+		"Select your trade account":{
+			"en":"Select your trade account"
+		},
+		"Set your trade amount and price":{
+			"en":"Set your trade amount and price"
+		},
+		"Confirm and publish":{
+			"en":"Confirm and publish"
+		},
+		"Select currency":{
+			"en":"Select currency"
+		},
+		"Select account":{
+			"en":"Select account"
+		},
+		"Min BTC to sell":{
+			"en":"Minimum BTC to sell"
+		},
+		"BTC to sell":{
+			"en":"BTC to sell"
+		},
+		"Min BTC to buy":{
+			"en":"Minimum BTC to buy"
+		},
+		"BTC to buy":{
+			"en":"BTC to buy"
+		},
+		"Price type":{
+			"en":"Price type"
+		},
+		"Percentage from market average":{
+			"en":"Percentage from market average"
+		},
+		"Fixed price":{
+			"en":"Fixed price"
+		},
+		"Percentage variation":{
+			"en":"Percentage variation"
+		},
+		"Price in":{
+			"en":"Price in"
+		},
+		"Fixed price for one BTC":{
+			"en":"Fixed price for one BTC"
+		},
+		"Offer to SELL":{
+			"en":"Offer to SELL"
+		},
+		"Offer to BUY":{
+			"en":"Offer to BUY"
+		},
+		"acknowledge terms":{
+			"en":"I understand the terms, conditions, risks and timelines involved in trading on the BISQ network"
+		},
+		"Submit your offer to BUY":{
+			"en":"Submit your offer to buy"
+		},
+		"Submit your offer to SELL":{
+			"en":"Submit your offer to sell"
+		},
+		"Funds will be transferred":{
+			"en":"Funds will be transferred to and held in escrow in your local trading wallet. Deposits will be returned on completion of trade."
+		},
+		"Security deposit":{
+			"en":"Security deposit"
+		},
+		"Trading fee":{
+			"en":"Trading fee"
+		},
+		"Mining fee":{
+			"en":"Mining fee"
+		},
+		"Trade amount":{
+			"en":"Trade amount"
+		},
+		"Account Name":{
+			"en":"Account Name"
+		},
+		"Select your fiat account for this trade":{
+			"en":"Select your fiat account for this trade"
+		},
+		"Select your altcoin account for this trade":{
+			"en":"Select your altcoin account for this trade"
+		},
+		"accepted trade":{
+			"en":"You have accepted the trade offer. Go to:"
+		},
+		"Offers":{
+			"en":"Offers"
+		},
+		"Open Trades":{
+			"en":"Open Trades"
 		}
 	},
 	"dialog":{

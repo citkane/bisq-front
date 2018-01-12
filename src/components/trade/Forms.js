@@ -176,34 +176,34 @@ class Forms extends Component {
 							return(
 								<div>
 									<Typography type = 'body1'>
-										Funds will be transferred to and held in escrow in your local trading wallet. Deposits will be returned on completion of trade.
+										{babel('Funds will be transferred',{category:'forms'})}
 									</Typography>
 									<Paper className = {classes.paper}>
 										<div className = {classes.item}>
 											<Typography type = 'body1'>{fees.security.btc}</Typography>
-											<Typography type = 'caption'>Security deposit @{fees.security.rate}</Typography>
+											<Typography type = 'caption'>{babel('Security deposit',{category:'forms'})} @{fees.security.rate}</Typography>
 										</div>
 										<div className = {classes.item}>+</div>
 										<div className = {classes.item}>
 											<Typography type = 'body1'>{fees.trading.btc}</Typography>
-											<Typography type = 'caption'>Trading fee @{fees.trading.rate}</Typography>
+											<Typography type = 'caption'>{babel('Trading fee',{category:'forms'})} @{fees.trading.rate}</Typography>
 										</div>
 										<div className = {classes.item}>+</div>
 										<div className = {classes.item}>
 											<Typography type = 'body1'>{fees.mining.btc}</Typography>
-											<Typography type = 'caption'>Mining fee @{fees.mining.rate}</Typography>
+											<Typography type = 'caption'>{babel('Mining fee',{category:'forms'})} @{fees.mining.rate}</Typography>
 										</div>
 										{type==='BUY' && <div className = {classes.item}>+</div>}
 										{type==='BUY' && <div className = {classes.item}>
 											<Typography type = 'body1'>{btc}</Typography>
-											<Typography type = 'caption'>Trade amount</Typography>
+											<Typography type = 'caption'>{babel('Trade amount',{category:'forms'})}</Typography>
 										</div>}
 										<div className = {classes.item}>=</div>
 										<Typography type = 'title' className = {classes.item}>{fees.total.btc} BTC</Typography>
 									</Paper>
 									<Paper className = {classes.paper}>
 										<FormControl className={classes.formControl}>
-											<InputLabel htmlFor="account_list">Account Name</InputLabel>
+											<InputLabel htmlFor="account_list">{babel('Account Name',{category:'forms'})}</InputLabel>
 											<Select
 												native
 												value={this.state.account}
@@ -214,8 +214,8 @@ class Forms extends Component {
 													return <option value={ac.id} key = {i}>{ac.name}</option>
 												})}
 											</Select>
-											{fiat && <FormHelperText>Select your fiat account for this trade</FormHelperText>}
-											{!fiat && <FormHelperText>Select your altcoin account for this trade</FormHelperText>}
+											{fiat && <FormHelperText>{babel('Select your fiat account for this trade',{category:'forms'})}</FormHelperText>}
+											{!fiat && <FormHelperText>{babel('Select your altcoin account for this trade',{category:'forms'})}</FormHelperText>}
 										</FormControl>
 									</Paper>
 								</div>
@@ -258,7 +258,7 @@ class Forms extends Component {
 													onChange={this.consent}
 												/>
 											}
-											label="I understand the terms, conditions, risks and timelines involved in trading on the BISQ network"
+											label={babel('acknowledge terms',{category:'forms'})}
 										/>
 									</FormGroup>
 								</Paper>
@@ -312,15 +312,15 @@ class Forms extends Component {
 						</Stepper>
 						{activeStep === steps.length && (
 							<Paper className={classes.paper2}>
-								<Typography gutterBottom>You have accepted the trade offer. Go to:</Typography>
+								<Typography gutterBottom>{babel('accepted trade',{category:'forms'})}</Typography>
 								<Button raised color='primary' onClick={root('FullScreenDialogClose')} className={classes.button}>
-									Offers
+									{babel('Offers',{category:'forms'})}
 								</Button>
 								<Button raised color='primary' onClick={()=>{
 									root('FullScreenDialogClose')();
 									root('screen')('Portfolio');
 								}} className={classes.button}>
-									Open Trades
+									{babel('Open Trades',{category:'forms'})}
 								</Button>
 							</Paper>
 						)}

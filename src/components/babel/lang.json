@@ -22,7 +22,10 @@
 			"en":"Finish"
 		},
 		"close":{
-			"en":"Close"
+			"en":"Exit"
+		},
+		"cancel":{
+			"en":"cancel"
 		}
 	},
 	"help":{

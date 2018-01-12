@@ -33,19 +33,30 @@ const styles = theme => ({
 		height: '100%',
 		zIndex: 1,
 		overflow: 'hidden',
+		//textAlign:theme.direction==='rtl'?'right':'left',
+		direction:theme.direction
 	},
 	appFrame: {
 		position: 'relative',
 		display: 'flex',
 		width: '100%',
 		height: '100%',
+		//flexDirection:theme.direction==='rtl'?'row-reverse':'row'
 	},
 	appBar: {
 		position: 'absolute',
-		marginLeft: drawerWidth,
+		//marginLeft:drawerWidth,
+		marginLeft:theme.direction==='rtl'?drawerWidth:'auto',
+		marginRight:theme.direction==='rtl'?drawerWidth:'auto',
 		[theme.breakpoints.up('md')]: {
 			width: `calc(100% - ${drawerWidth}px)`,
 		},
+		display:'flex',
+		alignItems:"center",
+		flexDirection:'row',
+		//flexDirection:theme.direction==='rtl'?'row-reverse':'row',
+		justifyContent:'space-between',
+		padding:'0 '+theme.spacing.unit*3+'px',
 	},
 	navIconHide: {
 		[theme.breakpoints.up('md')]: {
@@ -62,7 +73,7 @@ const styles = theme => ({
 		},
 	},
 	content: {
-		overflowY: "scroll",
+		overflowY: "auto",
 		position:'relative',
 		backgroundColor: theme.palette.background.default,
 		width: '100%',
@@ -78,12 +89,30 @@ const styles = theme => ({
 	},
 	settings:{
 		cursor:'pointer'
+	},
+	menuicon:{
+		display:"flex",
+		alignItems:"center",
+		//flexDirection:theme.direction==='rtl'?'row-reverse':'row'
+	},
+	price:{
+		//display:"flex",
+		//alignItems:"center",
+		//flexDirection:theme.direction==='rtl'?'row-reverse':'row'
+	},
+	toolbar:{
+		padding:0
+	},
+	logo:{
+		transform:"scale(-1, 1)",
+		direction:'ltr'
 	}
 });
 class Balance extends Component{
 
 	render(){
-		var btc = <span className='price'><Bitcoin />{this.props.balance}</span>
+		const {classes} = this.props;
+		var btc = <span className={classes.price}><Bitcoin />{this.props.balance}</span>
 		return(
 			<ListItem className='balance' aria-label={this.props.title}>
 				<ListItemText primary = {btc} secondary = {this.props.title} />
@@ -91,6 +120,11 @@ class Balance extends Component{
 		)
 	}
 }
+Balance.propTypes = {
+	classes: PropTypes.object.isRequired,
+};
+Balance = withStyles(styles, { withTheme: true })(Balance);
+
 class Wallet extends Component{
 	render(){
 		const {wallet,babel} = this.props;
@@ -122,7 +156,9 @@ class Chrome extends Component {
 		const drawer = (
 			<div>
 				<div className={classes.drawerHeader}>
-					<Bisq id = 'logo' action = {()=>root('screen','Welcome')} />
+					<div className = {theme.direction==='rtl'?classes.logo:null}>
+						<Bisq id = 'logo' action = {()=>root('screen','Welcome')} />
+					</div>
 				</div>
 				<Wallet root = {root} babel = {babel} wallet = {data.wallet_detail}/>
 				<Divider />
@@ -133,9 +169,9 @@ class Chrome extends Component {
 			<div className={classes.root}>
 				<div className={classes.appFrame}>
 					<AppBar className={classes.appBar}>
-						<Toolbar>
+						<Toolbar className = {classes.toolbar}>
 							<Grid container spacing = {0} alignItems = 'center'>
-								<Grid item id='menuicon'>
+								<Grid item className={classes.menuicon}>
 									<IconButton
 									color="contrast"
 									aria-label="open drawer"
@@ -147,10 +183,10 @@ class Chrome extends Component {
 									<Typography type="title" color = 'inherit'>{babel(screen,{category:'chrome'})}</Typography>
 								</Grid>
 							</Grid>
-							<SettingsIcon className = {classes.settings} onClick={()=>{
-								root('FullScreenDialog')('Settings',<Settings root={root} colors={colors}/>)
-							}}/>
 						</Toolbar>
+						<SettingsIcon className = {classes.settings} onClick={()=>{
+							root('FullScreenDialog')('Settings',<Settings root={root} babel = {babel} colors={colors}/>)
+						}}/>
 					</AppBar>
 					<Hidden mdUp>
 						<Drawer

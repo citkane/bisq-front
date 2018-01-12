@@ -17,6 +17,9 @@
 		},
 		"Welcome":{
 			"en":"Welcome"
+		},
+		"Settings":{
+			"en":"Settings"
 		}
 	},
 	"wallet":{
@@ -29,5 +32,59 @@
 		"locked":{
 			"en":"Locked in trades"
 		}
+	},
+	"form":{
+		"language":{
+			"en":"Language"
+		},
+		"select language":{
+			"en":"Select your language"
+		},
+		"Appearance":{
+			"en":"Appearance"
+		},
+		"Theme":{
+			"en":"Theme"
+		},
+		"Light":{
+			"en":"Light"
+		},
+		"Dark":{
+			"en":"Dark"
+		},
+		"Select the theme variation":{
+			"en":"Select the theme variation"
+		},
+		"Theme Color":{
+			"en":"Theme Color"
+		},
+		"Select the theme color":{
+			"en":"Select the theme color"
+		},
+		"teal":{
+			"en":"teal"
+		},
+		"blue":{
+			"en":"blue"
+		},
+		"purple":{
+			"en":"purple"
+		},
+		"indigo":{
+			"en":"indigo"
+		},
+		"cyan":{
+			"en":"cyan"
+		},
+		"green":{
+			"en":"green"
+		},
+		"amber":{
+			"en":"amber"
+		},
+		"brown":{
+			"en":"brown"
+		}
+
 	}
 }

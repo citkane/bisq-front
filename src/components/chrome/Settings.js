@@ -9,10 +9,12 @@ import Select from 'material-ui/Select';
 
 const styles = theme => ({
 	paper:{
-		padding:theme.spacing.unit*3
+		padding:theme.spacing.unit*3,
+		marginBottom:theme.spacing.unit
 	},
 	formControl:{
-		marginRight:theme.spacing.unit*3
+		marginRight:theme.direction==='ltr'?theme.spacing.unit*3:'auto',
+		marginLeft:theme.direction==='rtl'?theme.spacing.unit*3:'auto'
 	}
 })
 
@@ -34,13 +36,13 @@ class Settings extends Component {
 
 	};
 	render(){
-		const {classes,colors,root} = this.props;
+		const {classes,colors,babel,root} = this.props;
 		return (
 			<div>
 				<Paper className = {classes.paper}>
-					<Typography type='title' gutterBottom >Language</Typography>
+					<Typography type='title' gutterBottom >{babel('language',{category:'form'})}</Typography>
 					<FormControl className={classes.formControl}>
-						<InputLabel htmlFor="language">Language</InputLabel>
+						<InputLabel htmlFor="language">{babel('language',{category:'form'})}</InputLabel>
 							<Select
 								native
 								defaultValue={this.state.lang}
@@ -48,29 +50,29 @@ class Settings extends Component {
 								input={<Input id="language" />}
 							>
 								{root('langList').map((lang,i)=>{
-									return <option key={i} value={lang} >{lang}</option>
+									return <option key={i} value={lang.language} >{lang.dir === 'ltr'?lang.language+' - '+lang.name:lang.name+' - '+lang.language}</option>
 								})}
 							</Select>
-						<FormHelperText>Select your language</FormHelperText>
+						<FormHelperText>{babel('select language',{category:'form'})}</FormHelperText>
 					</FormControl>
 				</Paper>
 				<Paper className = {classes.paper}>
-					<Typography type='title' gutterBottom >Appearance</Typography>
+					<Typography type='title' gutterBottom >{babel('Appearance',{category:'form'})}</Typography>
 					<FormControl className={classes.formControl}>
-						<InputLabel htmlFor="theme">Theme</InputLabel>
+						<InputLabel htmlFor="theme">{babel('Theme',{category:'form'})}</InputLabel>
 							<Select
 								native
 								value={root('theme')}
 								onChange={this.handleChange('theme')}
 								input={<Input id="theme" />}
 							>
-								<option value='light'>Light</option>
-								<option value='dark'>Dark</option>
+								<option value='light'>{babel('Light',{category:'form'})}</option>
+								<option value='dark'>{babel('Dark',{category:'form'})}</option>
 							</Select>
-						<FormHelperText>Select the theme variation</FormHelperText>
+						<FormHelperText>{babel('Select the theme variation',{category:'form'})}</FormHelperText>
 					</FormControl>
 					<FormControl className={classes.formControl}>
-						<InputLabel htmlFor="color">Theme Color</InputLabel>
+						<InputLabel htmlFor="color">{babel('Theme Color',{category:'form'})}</InputLabel>
 							<Select
 								native
 								value={root('color')}
@@ -78,10 +80,10 @@ class Settings extends Component {
 								input={<Input id="color" />}
 							>
 								{colors.map((color,i)=>{
-									return <option key={i} value={color}>{color}</option>
+									return <option key={i} value={color}>{babel(color,{category:'form'})}</option>
 								})}
 							</Select>
-						<FormHelperText>Select the theme color</FormHelperText>
+						<FormHelperText>{babel('Select the theme color',{category:'form'})}</FormHelperText>
 					</FormControl>
 				</Paper>
 			</div>

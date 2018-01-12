@@ -44,6 +44,7 @@ class App extends Component {
 	state = {
 		Global:{
 			lang:"en",
+			langDir:"ltr",
 			screen:"Welcome",
 			api:api,
 			tools:tools,
@@ -67,7 +68,7 @@ class App extends Component {
 
 		var string;
 		if(!lang[opts.category][key]){
-			//console.warn('"'+key+'" is not defined in Babel');
+			console.warn('"'+key+'" is not defined in Babel');
 			string = key;
 		}
 		if(!string) string = lang[opts.category][key][this.state.Global.lang];
@@ -82,15 +83,33 @@ class App extends Component {
 		if(typeof val === 'undefined') return this.state.Global[key];
 		var G = this.state.Global;
 		G[key] = val;
+		if(key==='lang'){
+			lang.list.some((l)=>{
+				if(l.language === val){
+					G.langDir = l.dir;
+					return true;
+				}
+				return false;
+			})
+		}
 		this.setState({
 			Global:G,
 		},()=>{
-			if(key === 'theme'||key === 'color') this.makeTheme();
+			socket.emit('settings',{
+				lang:this.state.Global.lang,
+				langDir:this.state.Global.langDir,
+				screen:this.state.Global.screen,
+				theme:this.state.Global.theme,
+				color:this.state.Global.color,
+			})
+			if(key === 'theme'||key === 'color'||key === 'lang') this.makeTheme();
 		})
+
 	}
 	makeTheme = () =>{
 		this.setState({
 			theme:createMuiTheme({
+				direction:this.state.Global.langDir,
 				palette: {
 					primary: Colors[this.state.Global.color],
 					secondary:pink,
@@ -110,7 +129,7 @@ class App extends Component {
 
 	componentDidMount(){
 		api.generate(1)
-		this.makeTheme();
+
 		//console.log('theme',this.theme);
 		//console.log('');
 
@@ -138,14 +157,32 @@ class App extends Component {
 			this.setState({data:data});
 		})
 		api.ticker();
+		socket.emit('getSettings');
+		socket.once('getSettings',(data)=>{
+
+			if(data){
+				var G = this.state.Global
+				Object.keys(data).forEach((key)=>{
+					G[key] = data[key];
+				})
+				this.setState({
+					Global:G
+				},()=>{
+					this.makeTheme();
+				})
+			}else{
+				this.makeTheme();
+			}
+		})
 	}
 	render() {
+
 		if(!this.state.data||!this.state.theme) return null;
 		return (
 			<MuiThemeProvider theme={this.state.theme}>
 				<Chrome root = {this.root} babel = {this.babel} data = {this.state.data} colors = {colors}/>
 				<FullScreenDialog root = {this.root} babel = {this.babel} />
-				<AlertDialog root = {this.root} babel = {this.babel} />
+				<AlertDialog root  = {this.root} babel = {this.babel} />
 			</MuiThemeProvider>
 		);
 	}

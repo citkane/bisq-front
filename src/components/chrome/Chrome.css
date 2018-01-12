@@ -1,19 +1,5 @@
-#logo{
+#logo {
 	height:64px;
 	cursor:pointer;
-	display:block;
-
-}
-#menuicon{
-	display:flex;
-	align-items:center;
-}
-.price{
-	display:flex;
-	align-items: center;
-}
-.price img{
 	display:inline-block;
-	width:.9em;
-	opacity:.7;
 }

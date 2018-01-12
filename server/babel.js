@@ -7,14 +7,36 @@ global.appRoot = path.join(path.resolve(__dirname),'../');
 const trans = require('google-translate')("AIzaSyB_jGUlCbK2IFKUmjIXHzKLqwLjF5n2tO0");
 var lang = require(path.join(appRoot,'src/components/babel/lang.json'));
 
+var rtl = ['ar','arc','dv','far','ha','he','khw','ks','ku','ps','ur','yi']
 
-trans.getSupportedLanguages(function(err,languageCodes) {
-	buildLang(languageCodes)
+trans.getSupportedLanguages('en',function(err,languageCodes) {
+	var langCodes = [];
+	var count = 0;
+	languageCodes.forEach((code)=>{
+		if(code.language === 'en'){
+			langCodes.push({name:'English',language:'en',dir:'ltr'});
+			count++;
+			if(count === languageCodes.length){
+				buildLang(langCodes)
+			}
+			return;
+		}
+		trans.translate(code.name,'en',code.language, function(err, translation) {
+			var dir = rtl.indexOf(code.language)===-1?"ltr":"rtl";
+			langCodes.push({name:translation.translatedText,language:code.language,dir:dir})
+			count++;
+			if(count === languageCodes.length){
+				buildLang(langCodes)
+			}
+		})
+	})
 });
 
 function buildLang(languageCodes){
 	var targets = languageCodes.filter((code)=>{
-		return code!=='en';
+		return code.language!=='en';
+	}).map((code)=>{
+		return code.language;
 	});
 	var files = fs.readdirSync(path.join(appRoot,'src/components'));
 	files.forEach(function(dir){
@@ -74,6 +96,11 @@ function buildLang(languageCodes){
 
 
 function writeLang(lang,targets){
+	targets = targets.sort((a,b)=>{
+		if(a.language > b.language) return 1;
+		if(a.language < b.language) return -1;
+		return 0;
+	})
 	lang.list = targets;
 	lang = JSON.stringify(lang,null,'\t');
 	fs.writeFileSync(path.join(appRoot,'src/resources/lang.json'),lang);

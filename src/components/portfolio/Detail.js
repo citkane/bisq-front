@@ -40,7 +40,7 @@ const styles = theme => ({
 	button:{
 		width:'100%',
 		//margin:".5em 0",
-		justifyContent:'left'
+		justifyContent:theme.direction==='ltr'?'left':'right'
 	},
 	button2:{
 		marginRight:theme.spacing.unit
@@ -63,12 +63,12 @@ class Transfer extends Component {
 				<Paper className = {classes.paper3}>
 					<div className = {classes.item} >
 						<Typography component='span'><Bitcoin />{trade.deposit[trade.type[0]]}</Typography>
-						<Typography type = 'caption'>Security deposit</Typography>
+						<Typography type = 'caption'>{babel('Security deposit',{category:'forms'})}</Typography>
 					</div>
 					{trade.type[0]==='buying' && <div className = {classes.item}>+</div>}
 					{trade.type[0]==='buying' && <div className = {classes.item}>
 						<Typography component = 'span'><Bitcoin />{trade.amount}</Typography>
-						<Typography type = 'caption'>Purchased amount</Typography>
+						<Typography type = 'caption'>{babel('Purchased amount',{category:'forms'})}</Typography>
 					</div>}
 				</Paper>
 				<div className = {classes.bottom} >
@@ -83,7 +83,7 @@ class Transfer extends Component {
 							})
 
 						}
-					}>Move funds to my Bisq BTC wallet</Button>
+					}>{babel('Move funds to my Bisq BTC wallet',{category:'forms'})}</Button>
 				</div>
 			</div>
 		)
@@ -101,9 +101,9 @@ class Received extends Component {
 		const api = root('api');
 		return (
 			<div>
-				<Typography gutterBottom type='title' className = {classes.top}>Please check that you have received {trade.volume} {trade.base==='BTC'?trade.counter:trade.base} from the following {trade.method} account:</Typography>
+				<Typography gutterBottom type='title' className = {classes.top}>{babel('Please check that you have received from the following account:',{category:'forms'})} ({trade.volume} {trade.base==='BTC'?trade.counter:trade.base} | {trade.method})</Typography>
 				<Paper className = {classes.paper2}><AccountDetails trade = {trade} babel = {babel} /></Paper>
-				{trade.base==='BTC' && <div className = {classes.bottom}>Ensure that the trading account holder's name matches that on your statement. If not, consider cancelling and opening a support ticket</div>}
+				{trade.base==='BTC' && <div className = {classes.bottom}>{babel('Ensure that the trading account holder\'s name matches that on your statement. If not, consider cancelling and opening a support ticket',{category:'forms'})}</div>}
 				<div className = {classes.bottom} >
 					<Button raised className = {classes.button2} color = 'accent' onClick = {
 						()=>{
@@ -116,10 +116,10 @@ class Received extends Component {
 							})
 
 						}
-					}>I have received the funds</Button>
+					}>{babel('I have received the funds',{category:'forms'})}</Button>
 					<Button raised onClick = {
 						()=>root('FullScreenDialogClose')()
-					}>Cancel</Button>
+					}>{babel('Cancel',{category:'forms'})}</Button>
 				</div>
 			</div>
 		)
@@ -137,9 +137,9 @@ class StartPayment extends Component {
 		const api = root('api');
 		return (
 			<div>
-				<Typography gutterBottom type='title' className = {classes.top}>Please deposit {trade.volume} {trade.base==='BTC'?trade.counter:trade.base} to the following {trade.method} account:</Typography>
+				<Typography gutterBottom type='title' className = {classes.top}>{babel('Please deposit to the following account:',{category:'forms'})} ({trade.volume} {trade.base==='BTC'?trade.counter:trade.base} | {trade.method})</Typography>
 				<Paper className = {classes.paper2}><AccountDetails trade = {trade} babel = {babel} /></Paper>
-					{trade.base==='BTC' && <div className = {classes.bottom}>Please ensure that your account name is exactly as entered on BISQ otherwise your trading partner may open a dispute</div>}
+					{trade.base==='BTC' && <div className = {classes.bottom}>{babel('Please ensure that your account name is exactly as entered on BISQ otherwise your trading partner may open a dispute',{category:'forms'})}</div>}
 				<div className = {classes.bottom} >
 					<Button raised className = {classes.button2} color = 'accent' onClick = {
 						()=>{
@@ -152,10 +152,10 @@ class StartPayment extends Component {
 							})
 
 						}
-					}>I have completed the deposit</Button>
+					}>{babel('I have completed the deposit',{category:'forms'})}</Button>
 					<Button raised onClick = {
 						()=>root('FullScreenDialogClose')()
-					}>Cancel</Button>
+					}>{babel('Cancel',{category:'forms'})}</Button>
 				</div>
 			</div>
 		)
@@ -205,7 +205,7 @@ class Account extends Component{
 		const {classes,trade,root,babel} = this.props;
 		const {anchorEl} = this.state;
 		const open = !!anchorEl;
-		const label = trade.type[0]==='buying'?"Seller account details":"Buyer account details";
+		const label = trade.type[0]==='buying'?babel("Seller account details",{category:'forms'}):babel("Buyer account details",{category:'forms'});
 		console.log(trade)
 		return(
 			<div>
@@ -261,17 +261,17 @@ class Detail extends Component {
 										<Divider light />
 										<Typography type = 'caption'>{babel(t.type[1],{category:'cards',type:'text'})}</Typography>
 										<div className = 'cardrow'>
-											<Typography component = 'span' color = 'primary'>For:</Typography>
+											<Typography component = 'span' color = 'primary'>{babel('For',{category:'cards'})}:</Typography>
 											<Typography component = 'span' type='body2'>{t.volume} {t.base==='BTC'?t.counter:t.base}</Typography>
 										</div>
 										<Divider inset light />
 										<div className = 'cardrow'>
-											<Typography component = 'span' color = 'primary'>At:</Typography>
+											<Typography component = 'span' color = 'primary'>{babel('At',{category:'cards'})}:</Typography>
 											<Typography component = 'span' type='caption' >{t.price} {t.base==='BTC'?t.counter:t.base} / BTC</Typography>
 										</div>
 										<Divider inset light />
 										<div className = 'cardrow'>
-											<Typography component = 'span' color = 'primary'>Time ago:</Typography>
+											<Typography component = 'span' color = 'primary'>{babel('Time ago',{category:'cards'})}:</Typography>
 											<Typography component = 'span' type='caption'>{t.ago}</Typography>
 										</div>
 
@@ -279,27 +279,27 @@ class Detail extends Component {
 										<Divider light />
 										<div className = 'cardrow button'>
 											<Button className={classes.button} raised = {t.stage===0} disabled = {t.stage!==0} dense color='primary' onClick = {
-												()=>root('AlertDialog')(false,{title:'Wait for blockchain confirmation',description:`
-													Please wait until deposits have reached at least one blockchain confirmation.
-												`})
+												()=>root('AlertDialog')(false,{title:babel('Wait for blockchain confirmation',{category:'cards'}),description:
+													babel('Please wait until deposits have reached at least one blockchain confirmation.',{category:'cards'})
+												})
 											}>
-												Wait for blockchain confirmation&nbsp;&nbsp;{t.stage!==0 && <DoneIcon color = 'primary'/>}
+												{babel('Wait for blockchain confirmation',{category:'cards'})}&nbsp;&nbsp;{t.stage!==0 && <DoneIcon color = 'primary'/>}
 											</Button>
 										</div>
 										{t.type[0] ==='selling' && <div className = 'cardrow button'>
 											<Button className={classes.button} raised = {t.stage <=1} disabled = {t.stage!==1} dense color='primary' onClick = {
-												()=>root('AlertDialog')(false,{title:'Wait until payment has started',description:`
-													Please wait until your trading partner has indicated that they have started the payment into your wallet or account.
-												`})
+												()=>root('AlertDialog')(false,{title:babel('Wait until payment has started',{category:'cards'}),description:
+													babel('Please wait until your trading partner has indicated that they have started the payment into your wallet or account.',{category:'cards'})
+												})
 											}>
-												Wait until payment has started&nbsp;&nbsp;{t.stage > 1 && <DoneIcon color = 'primary'/>}
+												{babel('Wait until payment has started',{category:'cards'})}&nbsp;&nbsp;{t.stage > 1 && <DoneIcon color = 'primary'/>}
 											</Button>
 										</div>}
 										{t.type[0] ==='buying' && <div className = 'cardrow button'>
 											<Button className={classes.button} raised = {t.stage <=1} disabled = {t.stage!==1} dense color='accent' onClick = {
 												()=>root('FullScreenDialog')('Start payment',<StartPayment trade = {t} babel = {babel} root = {root}/>)
 											}>
-												Start payment&nbsp;&nbsp;{t.stage > 1 && <DoneIcon color = 'primary'/>}
+												{babel('Start payment',{category:'chrome'})}&nbsp;&nbsp;{t.stage > 1 && <DoneIcon color = 'primary'/>}
 											</Button>
 										</div>}
 
@@ -307,16 +307,16 @@ class Detail extends Component {
 											<Button className={classes.button} raised = {t.stage <=2} disabled = {t.stage!==2} dense color='accent' onClick = {
 												()=>root('FullScreenDialog')('Confirm payment recieved',<Received trade = {t} babel = {babel} root = {root}/>)
 											}>
-												Confirm payment recieved&nbsp;&nbsp;{t.stage > 2 && <DoneIcon color = 'primary'/>}
+												{babel('Confirm payment recieved',{category:'chrome'})}&nbsp;&nbsp;{t.stage > 2 && <DoneIcon color = 'primary'/>}
 											</Button>
 										</div>}
 										{t.type[0] ==='buying' && <div className = 'cardrow button'>
 											<Button className={classes.button} raised = {t.stage <=2} disabled = {t.stage!==2} dense color='primary' onClick = {
-												()=>root('AlertDialog')(false,{title:'Wait until payment arrived',description:`
-													Please wait until your trading partner has indicated that your payment has arrived into their wallet or account.
-											`	})
+												()=>root('AlertDialog')(false,{title:babel('Wait until payment arrived',{category:'cards'}),description:
+													babel('Please wait until your trading partner has indicated that your payment has arrived into their wallet or account.',{category:'cards'})
+												})
 											}>
-												Wait until payment arrived&nbsp;&nbsp;{t.stage > 2 && <DoneIcon color = 'primary'/>}
+												{babel('Wait until payment arrived',{category:'cards'})}&nbsp;&nbsp;{t.stage > 2 && <DoneIcon color = 'primary'/>}
 											</Button>
 										</div>}
 
@@ -324,7 +324,7 @@ class Detail extends Component {
 											<Button className={classes.button} raised disabled = {t.stage!==3} dense color = 'accent' onClick = {
 												()=>root('FullScreenDialog')('Move Funds',<Transfer trade = {t} babel = {babel} root = {root}/>)
 											}>
-												Move Funds
+												{babel('Move Funds',{category:'chrome'})}
 											</Button>
 										</div>
 										<div className = 'cardrow bottom'>

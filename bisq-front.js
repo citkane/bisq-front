@@ -20,12 +20,20 @@ new makeInstance(3300,'Bisq-Regtest-Arbitrator',true,false);
 
 
 function makeInstance(port,name,gui,react){
+	var settings;
 	const http = require('http').Server(app);
 	const io = require('socket.io')(http);
 	io.on('connection', function(socket){
 		console.log(port+' connected');
 		var api = new Api(socket,port+3);
 		new ticker(socket,api);
+
+		socket.on('settings',function(data){
+			settings = data;
+		})
+		socket.on('getSettings',function(){
+			socket.emit('getSettings',settings);
+		})
 		socket.on('disconnect',function(){
 			console.log(port+' disconnected');
 			api = null;

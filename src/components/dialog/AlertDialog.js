@@ -6,6 +6,14 @@ import Dialog, {
 	DialogContentText,
 	DialogTitle,
 } from 'material-ui/Dialog';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+
+const styles  = theme => ({
+	root:{
+		direction:theme.direction,
+	}
+})
 
 class AlertDialog extends React.Component {
 	constructor(props){
@@ -38,7 +46,7 @@ class AlertDialog extends React.Component {
 		});
 	};
 	render() {
-		const {babel} = this.props;
+		const {classes,babel} = this.props;
 		const {action,title,description,yes,no} = this.state;
 		var No = no?no:babel('close',{category:'chrome',type:'text'});
 		return (
@@ -48,6 +56,7 @@ class AlertDialog extends React.Component {
 				onClose={()=>this.handleClose(false)}
 				aria-labelledby="alert-dialog-title"
 				aria-describedby="alert-dialog-description"
+				className = {classes.root}
 			>
 				<DialogTitle id="alert-dialog-title">{title}</DialogTitle>
 				<DialogContent>
@@ -63,4 +72,8 @@ class AlertDialog extends React.Component {
 	}
 }
 
-export default AlertDialog;
+AlertDialog.propTypes = {
+	classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(AlertDialog);

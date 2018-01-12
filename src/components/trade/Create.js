@@ -53,7 +53,7 @@ const styles = theme => ({
 		marginRight:theme.spacing.unit
 	},
 	formControl2:{
-		minWidth:'600px',
+		minWidth:'300px',
 		marginRight:theme.spacing.unit
 	},
 	actionsContainer: {
@@ -74,7 +74,6 @@ const styles = theme => ({
 class Form extends Component {
 	constructor(props){
 		super(props);
-		console.log(this.props)
 		this.currency = [];
 		this.accounts = this.props.data.account_list.map((ac)=>{
 			var type = ac.payment_method_details.contractData.paymentMethodId;
@@ -204,7 +203,7 @@ class Form extends Component {
 			amount:tools.toSatoshi(this.state.amount*1||this.state.min_amount*1),
 			min_amount:tools.toSatoshi(this.state.min_amount*1||this.state.amount*1)
 		}
-		console.error(data);
+
 		var api = this.props.root('api');
 		api.get('offer_make',data).then((data)=>{
 
@@ -231,7 +230,7 @@ class Form extends Component {
 		const tools = root('tools');
 		function getSteps() {
 			return [
-				'Select your trade account','Set your trade amount and price','Confirm and publish'
+				babel('Select your trade account',{category:'forms'}),babel('Set your trade amount and price',{category:'forms'}),babel('Confirm and publish',{category:'forms'})
 			];
 		}
 		const steps = getSteps();
@@ -247,7 +246,7 @@ class Form extends Component {
 					return(
 						<Paper className = {classes.paper}>
 							<FormControl className={classes.formControl}>
-								<InputLabel htmlFor="currency" shrink>Select currency</InputLabel>
+								<InputLabel htmlFor="currency" shrink>{babel('Select currency',{category:'forms'})}</InputLabel>
 								<Select
 
 									native
@@ -261,9 +260,8 @@ class Form extends Component {
 								</Select>
 							</FormControl>
 							<FormControl className={classes.formControl}>
-								<InputLabel htmlFor="account_list" shrink>Select account</InputLabel>
+								<InputLabel htmlFor="account_list" shrink>{babel('Select account',{category:'forms'})}</InputLabel>
 								<Select
-
 									native
 									value={this.state.accountId}
 									onChange={this.handleAccount('accountId')}
@@ -286,10 +284,11 @@ class Form extends Component {
 					return(
 						<Paper className = {classes.paper2}>
 							<div className = {classes.row}>
-								<form noValidate autoComplete="off" className={classes.formControl}>
+								<form noValidate autoComplete="off" className={classes.formControl2}>
 									<TextField
 										id="min_amount"
-										label = {dir==='SELL'?babel('Min BTC to sell',{category:'forms',type:'text'}):babel('Min BTC to buy',{category:'forms',type:'text'})}
+										label = {dir==='SELL'?babel('Min BTC to sell',{category:'forms'}):babel('Min BTC to buy',{category:'forms'})}
+										InputLabelProps = {{className:classes.formControl2}}
 										value={this.state.min_amount}
 										onChange={(e)=>this.setVol(e,true)}
 										className={classes.item}
@@ -297,7 +296,7 @@ class Form extends Component {
 										margin="normal"
 									/>
 								</form>
-								<form noValidate autoComplete="off" className={classes.formControl}>
+								<form noValidate autoComplete="off" className={classes.formControl2}>
 									<TextField
 										id="amount"
 										label = {dir==='SELL'?babel('BTC to sell',{category:'forms',type:'text'}):babel('BTC to buy',{category:'forms',type:'text'})}
@@ -306,6 +305,7 @@ class Form extends Component {
 										className={classes.item}
 										helperText={'max: '+this.limit.max+' BTC'}
 										margin="normal"
+										classes={{input:classes.formControl2}}
 									/>
 								</form>
 							</div>
@@ -315,15 +315,15 @@ class Form extends Component {
 									<div className = {classes.row}>
 
 										<FormControl className={classes.formControl}>
-											<InputLabel htmlFor="priceType">Price type</InputLabel>
+											<InputLabel htmlFor="priceType">{babel('Price type',{category:'forms'})}</InputLabel>
 											<Select
 												native
 												defaultValue = {this.state.priceType}
 												onChange={this.handleAccount('priceType')}
 												input={<Input id="priceType" />}
 											>
-												<option value='PERCENTAGE' key = '2'>Percentage from market average</option>
-												<option value='FIXED' key = '1'>Fixed price</option>
+												<option value='PERCENTAGE' key = '2'>{babel('Percentage from market average',{category:'forms'})}</option>
+												<option value='FIXED' key = '1'>{babel('Fixed price',{category:'forms'})}</option>
 											</Select>
 
 										</FormControl>
@@ -334,7 +334,7 @@ class Form extends Component {
 											<TextField
 												id="percent"
 												required
-												label = "Percentage variation"
+												label = {babel("Percentage variation",{category:'forms'})}
 												defaultValue={this.state.percent}
 												onChange={(e)=>this.setPrice(e,true)}
 												labelClassName={classes.label}
@@ -345,11 +345,11 @@ class Form extends Component {
 											<TextField
 												id="fixed"
 												required
-												label = {'Price in '+this.state.currency}
+												label = {babel('Price in',{category:'forms'})+' '+this.state.currency}
 												defaultValue={this.state.fixed}
 												onChange={(e)=>this.setPrice(e)}
 												className={classes.item}
-												helperText={'Fixed price in for one BTC ('+this.state.currency+')'}
+												helperText={babel('Fixed price for one BTC',{category:'forms'})+' ('+this.state.currency+')'}
 											/>
 										</form>}
 									</div>
@@ -364,7 +364,7 @@ class Form extends Component {
 						<div>
 							<Paper className = {classes.paper2}>
 								<Typography type = 'title'>
-									Offer to {dir} {min!==max && min+' - '} {max} BTC @ {this.state.priceType === 'PERCENTAGE' && this.state.percent+'% '+this.state.currency+' market.'} {this.state.priceType === 'FIXED' && this.state.fixed+' '+this.state.currency+' / BTC'}
+									{babel('Offer to '+dir,{category:'forms'})} {min!==max && min+' - '} {max} BTC @ {this.state.priceType === 'PERCENTAGE' && this.state.percent+'% '+this.state.currency+' market.'} {this.state.priceType === 'FIXED' && this.state.fixed+' '+this.state.currency+' / BTC'}
 
 								</Typography>
 							</Paper>
@@ -403,7 +403,7 @@ class Form extends Component {
 												onChange={this.consent}
 											/>
 										}
-										label="I understand the terms, conditions, risks and timelines involved in trading on the BISQ network"
+										label={babel("acknowledge terms",{category:'forms'})}
 									/>
 								</FormGroup>
 							</Paper>
@@ -448,7 +448,7 @@ class Form extends Component {
 													className={classes.button}
 													disabled = {!this.state.accepted}
 												>
-													Submit your offer to {dir}
+													{babel('Submit your offer to '+dir,{category:'forms'})}
 												</Button>
 											}
 										</div>
@@ -473,10 +473,10 @@ class Create extends Component {
 		return (
 			<div className = {classes.wrapper}>
 				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>root('FullScreenDialog')('Create offer to sell',<Form dir = 'SELL' root={root} babel = {babel} data = {data}/>)}>
-					Create offer to sell BTC
+					{babel('Create offer to sell BTC',{category:'chrome'})}
 				</Button>
 				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>root('FullScreenDialog')('Create offer to buy',<Form dir = 'BUY' root={root} babel = {babel} data = {data}/>)}>
-					Create offer to buy BTC
+					{babel('Create offer to buy BTC',{category:'chrome'})}
 				</Button>
 			</div>
 		)

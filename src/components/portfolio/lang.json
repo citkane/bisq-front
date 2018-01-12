@@ -11,6 +11,15 @@
 		},
 		"Failed":{
 			"en":"Failed"
+		},
+		"Start payment":{
+			"en":"Start payment"
+		},
+		"Confirm payment recieved":{
+			"en":"Confirm payment recieved"
+		},
+		"Move Funds":{
+			"en":"Move Funds"
 		}
 	},
 	"cards":{
@@ -25,6 +34,75 @@
 		},
 		"taker":{
 			"en":"You accepted an offer"
+		},
+		"For":{
+			"en":"For"
+		},
+		"At":{
+			"en":"Rate"
+		},
+		"Time ago":{
+			"en":"Time ago"
+		},
+		"Please wait until deposits have reached at least one blockchain confirmation.":{
+			"en":"Please wait until deposits have reached at least one blockchain confirmation."
+		},
+		"Wait for blockchain confirmation":{
+			"en":"Wait for blockchain confirmation"
+		},
+		"Wait until payment has started":{
+			"en":"Wait until payment has started"
+		},
+		"Please wait until your trading partner has indicated that they have started the payment into your wallet or account.":{
+			"en":"Please wait until your trading partner has indicated that they have started the payment into your wallet or account."
+		},
+
+		"Wait until payment arrived":{
+			"en":"Wait until payment arrived"
+		},
+		"Please wait until your trading partner has indicated that your payment has arrived into their wallet or account.":{
+			"en":"Please wait until your trading partner has indicated that your payment has arrived into their wallet or account."
+		}
+	},
+	"forms":{
+		"Seller account details":{
+			"en":"Seller account details"
+		},
+		"Buyer account details":{
+			"en":"Buyer account details"
+		},
+		"Security deposit":{
+			"en":"Security deposit"
+		},
+		"Purchased amount":{
+			"en":"Purchased amount"
+		},
+		"Move funds to my Bisq BTC wallet":{
+			"en":"Move funds to my Bisq BTC wallet"
+		},
+		"Please check that you have received from the following account:":{
+			"en":"Please check that you have received from the following account:"
+		},
+		"Ensure that the trading account holder's name matches that on your statement. If not, consider cancelling and opening a support ticket":{
+			"en":"Ensure that the trading account holder's name matches that on your statement. If not, consider cancelling and opening a support ticket"
+		},
+		"I have received the funds":{
+			"en":"I have received the funds"
+		},
+		"Cancel":{
+			"en":"Cancel"
+		},
+		"Please deposit":{
+			"en":"Please deposit"
+		},
+		"Please deposit to the following account:":{
+			"en":"Please deposit to the following account:"
+		},
+		"Please ensure that your account name is exactly as entered on BISQ otherwise your trading partner may open a dispute":{
+			"en":"Please ensure that your account name is exactly as entered on BISQ otherwise your trading partner may open a dispute"
+		},
+		"I have completed the deposit":{
+			"en":"I have completed the deposit"
 		}
 	}
 }

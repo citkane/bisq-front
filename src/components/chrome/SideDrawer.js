@@ -13,7 +13,11 @@ import { withStyles } from 'material-ui/styles';
 
 const styles = theme => ({
 	active:{
-		background:theme.palette.background.contentFrame
+		background:theme.palette.background.contentFrame,
+		//flexDirection:theme.direction==='rtl'?'row-reverse':'row'
+	},
+	list:{
+		//flexDirection:theme.direction==='rtl'?'row-reverse':'row'
 	}
 })
 
@@ -24,31 +28,31 @@ class SideDrawer extends Component {
 		return (
 			<div>
 				<List>
-					<ListItem className = {root('screen') === 'Market'?classes.active:null} button onClick = {()=>root('screen','Market')}>
+					<ListItem className = {root('screen') === 'Market'?classes.active:classes.list} button onClick = {()=>root('screen','Market')}>
 						<ListItemIcon>
 							<PublicIcon />
 						</ListItemIcon>
 						<ListItemText primary ={babel('Market',{type:'span',category:'chrome',aria:true})} />
 					</ListItem>
-					<ListItem className = {root('screen') === 'Trade'?classes.active:null} button onClick = {()=>root('screen','Trade')}>
+					<ListItem className = {root('screen') === 'Trade'?classes.active:classes.list} button onClick = {()=>root('screen','Trade')}>
 						<ListItemIcon>
 							<TradeIcon />
 						</ListItemIcon>
 						<ListItemText primary ={babel('Trade',{type:'span',category:'chrome',aria:true})} />
 					</ListItem>
-					<ListItem className = {root('screen') === 'Portfolio'?classes.active:null} button onClick = {()=>root('screen','Portfolio')}>
+					<ListItem className = {root('screen') === 'Portfolio'?classes.active:classes.list} button onClick = {()=>root('screen','Portfolio')}>
 						<ListItemIcon>
 							<FolderIcon />
 						</ListItemIcon>
 						<ListItemText primary ={babel('Portfolio',{type:'span',category:'chrome',aria:true})} />
 					</ListItem>
-					<ListItem className = {root('screen') === 'Funds'?classes.active:null} button onClick = {()=>root('screen','Funds')}>
+					<ListItem className = {root('screen') === 'Funds'?classes.active:classes.list} button onClick = {()=>root('screen','Funds')}>
 						<ListItemIcon>
 							<WalletIcon />
 						</ListItemIcon>
 						<ListItemText primary ={babel('Funds',{type:'span',category:'chrome',aria:true})} />
 					</ListItem>
-					<ListItem className = {root('screen') === 'Support'?classes.active:null} button onClick = {()=>root('screen','Support')}>
+					<ListItem className = {root('screen') === 'Support'?classes.active:classes.list} button onClick = {()=>root('screen','Support')}>
 						<ListItemIcon>
 							<SupportIcon />
 						</ListItemIcon>

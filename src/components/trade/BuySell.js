@@ -50,7 +50,7 @@ class Action extends Component {
 		const {anchorEl} = this.state;
 		const {classes,offer,babel,data,root} = this.props;
 		const open = !!anchorEl;
-		const title = offer.direction === 'BUY'?babel('sell',{category:'cards',type:'text'})+' BTC':babel('buy',{category:'cards',type:'text'})+' BTC';
+		const title = offer.direction === 'BUY'?babel('sell',{category:'cards'})+' BTC':babel('buy',{category:'cards'})+' BTC';
 		const owner = offer.owner;
 
 		return(
@@ -92,7 +92,7 @@ class Action extends Component {
 						no:babel('no',{category:'chrome',type:'text'})
 					})}
 				>
-					Cancel Offer
+					{babel('Cancel Offer',{category:'cards'})}
 				</Button>}
 			</CardActions>
 		)
@@ -159,9 +159,9 @@ class BuySell extends Component {
 					const fiat = t.currency.type === 'fiat';
 					t.other_amount = fiat?t.other_amount:Math.round((1/t.other_amount)*1000000000000)/1000000000000;
 					if(dir === 'OWN'||t.owner){
-						var title = 'You want to '+t.direction;
+						var title = babel('You want to '+t.direction.toLowerCase(),{category:'cards'});
 					}else{
-						var title = t.direction==='BUY'?'Sell':'Buy';
+						var title = babel(t.direction==='BUY'?'sell':'buy',{category:'cards'});
 					}
 					return (
 						<Grid item lg={3} md = {6} sm = {6} xs = {12} key = {t.offer_id} className = 'card'>
@@ -172,12 +172,12 @@ class BuySell extends Component {
 									</div>
 									<Divider light />
 									<div className = 'cardrow'>
-										<Typography component = 'span' color = 'primary'>{babel('market',{category:'cards',type:'text'})+': '}</Typography>
+										<Typography component = 'span' color = 'primary'>{babel('market',{category:'cards'})+': '}</Typography>
 										<Typography component = 'span'>{t.other_currency}</Typography>
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
-										<Typography color = 'primary'>{babel('price',{category:'cards',type:'text'})+' / 1 BTC: '}</Typography>
+										<Typography color = 'primary'>{babel('price',{category:'cards'})+' / 1 BTC: '}</Typography>
 										{t.price_detail.use_market_price && (
 											<span>
 												<Typography>({fiat?t.price_detail.market_price_margin*100:t.price_detail.market_price_margin*-100}%) </Typography>
@@ -194,12 +194,12 @@ class BuySell extends Component {
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
-										<Typography component = 'span' color = 'primary'>{t.other_currency} cost: {t.min_btc_amount!==t.btc_amount && "(min|max)"} </Typography>
+										<Typography component = 'span' color = 'primary'>{t.other_currency} {babel('cost',{category:'cards'})}: {t.min_btc_amount!==t.btc_amount && "(min|max)"} </Typography>
 										<Typography component = 'span'>{t.min_btc_amount!==t.btc_amount && (Math.round(t.other_amount*t.min_btc_amount*100))/100 +' | '} {(Math.round(t.other_amount*t.btc_amount*100))/100}</Typography>
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
-										<Typography component = 'span' color = 'primary'>{babel('payment method',{category:'cards',type:'text'})+': '}</Typography>
+										<Typography component = 'span' color = 'primary'>{babel('payment method',{category:'cards'})+': '}</Typography>
 										<Typography component = 'span'>???</Typography>
 									</div>
 									<Divider inset light />

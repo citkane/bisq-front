@@ -54,7 +54,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-	"babel": "node server/babel.js"
+	"translate": "node server/babel.js"
   },
   "devDependencies": {
     "bitcoin-core": "^2.0.0"

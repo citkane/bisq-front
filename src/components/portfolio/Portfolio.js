@@ -55,10 +55,10 @@ class Portfolio extends Component {
 			<div className={classes.root}>
 				<AppBar position="static" color = 'default'>
 					<Tabs value={value} onChange={this.handleChange} indicatorColor = 'primary'>
-						<Tab label={babel('Open trades',{type:'text',category:'chrome'})} aria-label = {babel('Open trades',{type:'text',category:'chrome'})}/>
-						<Tab label={babel('Open offers',{type:'text',category:'chrome'})} aria-label = {babel('Open offers',{type:'text',category:'chrome'})}/>
-						<Tab label={babel('History',{type:'text',category:'chrome'})} aria-label = {babel('History',{type:'text',category:'chrome'})}/>
-						<Tab label={babel('Failed',{type:'text',category:'chrome'})} aria-label = {babel('Failed',{type:'text',category:'chrome'})}/>
+						<Tab label={babel('Open trades',{type:'span',category:'chrome',aria:true})}/>
+						<Tab label={babel('Open offers',{type:'span',category:'chrome',aria:true})}/>
+						<Tab label={babel('History',{type:'span',category:'chrome',aria:true})}/>
+						<Tab label={babel('Failed',{type:'span',category:'chrome',aria:true})}/>
 					</Tabs>
 				</AppBar>
 				{value === 0 && <TabContainer  className={classes.content}><Detail trades = {trades} babel = {babel} root = {root}/></TabContainer>}

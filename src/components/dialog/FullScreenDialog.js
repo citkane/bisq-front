@@ -25,6 +25,7 @@ const styles  = theme => ({
 		display:'flex',
 		flexDirection:'column',
 		minHeight:"100%",
+		direction:theme.direction
 	}
 });
 
@@ -58,8 +59,9 @@ class FullScreenDialog extends React.Component {
 	};
 
 	render() {
-		const {classes} = this.props;
+		const {classes,babel} = this.props;
 		const {form,title} = this.state;
+		if(!title) return null;
 		return (
 			<Dialog
 				fullScreen
@@ -74,7 +76,7 @@ class FullScreenDialog extends React.Component {
 							<IconButton color="contrast" onClick={this.handleClose} aria-label="Close">
 								<CloseIcon />
 							</IconButton>
-							<Typography type="title" color="inherit" className={classes.flex}>{title}</Typography>
+							<Typography type="title" color="inherit" className={classes.flex}>{babel(title,{category:'chrome'})}</Typography>
 
 						</Toolbar>
 					</AppBar>
