@@ -148,16 +148,19 @@ class BuySell extends Component {
 			<div>
 				{dir!=='OWN' && <Create root = {root} babel = {babel} data ={data}/>}
 				<Grid container spacing={16}>{trades.map(t => {
+
 					data.currency_list.some((currency)=>{
 						var curr = t.other_currency;
 						if(curr === 'EUR') curr = '€';
-						if(curr === 'GPB') curr = '£';
-						if(curr === currency.symbol){
+						if(curr === 'GBP') curr = '£';
+						console.log(curr,currency.symbol.trim())
+						if(curr === currency.symbol.trim()){
 							t.currency = currency;
 							return true;
 						}
 						return false;
 					})
+
 					const fiat = t.currency.type === 'fiat';
 					t.other_amount = fiat?t.other_amount:Math.round((1/t.other_amount)*1000000000000)/1000000000000;
 					var title;

@@ -20,7 +20,6 @@ import brown from 'material-ui/colors/brown';
 
 import pink from 'material-ui/colors/pink';
 
-
 import lang from './resources/lang.json';
 import Api from './resources/modules/api.js';
 import tools from './resources/modules/tools.js';
@@ -29,9 +28,16 @@ const Colors = {'teal':teal,'blue':blue,'purple':purple,'indigo':indigo,'cyan':c
 const colors = ['teal','blue','purple','indigo','cyan','green','amber','brown'];
 
 const s = document.location.protocol+'//'+document.location.hostname+':'+process.env.SERVER_PORT;
+//console.log('process',process.env);
 
 const socket = socketIOClient(s);
 const api = new Api(socket);
+
+
+var market;
+socket.on('market',(data)=>{
+	market = data;
+})
 
 
 class App extends Component {
@@ -51,7 +57,10 @@ class App extends Component {
 			theme:'light',
 			color:'teal',
 			langList:lang.list,
-			showown:true
+			showown:true,
+			primary_market:'BTC',
+			secondary_market:'USD',
+			pair_market:'btc_usd'
 		}
 	}
 	babel(key,opts){
@@ -102,7 +111,10 @@ class App extends Component {
 				screen:this.state.Global.screen,
 				theme:this.state.Global.theme,
 				color:this.state.Global.color,
-				showown:this.state.Global.showown
+				showown:this.state.Global.showown,
+				primary_market:this.state.Global.primary_market,
+				secondary_market:this.state.Global.secondary_market,
+				pair_market:this.state.Global.pair_market
 			})
 			if(key === 'theme'||key === 'color'||key === 'lang') this.makeTheme();
 		})
@@ -130,12 +142,15 @@ class App extends Component {
 	}
 
 	componentDidMount(){
+
 		api.generate(1)
 
 		//console.log('theme',this.theme);
 		//console.log('');
 
-		var data = {};
+		var data = {
+			market:market
+		};
 		['currency_list','market_list'].forEach(function(command){
 			socket.on(command, function(data2){
 				//self.root(command,data)
@@ -147,6 +162,7 @@ class App extends Component {
 		})
 		var log;
 		socket.on('ticker',(data2)=>{
+			data2.market = market;
 			Object.keys(data2).forEach(function(key){
 				if(!log){
 					console.log(key,data2[key]);
@@ -160,8 +176,8 @@ class App extends Component {
 		api.ticker();
 		socket.emit('getSettings');
 		socket.once('getSettings',(data)=>{
-
 			if(data){
+				console.log(data)
 				var G = this.state.Global
 				Object.keys(data).forEach((key)=>{
 					G[key] = data[key];
@@ -175,10 +191,34 @@ class App extends Component {
 				this.makeTheme();
 			}
 		})
+		api.market('markets').then((data)=>{
+			var left = [];
+			var right = [];
+			var G = this.state.Global;
+
+			data = Object.keys(data).map((key)=>{
+				return data[key];
+			})
+			data.forEach((market)=>{
+				if(left.indexOf(market.pair.split('_')[0]+' - '+market.lname)===-1) left.push(market.pair.split('_')[0]+' - '+market.lname);
+				if(right.indexOf(market.pair.split('_')[1]+' - '+market.rname)===-1) right.push(market.pair.split('_')[1]+' - '+market.rname);
+			})
+			left = left.sort()
+			right = right.sort()
+			G.markets = {
+				left:left,
+				right:right,
+				list:data
+			}
+			this.setState({Global:G});
+		})
 	}
 	render() {
-
-		if(!this.state.data||!this.state.theme) return null;
+		if(!this.state.data||!this.state.theme) return(
+			<div>
+				Could not connect to backend at port:{process.env.SERVER_PORT}
+			</div>
+		);
 		return (
 			<MuiThemeProvider theme={this.state.theme}>
 				<Chrome root = {this.root} babel = {this.babel} data = {this.state.data} colors = {colors}/>

@@ -13,11 +13,19 @@ const styles = theme => ({
 class Welcome extends Component {
 
 	render(){
-		const {classes,babel} = this.props;
+		const {classes,babel,root} = this.props;
 		return(
 			<div className = {classes.root}>
 				<Typography type='title' gutterBottom color='primary'>{babel('Welcome_title',{category:'content'})}</Typography>
-				<Typography>{babel('Welcome_p1',{category:'content'})}{document.location.origin}</Typography>
+				<Typography gutterBottom>{babel('Welcome_p1',{category:'content'})}{document.location.origin}</Typography>
+				<Typography type = 'body2'>This is a regtest demonstration with trading partners:</Typography>
+				{root('peers').map((peer,i)=>{
+					return(
+						<div index = {i}>
+							<Typography><a href = {'http://localhost:'+peer.port} target = '_blank'>{peer.name}</a></Typography>
+						</div>
+					)
+				})}
 			</div>
 		)
 	}

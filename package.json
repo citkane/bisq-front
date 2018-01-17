@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "anychart-react": "^1.4.1",
     "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
@@ -39,8 +40,10 @@
     "react-dev-utils": "^4.2.1",
     "react-dom": "^16.2.0",
     "request": "^2.83.0",
+    "serve": "^6.4.8",
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4",
+    "source-map-explorer": "^1.5.0",
     "style-loader": "0.19.0",
     "sw-precache-webpack-plugin": "0.11.4",
     "typeface-roboto": "0.0.45",
@@ -51,10 +54,14 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
+    "analyze": "source-map-explorer build/static/js/main.*",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-	"translate": "node server/babel.js"
+    "translate": "node server/babel.js",
+    "setup": "node scripts/setup.js",
+    "production": "NODE_ENV=production node bisq-front.js",
+    "development": "NODE_ENV=development node bisq-front.js"
   },
   "devDependencies": {
     "bitcoin-core": "^2.0.0"

@@ -4,6 +4,17 @@ import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
+import OfferBook from './OfferBook.js';
+//import Charts from './Charts.js';
+import Input, { InputLabel } from 'material-ui/Input';
+import { MenuItem } from 'material-ui/Menu';
+import { FormControl, FormHelperText } from 'material-ui/Form';
+import Select from 'material-ui/Select';
+
+var Charts;
+import('./Charts.js').then((charts)=>{
+	Charts = charts.default;
+})
 
 function TabContainer(props) {
 	return (
@@ -27,38 +38,112 @@ const styles = theme => ({
 		height: '100%',
 		padding: theme.spacing.unit * 3,
 	},
+	selects:{
+		padding:theme.spacing.unit*3,
+		display:"flex"
+	},
+	select:{
+		minWidth:200,
+		marginRight:theme.spacing.unit
+	},
+	label:{
+		minWidth:200
+	}
 });
 
 class Market extends Component {
 	constructor(props) {
 		super(props);
 		this.root = this.props.root;
-		this.babel = this.props.babel;
+		this.l = this.root('primary_market');
+		this.r = this.root('secondary_market');
+		this.m = this.props.data.market.markets;
+		this.right = this.m.right.filter((item)=>{
+			return !!this.m.list[this.l.toLowerCase()+'_'+item.rsymbol.toLowerCase()]
+		})
 	}
 	state = {
 		value: 0,
 	};
 
+	handleSelect = event => {
+		if(event.target.name === 'primary_market'){
+			this.l = event.target.value;
+			this.right = this.m.right.filter((item)=>{
+				return !!this.m.list[this.l.toLowerCase()+'_'+item.rsymbol.toLowerCase()]
+			})
+			this.r = this.right[0].rsymbol
+		}else{
+			this.r = event.target.value
+		}
+		this.root("primary_market",this.l);
+		this.root("secondary_market",this.r);
+		var pair = this.l.toLowerCase()+'_'+this.r.toLowerCase();
+		console.error(pair)
+		this.root('pair_market',pair);
+
+
+		//var l = event.target.name === 'primary_market'?event.target.value:this.root('primary_market').toLowerCase();
+		//var r = event.target.name === 'secondary_market'?event.target.value:this.root('secondary_market').toLowerCase();
+		//this.root('pair_market',l+'_'+r);
+	};
 	handleChange = (event, value) => {
 		this.setState({ value });
 	};
 
 	render() {
-		const { classes } = this.props;
-		const { value } = this.state;
-
+		if(!Charts) return null;
+		const {classes,babel,data,root} = this.props;
+		const {value} = this.state;
+		const m = data.market.markets;
+		//console.error(data.market.markets);
+		if(!m.left.length || !m.right.length) return null;
 		return (
 			<div className={classes.root}>
 				<AppBar position="static" color = 'default'>
 				<Tabs value={value} onChange={this.handleChange} indicatorColor = 'primary'>
-					<Tab label={this.babel('Offer Book',{type:'text',category:'chrome'})} aria-label = {this.babel('Offer Book',{type:'text',category:'chrome'})}/>
-					<Tab label={this.babel('Spread',{type:'text',category:'chrome'})} aria-label = {this.babel('Spread',{type:'text',category:'chrome'})}/>
-					<Tab label={this.babel('Trades',{type:'text',category:'chrome'})} aria-label = {this.babel('Trades',{type:'text',category:'chrome'})}/>
+					<Tab label={babel('Offer Book',{type:'span',category:'chrome',aria:true})} />
+					<Tab label={babel('Charts',{type:'span',category:'chrome',aria:true})} />
+
 				</Tabs>
 				</AppBar>
-				{value === 0 && <TabContainer  className={classes.content}>To Do</TabContainer>}
-				{value === 1 && <TabContainer className={classes.content}>To Do</TabContainer>}
-				{value === 2 && <TabContainer className={classes.content}>To Do</TabContainer>}
+				<div className = {classes.selects} >
+					<form autoComplete="off">
+						<FormControl className={classes.select}>
+							<InputLabel htmlFor="primary_market" classes = {{root:classes.label}}>Primary Market</InputLabel>
+							<Select
+								value={this.l}
+								onChange={this.handleSelect}
+								input={<Input name="primary_market" id="primary_market" />}
+								native
+							>
+								{m.left.map((item,i)=>{
+									return <option value={item.lsymbol} key={i}>{item.lsymbol} - {item.lname}</option>
+								})}
+
+							</Select>
+						</FormControl>
+					</form>
+					<form autoComplete="off">
+						<FormControl className={classes.select}>
+							<InputLabel htmlFor="secondary_market">Secondary Market</InputLabel>
+							<Select
+								value={this.r}
+								onChange={this.handleSelect}
+								input={<Input name="secondary_market" id="secondary_market" ref = {(val)=>this.secondary_market = val}/>}
+								native
+
+							>
+								{this.right.map((item,i2)=>{
+									return <option value={item.rsymbol} key={i2}>{item.rsymbol} - {item.rname}</option>
+								})}
+							</Select>
+						</FormControl>
+					</form>
+				</div>
+				{value === 0 && <TabContainer  className={classes.content}><OfferBook root={root} babel={babel}/></TabContainer>}
+				{value === 1 && <TabContainer className={classes.content}><Charts root={root} babel={babel}/></TabContainer>}
+
 			</div>
 		);
 	}

@@ -10,6 +10,15 @@ api.prototype.get = function(command,params){
 		})
 	})
 }
+api.prototype.market = function(command,params){
+	this.socket.emit('market',{command:command,params:params});
+	var self = this;
+	return new Promise(function(resolve,reject){
+		self.socket.once(command,function(data){
+			resolve(data);
+		})
+	})
+}
 api.prototype.delete = function(command,params){
 	this.socket.emit('delete',{command:command,params:params});
 	var self = this;

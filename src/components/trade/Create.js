@@ -235,7 +235,7 @@ class Form extends Component {
 		const fiat = this.state.account.fiat
 		this.limit = {
 			min:0.001,
-			max:fiat?0.1875:1
+			max:fiat?0.125:1
 		}
 		const getStepContent = (step) => {
 			switch (step) {

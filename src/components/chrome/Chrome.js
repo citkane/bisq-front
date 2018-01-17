@@ -91,7 +91,14 @@ const styles = theme => ({
 		direction:theme.direction
 	},
 	settings:{
+		display:'flex',
+		alignItems:'center'
+	},
+	hover:{
 		cursor:'pointer'
+	},
+	me:{
+		margin:"0 "+theme.spacing.unit+"px"
 	},
 	menuicon:{
 		display:"flex",
@@ -187,9 +194,13 @@ class Chrome extends Component {
 								</Grid>
 							</Grid>
 						</Toolbar>
-						<SettingsIcon className = {classes.settings} onClick={()=>{
-							root('FullScreenDialog')('Settings',<Settings root={root} babel = {babel} colors={colors}/>)
-						}}/>
+						<div className = {classes.settings}>
+							<span className = {classes.me}>{root('me').name}</span>
+							<SettingsIcon className = {classes.hover} onClick={()=>{
+								root('FullScreenDialog')('Settings',<Settings root={root} babel = {babel} colors={colors}/>)
+							}}/>
+						</div>
+
 					</AppBar>
 					<Hidden mdUp>
 						<Drawer
@@ -221,7 +232,7 @@ class Chrome extends Component {
 		            </Hidden>
 					<main className={classes.content}>
 						{screen === 'Welcome' && <Welcome babel={babel} root={root} data={data}/>}
-						{screen === 'Market' && <Market babel={babel} root={root} data={data}/>}
+						{screen === 'Market' && <Market babel={babel} root={root} data = {data}/>}
 						{screen === 'Trade' && <Trade babel={babel} root={root} data={data}/>}
 						{screen === 'Portfolio' && <Portfolio babel={babel} root={root} data={data}/>}
 						{screen === 'Funds' && <Funds babel={babel} root={root} data={data}/>}

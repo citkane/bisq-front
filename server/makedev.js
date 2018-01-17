@@ -13,31 +13,39 @@ const btc = new Btc({
 //btc.getInfo().then((help) => console.log(help));
 
 
-function dev(){
+function dev(){}
 
-	const core = child.spawn('bitcoind',['-regtest','-server','-printtoconsole','-rpcuser=regtest','-rpcpassword=test']);
-
-	const seedNode = child.spawn('java',['-jar','SeedNode.jar','--baseCurrencyNetwork=BTC_REGTEST','--useLocalhost=true','--myAddress=localhost:2002','--nodePort=2002','--appName=bisq_seed_node_localhost_2002'],{cwd:'/var/opt/bisq-network/seednode/target/'});
-
-	[core,seedNode].forEach((p)=>{
+dev.prototype.make = function(port,gui){
+	this.core = child.spawn(gui?'bitcoin-qt':'bitcoind',['-regtest','-server','-printtoconsole','-rpcuser=regtest','-rpcpassword=test']);
+	this.seedNode = child.spawn('java',['-jar','SeedNode.jar','--baseCurrencyNetwork=BTC_REGTEST','--useLocalhost=true','--myAddress=localhost:'+port,'--nodePort='+port,'--appName=bisq_seed_node_localhost_'+port],{cwd:'/var/opt/bisq-network/seednode/target/'});
+	return new Promise((resolve,reject)=>{
+		this.seedNode.stdout.on('data',(data)=>{
+			data = `${data}`;
+			if(data.indexOf('onHiddenServicePublished')!==-1){
+				resolve(port);
+			}
+		})
+	})
+}
+dev.prototype.log = function(){
+	[this.core,this.seedNode].forEach((p)=>{
 		p.stdout.on('data', (data) => {
-			//console.log(`stdout: ${data}`);
+			console.log(`stdout: ${data}`);
 		});
 		p.stderr.on('data', (data) => {
-			//console.log(`stderr: ${data}`);
+			console.log(`stderr: ${data}`);
 		});
 		p.on('close', (code) => {
-			//console.log(`child process exited with code ${code}`);
+			console.log(`child process exited with code ${code}`);
 		});
 	})
-
-
 }
-dev.prototype.makeuser = function(appName,port,gui){
+dev.prototype.makeuser = function(appName,port,gui,seedport){
+	console.log('> Starting the BISQ API server '+appName+' in '+(gui?'GUI':'headless')+' mode at localhost:'+(port+1));
 	var e = tools.getEnv();
 	e.BISQ_API_PORT = port+1;
 	gui = gui?'io.bisq.api.app.BisqApiWithUIMain':'io.bisq.api.app.ApiMain';
-	var com = 'mvn exec:java -Dexec.mainClass="'+gui+'" -Dexec.args="--baseCurrencyNetwork=BTC_REGTEST --bitcoinRegtestHost localhost --nodePort '+port+' --useLocalhost true --appName '+appName+' --seedNodes=localhost:2002"'
+	var com = 'mvn exec:java -Dexec.mainClass="'+gui+'" -Dexec.args="--baseCurrencyNetwork=BTC_REGTEST --bitcoinRegtestHost localhost --nodePort '+port+' --useLocalhost true --appName '+appName+' --seedNodes=localhost:'+seedport+'"'
 	return child.exec(com,{
 		cwd:'/var/opt/bisq-api',
 		env:e

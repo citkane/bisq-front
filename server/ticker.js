@@ -1,5 +1,5 @@
 "use strict"
-
+const fetch = require('node-fetch');
 const tick = 5000;
 
 function ticker(socket,api){
@@ -21,7 +21,9 @@ ticker.prototype.emit = function(){
 		this.api.get({command:end}).then((d)=>{
 			data[end]=d;
 			count++;
-			if(count === endpoints.length) this.socket.emit('ticker',data);
+			if(count === endpoints.length){
+				this.socket.emit('ticker',data);
+			}
 		})
 	})
 }
