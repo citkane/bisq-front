@@ -3,17 +3,17 @@
 Table of Contents
 =================
 1. [Proposal](#proposal)
-  - [Proof of Concept (POC)](#proof)
-  - [Usage scenarios](#usage)
-  - [Motivation](#motivation)
+	i. [Proof of Concept (POC)](#proof-of-concep-poc)
+	ii. [Usage scenarios](#usage-scenarios)
+	iii. [Motivation](#motivation)
 2. [Architecture](#architecture)
-  - [Server](#server)
-  - [Client](#client)
+ * [Server](#server)
+ * [Client](#client)
 3. [Security](#security)
 4. [Accessibility](#accessibility)
-  - [Devices](#devices)
-  - [Language](#language)
-  - [People with disabilities](#people)
+ * [Devices](#devices)
+ * [Language](#language)
+ * [People with disabilities](#people-with-disabilities)
 5. [Install](#install)
 6. [Run](#run)
 
@@ -86,7 +86,7 @@ Security
 Initial security priorities for bisq-front are two-fold:
 1. Protect the anonymity and content of the [data stream](#Server) so that the nature of data passed over the internet cannot be identified as BISQ trading or interfered with.
 
-2. Provide token based and two-factor authentication to the web client to protect the user from unauthorised access. (Not implemented in [POC](#proof))
+2. Provide token based and two-factor authentication to the web client to protect the user from unauthorised access. (Not implemented in [POC](#proof-of-concep-poc))
 
 Accessibility
 =============
