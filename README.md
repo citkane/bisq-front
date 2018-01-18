@@ -33,6 +33,7 @@ This is proposed to be a web-client / server model where a GUI is provided in a 
 
 ### Proof of Concept (POC) ###
 ##### To Do #####
+Serve each regtest instance to URL as public demo from headless server.
 Awaiting resolution of issue: https://github.com/mrosseel/bisq-api/issues/6
 
 ### Usage scenarios ###
