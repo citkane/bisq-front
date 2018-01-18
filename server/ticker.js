@@ -1,6 +1,11 @@
 "use strict"
 const fetch = require('node-fetch');
 const tick = 5000;
+const dev = require('./makedev.js');
+dev.generate(1);
+setInterval(()=>{
+	dev.generate(1);
+},1000*60*1)
 
 function ticker(socket,api){
 	this.socket = socket;
@@ -11,6 +16,7 @@ function ticker(socket,api){
 	socket.on('ticker',()=>{
 		this.emit();
 	})
+
 }
 
 ticker.prototype.emit = function(){

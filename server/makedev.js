@@ -18,11 +18,20 @@ function dev(){}
 dev.prototype.make = function(port,gui){
 	this.core = child.spawn(gui?'bitcoin-qt':'bitcoind',['-regtest','-server','-printtoconsole','-rpcuser=regtest','-rpcpassword=test']);
 	this.seedNode = child.spawn('java',['-jar','SeedNode.jar','--baseCurrencyNetwork=BTC_REGTEST','--useLocalhost=true','--myAddress=localhost:'+port,'--nodePort='+port,'--appName=bisq_seed_node_localhost_'+port],{cwd:'/var/opt/bisq-network/seednode/target/'});
+	var count = 0;
 	return new Promise((resolve,reject)=>{
 		this.seedNode.stdout.on('data',(data)=>{
 			data = `${data}`;
 			if(data.indexOf('onHiddenServicePublished')!==-1){
-				resolve(port);
+				count++
+				if(count === 2) resolve(port);
+			}
+		})
+		this.core.stdout.on('data', function(data) {
+			data = `${data}`;
+			if(data.indexOf('msghand thread start')!== -1){
+				count++
+				if(count === 2) resolve(port)
 			}
 		})
 	})
@@ -53,7 +62,10 @@ dev.prototype.makeuser = function(appName,port,gui,seedport){
 }
 
 dev.prototype.generate = function(amount){
-	btc.generate(amount);
+	btc.generate(amount,(error, data) => {
+		if(error) console.error('\n> Bitcoin-core error while generating:\n'+error);
+		//console.log(data)
+	});
 }
 
 module.exports = new dev();

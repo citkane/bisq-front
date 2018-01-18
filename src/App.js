@@ -37,6 +37,21 @@ const api = new Api(socket);
 var market;
 socket.on('market',(data)=>{
 	market = data;
+	/*
+	var curr = [];
+	var list = market.markets.list;
+	Object.keys(list).forEach((key)=>{
+		if (curr.indexOf(list[key].lname)===-1) curr.push(list[key].lname)
+		if (curr.indexOf(list[key].rname)===-1) curr.push(list[key].rname)
+	})
+	var foo = {}
+	curr.forEach((v)=>{
+		foo[v]={
+			"en":v
+		}
+	})
+	console.log(JSON.stringify(foo))
+	*/
 })
 
 
@@ -142,12 +157,7 @@ class App extends Component {
 	}
 
 	componentDidMount(){
-
-		api.generate(1)
-
 		//console.log('theme',this.theme);
-		//console.log('');
-
 		var data = {
 			market:market
 		};

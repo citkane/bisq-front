@@ -82,14 +82,14 @@ class Charts extends Component {
 	}
 	componentDidMount(){
 		//makeChart().then((chart)=>{
-			var chart = makeChart();
-			this.getChart(chart);
+			this.chart = makeChart();
+			this.getChart(this.chart);
 			ReactDOM.render(
 				<AnyChart
 					width='100%'
 					height={600}
-					instance={chart.stage}
-					charts={[chart.chart]}
+					instance={this.chart.stage}
+					charts={[this.chart.chart]}
 					id = 'chartcontainer'
 				/>,
 				document.getElementById('anychart')
@@ -97,7 +97,7 @@ class Charts extends Component {
 		//})
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(this.pair!==this.props.root('pair_market')) this.getChart();
+		if(this.pair!==this.props.root('pair_market')) this.getChart(this.chart);
 	}
 	render(){
 		const {classes,babel,root} = this.props;

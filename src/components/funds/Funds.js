@@ -36,8 +36,11 @@ class Funds extends Component {
 	render(){
 		const {root,data,classes} = this.props
 		var wallet = data.wallet_tx_list;
+
 		const tools = root('tools');
-		wallet = wallet.map((trans)=>{
+		wallet = wallet.filter((trans)=>{
+			return trans.confidence && trans.confidence.indexOf('height')!==-1 && trans.confidence.indexOf('depth')!==-1
+		}).map((trans)=>{
 			var dir = trans.value > 0?'+':'-';
 			trans.value = dir==='-'?trans.value*-1:trans.value;
 			return {

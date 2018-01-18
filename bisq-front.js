@@ -9,7 +9,7 @@ global.appRoot = path.resolve(__dirname);
 const dev = require('./server/makedev.js');
 var Api = require('./server/api.js');
 const tools = require('./server/tools.js');
-const ticker = require('./server/ticker.js');
+
 const mark = require('./server/market.js');
 const devsettings = require('./devSettings.js');
 
@@ -20,8 +20,10 @@ mark.get('markets').then((data)=>{
 	market.markets = mark.formatMarkets(data);
 })
 
+var ticker;
 dev.make(devsettings.startport).then((port)=>{
 	console.log('> Started the seednode on localhost:'+port);
+	ticker = require('./server/ticker.js');
 	devsettings.clients.forEach((client)=>{
 		new makeInstance(client);
 	})
@@ -52,6 +54,10 @@ function makeInstance(client){
 				console.error(`stderr: ${data}`);
 			});
 
+		}
+		if(data.indexOf('ERROR') === 0){
+			console.log('\n> BISQ API error for '+name);
+			console.log(data);
 		}
 	});
 }

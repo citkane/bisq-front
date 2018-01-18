@@ -12,5 +12,21 @@
 		"Charts":{
 			"en":"Charts"
 		}
+	},
+	"cards":{
+		"Offers to buy":{
+			"en":"Offers to buy"
+		},
+		"Offers to sell":{
+			"en":"Offers to sell"
+		}
+	},
+	"forms":{
+		"Secondary Market":{
+			"en":"Secondary Market"
+		},
+		"Primary Market":{
+			"en":"Primary Market"
+		}
 	}
 }

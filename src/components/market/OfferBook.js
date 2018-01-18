@@ -31,7 +31,6 @@ class OfferBook extends Component {
 
 	getOffers = ()=>{
 		this.pair = this.props.root('pair_market');
-		console.error('get offers');
 		const api = this.props.root('api');
 		api.market('offers',{market:this.pair}).then((data)=>{
 			console.error(data[Object.keys(data)[0]]);
@@ -57,14 +56,14 @@ class OfferBook extends Component {
 			<Grid container>
 				<Grid item sm={12} md ={6}>
 					<Paper className = {classes.paper}>
-						<Typography type='title' gutterBottom>Offers to buy</Typography>
+						<Typography type='title' gutterBottom>{babel('Offers to buy',{category:'cards'})}</Typography>
 						{offers.buys.map((offer,i)=>{
 							return (
 								<div key = {i}>
 									<Divider light />
 									<div className={classes.row}>
 										<div>
-											<Typography className={classes.inline} type = 'body2' component='span'>{offer.price*1} </Typography> 
+											<Typography className={classes.inline} type = 'body2' component='span'>{offer.price*1} </Typography>
 											{root('secondary_market')} / {root('primary_market')}
 										</div>
 										<Typography type = 'caption'>({offer.amount*1===offer.min_amount*1?offer.amount*1:offer.min_amount*1+' - '+offer.amount*1} {root('primary_market')})</Typography>
@@ -76,7 +75,7 @@ class OfferBook extends Component {
 				</Grid>
 				<Grid item sm={12} md ={6}>
 					<Paper className = {classes.paper}>
-						<Typography type='title' gutterBottom>Offers to sell</Typography>
+						<Typography type='title' gutterBottom>{babel('Offers to sell',{category:'cards'})}</Typography>
 						{offers.sells.map((offer,i)=>{
 							return (
 								<div key = {i}>

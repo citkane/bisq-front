@@ -33,5 +33,640 @@
 	},
 	"tooltip":{
 
+	},
+	"currency":{
+		"Bitcoin Cash": {
+			"en": "Bitcoin Cash"
+		},
+		"Bitcoin": {
+			"en": "Bitcoin"
+		},
+		"Bitcoin Clashic": {
+			"en": "Bitcoin Clashic"
+		},
+		"United Arab Emirates Dirham": {
+			"en": "United Arab Emirates Dirham"
+		},
+		"Afghan Afghani": {
+			"en": "Afghan Afghani"
+		},
+		"Albanian Lek": {
+			"en": "Albanian Lek"
+		},
+		"Armenian Dram": {
+			"en": "Armenian Dram"
+		},
+		"Netherlands Antillean Guilder": {
+			"en": "Netherlands Antillean Guilder"
+		},
+		"Angolan Kwanza": {
+			"en": "Angolan Kwanza"
+		},
+		"Argentine Peso": {
+			"en": "Argentine Peso"
+		},
+		"Australian Dollar": {
+			"en": "Australian Dollar"
+		},
+		"Aruban Florin": {
+			"en": "Aruban Florin"
+		},
+		"Azerbaijani Manat": {
+			"en": "Azerbaijani Manat"
+		},
+		"Bosnia-Herzegovina Convertible Mark": {
+			"en": "Bosnia-Herzegovina Convertible Mark"
+		},
+		"Barbadian Dollar": {
+			"en": "Barbadian Dollar"
+		},
+		"Bangladeshi Taka": {
+			"en": "Bangladeshi Taka"
+		},
+		"Bulgarian Lev": {
+			"en": "Bulgarian Lev"
+		},
+		"Bahraini Dinar": {
+			"en": "Bahraini Dinar"
+		},
+		"Burundian Franc": {
+			"en": "Burundian Franc"
+		},
+		"Bermudan Dollar": {
+			"en": "Bermudan Dollar"
+		},
+		"Brunei Dollar": {
+			"en": "Brunei Dollar"
+		},
+		"Bolivian Boliviano": {
+			"en": "Bolivian Boliviano"
+		},
+		"Brazilian Real": {
+			"en": "Brazilian Real"
+		},
+		"Bahamian Dollar": {
+			"en": "Bahamian Dollar"
+		},
+		"Bhutanese Ngultrum": {
+			"en": "Bhutanese Ngultrum"
+		},
+		"Botswanan Pula": {
+			"en": "Botswanan Pula"
+		},
+		"Belarusian Ruble": {
+			"en": "Belarusian Ruble"
+		},
+		"Belize Dollar": {
+			"en": "Belize Dollar"
+		},
+		"Canadian Dollar": {
+			"en": "Canadian Dollar"
+		},
+		"Congolese Franc": {
+			"en": "Congolese Franc"
+		},
+		"Swiss Franc": {
+			"en": "Swiss Franc"
+		},
+		"Chilean Peso": {
+			"en": "Chilean Peso"
+		},
+		"Chinese Yuan": {
+			"en": "Chinese Yuan"
+		},
+		"Colombian Peso": {
+			"en": "Colombian Peso"
+		},
+		"Costa Rican Colón": {
+			"en": "Costa Rican Colón"
+		},
+		"Cuban Peso": {
+			"en": "Cuban Peso"
+		},
+		"Cape Verdean Escudo": {
+			"en": "Cape Verdean Escudo"
+		},
+		"Czech Republic Koruna": {
+			"en": "Czech Republic Koruna"
+		},
+		"Djiboutian Franc": {
+			"en": "Djiboutian Franc"
+		},
+		"Danish Krone": {
+			"en": "Danish Krone"
+		},
+		"Dominican Peso": {
+			"en": "Dominican Peso"
+		},
+		"Algerian Dinar": {
+			"en": "Algerian Dinar"
+		},
+		"Egyptian Pound": {
+			"en": "Egyptian Pound"
+		},
+		"Eritrean Nakfa": {
+			"en": "Eritrean Nakfa"
+		},
+		"Ethiopian Birr": {
+			"en": "Ethiopian Birr"
+		},
+		"Euro": {
+			"en": "Euro"
+		},
+		"Fijian Dollar": {
+			"en": "Fijian Dollar"
+		},
+		"Falkland Islands Pound": {
+			"en": "Falkland Islands Pound"
+		},
+		"British Pound Sterling": {
+			"en": "British Pound Sterling"
+		},
+		"Georgian Lari": {
+			"en": "Georgian Lari"
+		},
+		"Ghanaian Cedi": {
+			"en": "Ghanaian Cedi"
+		},
+		"Gibraltar Pound": {
+			"en": "Gibraltar Pound"
+		},
+		"Gambian Dalasi": {
+			"en": "Gambian Dalasi"
+		},
+		"Guinean Franc": {
+			"en": "Guinean Franc"
+		},
+		"Guatemalan Quetzal": {
+			"en": "Guatemalan Quetzal"
+		},
+		"Guyanaese Dollar": {
+			"en": "Guyanaese Dollar"
+		},
+		"Hong Kong Dollar": {
+			"en": "Hong Kong Dollar"
+		},
+		"Honduran Lempira": {
+			"en": "Honduran Lempira"
+		},
+		"Croatian Kuna": {
+			"en": "Croatian Kuna"
+		},
+		"Haitian Gourde": {
+			"en": "Haitian Gourde"
+		},
+		"Hungarian Forint": {
+			"en": "Hungarian Forint"
+		},
+		"Indonesian Rupiah": {
+			"en": "Indonesian Rupiah"
+		},
+		"Israeli New Sheqel": {
+			"en": "Israeli New Sheqel"
+		},
+		"Indian Rupee": {
+			"en": "Indian Rupee"
+		},
+		"Iraqi Dinar": {
+			"en": "Iraqi Dinar"
+		},
+		"Iranian Rial": {
+			"en": "Iranian Rial"
+		},
+		"Icelandic Króna": {
+			"en": "Icelandic Króna"
+		},
+		"Jamaican Dollar": {
+			"en": "Jamaican Dollar"
+		},
+		"Jordanian Dinar": {
+			"en": "Jordanian Dinar"
+		},
+		"Japanese Yen": {
+			"en": "Japanese Yen"
+		},
+		"Kenyan Shilling": {
+			"en": "Kenyan Shilling"
+		},
+		"Kyrgystani Som": {
+			"en": "Kyrgystani Som"
+		},
+		"Cambodian Riel": {
+			"en": "Cambodian Riel"
+		},
+		"Comorian Franc": {
+			"en": "Comorian Franc"
+		},
+		"North Korean Won": {
+			"en": "North Korean Won"
+		},
+		"South Korean Won": {
+			"en": "South Korean Won"
+		},
+		"Kuwaiti Dinar": {
+			"en": "Kuwaiti Dinar"
+		},
+		"Cayman Islands Dollar": {
+			"en": "Cayman Islands Dollar"
+		},
+		"Kazakhstani Tenge": {
+			"en": "Kazakhstani Tenge"
+		},
+		"Laotian Kip": {
+			"en": "Laotian Kip"
+		},
+		"Lebanese Pound": {
+			"en": "Lebanese Pound"
+		},
+		"Sri Lankan Rupee": {
+			"en": "Sri Lankan Rupee"
+		},
+		"Liberian Dollar": {
+			"en": "Liberian Dollar"
+		},
+		"Lesotho Loti": {
+			"en": "Lesotho Loti"
+		},
+		"Libyan Dinar": {
+			"en": "Libyan Dinar"
+		},
+		"Moroccan Dirham": {
+			"en": "Moroccan Dirham"
+		},
+		"Moldovan Leu": {
+			"en": "Moldovan Leu"
+		},
+		"Malagasy Ariary": {
+			"en": "Malagasy Ariary"
+		},
+		"Macedonian Denar": {
+			"en": "Macedonian Denar"
+		},
+		"Myanma Kyat": {
+			"en": "Myanma Kyat"
+		},
+		"Mongolian Tugrik": {
+			"en": "Mongolian Tugrik"
+		},
+		"Macanese Pataca": {
+			"en": "Macanese Pataca"
+		},
+		"Mauritanian Ouguiya": {
+			"en": "Mauritanian Ouguiya"
+		},
+		"Mauritian Rupee": {
+			"en": "Mauritian Rupee"
+		},
+		"Maldivian Rufiyaa": {
+			"en": "Maldivian Rufiyaa"
+		},
+		"Malawian Kwacha": {
+			"en": "Malawian Kwacha"
+		},
+		"Mexican Peso": {
+			"en": "Mexican Peso"
+		},
+		"Malaysian Ringgit": {
+			"en": "Malaysian Ringgit"
+		},
+		"Mozambican Metical": {
+			"en": "Mozambican Metical"
+		},
+		"Namibian Dollar": {
+			"en": "Namibian Dollar"
+		},
+		"Nigerian Naira": {
+			"en": "Nigerian Naira"
+		},
+		"Nicaraguan Córdoba": {
+			"en": "Nicaraguan Córdoba"
+		},
+		"Norwegian Krone": {
+			"en": "Norwegian Krone"
+		},
+		"Nepalese Rupee": {
+			"en": "Nepalese Rupee"
+		},
+		"New Zealand Dollar": {
+			"en": "New Zealand Dollar"
+		},
+		"Omani Rial": {
+			"en": "Omani Rial"
+		},
+		"Panamanian Balboa": {
+			"en": "Panamanian Balboa"
+		},
+		"Peruvian Nuevo Sol": {
+			"en": "Peruvian Nuevo Sol"
+		},
+		"Papua New Guinean Kina": {
+			"en": "Papua New Guinean Kina"
+		},
+		"Philippine Peso": {
+			"en": "Philippine Peso"
+		},
+		"Pakistani Rupee": {
+			"en": "Pakistani Rupee"
+		},
+		"Polish Zloty": {
+			"en": "Polish Zloty"
+		},
+		"Paraguayan Guarani": {
+			"en": "Paraguayan Guarani"
+		},
+		"Qatari Rial": {
+			"en": "Qatari Rial"
+		},
+		"Romanian Leu": {
+			"en": "Romanian Leu"
+		},
+		"Serbian Dinar": {
+			"en": "Serbian Dinar"
+		},
+		"Russian Ruble": {
+			"en": "Russian Ruble"
+		},
+		"Rwandan Franc": {
+			"en": "Rwandan Franc"
+		},
+		"Saudi Riyal": {
+			"en": "Saudi Riyal"
+		},
+		"Solomon Islands Dollar": {
+			"en": "Solomon Islands Dollar"
+		},
+		"Seychellois Rupee": {
+			"en": "Seychellois Rupee"
+		},
+		"Sudanese Pound": {
+			"en": "Sudanese Pound"
+		},
+		"Swedish Krona": {
+			"en": "Swedish Krona"
+		},
+		"Singapore Dollar": {
+			"en": "Singapore Dollar"
+		},
+		"Saint Helena Pound": {
+			"en": "Saint Helena Pound"
+		},
+		"Sierra Leonean Leone": {
+			"en": "Sierra Leonean Leone"
+		},
+		"Somali Shilling": {
+			"en": "Somali Shilling"
+		},
+		"Surinamese Dollar": {
+			"en": "Surinamese Dollar"
+		},
+		"South Sudanese Pound": {
+			"en": "South Sudanese Pound"
+		},
+		"São Tomé and Príncipe Dobra": {
+			"en": "São Tomé and Príncipe Dobra"
+		},
+		"Salvadoran Colón": {
+			"en": "Salvadoran Colón"
+		},
+		"Syrian Pound": {
+			"en": "Syrian Pound"
+		},
+		"Swazi Lilangeni": {
+			"en": "Swazi Lilangeni"
+		},
+		"Thai Baht": {
+			"en": "Thai Baht"
+		},
+		"Tajikistani Somoni": {
+			"en": "Tajikistani Somoni"
+		},
+		"Turkmenistani Manat": {
+			"en": "Turkmenistani Manat"
+		},
+		"Tunisian Dinar": {
+			"en": "Tunisian Dinar"
+		},
+		"Tongan Paʻanga": {
+			"en": "Tongan Paʻanga"
+		},
+		"Turkish Lira": {
+			"en": "Turkish Lira"
+		},
+		"Trinidad and Tobago Dollar": {
+			"en": "Trinidad and Tobago Dollar"
+		},
+		"New Taiwan Dollar": {
+			"en": "New Taiwan Dollar"
+		},
+		"Tanzanian Shilling": {
+			"en": "Tanzanian Shilling"
+		},
+		"Ukrainian Hryvnia": {
+			"en": "Ukrainian Hryvnia"
+		},
+		"Ugandan Shilling": {
+			"en": "Ugandan Shilling"
+		},
+		"US Dollar": {
+			"en": "US Dollar"
+		},
+		"Uruguayan Peso": {
+			"en": "Uruguayan Peso"
+		},
+		"Uzbekistan Som": {
+			"en": "Uzbekistan Som"
+		},
+		"Venezuelan Bolívar": {
+			"en": "Venezuelan Bolívar"
+		},
+		"Vietnamese Dong": {
+			"en": "Vietnamese Dong"
+		},
+		"Vanuatu Vatu": {
+			"en": "Vanuatu Vatu"
+		},
+		"Samoan Tala": {
+			"en": "Samoan Tala"
+		},
+		"CFA Franc BEAC": {
+			"en": "CFA Franc BEAC"
+		},
+		"East Caribbean Dollar": {
+			"en": "East Caribbean Dollar"
+		},
+		"CFA Franc BCEAO": {
+			"en": "CFA Franc BCEAO"
+		},
+		"CFP Franc": {
+			"en": "CFP Franc"
+		},
+		"Yemeni Rial": {
+			"en": "Yemeni Rial"
+		},
+		"South African Rand": {
+			"en": "South African Rand"
+		},
+		"ZMW": {
+			"en": "ZMW"
+		},
+		"Zimbabwean Dollar (2009)": {
+			"en": "Zimbabwean Dollar (2009)"
+		},
+		"Bitcoin Gold": {
+			"en": "Bitcoin Gold"
+		},
+		"Burstcoin": {
+			"en": "Burstcoin"
+		},
+		"Cagecoin": {
+			"en": "Cagecoin"
+		},
+		"Verify": {
+			"en": "Verify"
+		},
+		"Dash": {
+			"en": "Dash"
+		},
+		"Decred": {
+			"en": "Decred"
+		},
+		"DECENT": {
+			"en": "DECENT"
+		},
+		"DynamicCoin": {
+			"en": "DynamicCoin"
+		},
+		"DarkNet": {
+			"en": "DarkNet"
+		},
+		"Dogecoin": {
+			"en": "Dogecoin"
+		},
+		"Ellaism": {
+			"en": "Ellaism"
+		},
+		"Espers": {
+			"en": "Espers"
+		},
+		"Ether Classic": {
+			"en": "Ether Classic"
+		},
+		"Ether": {
+			"en": "Ether"
+		},
+		"Byte": {
+			"en": "Byte"
+		},
+		"Gridcoin": {
+			"en": "Gridcoin"
+		},
+		"Internext": {
+			"en": "Internext"
+		},
+		"Internet Of People": {
+			"en": "Internet Of People"
+		},
+		"LBRY Credits": {
+			"en": "LBRY Credits"
+		},
+		"Lisk": {
+			"en": "Lisk"
+		},
+		"Litecoin": {
+			"en": "Litecoin"
+		},
+		"MaidSafeCoin": {
+			"en": "MaidSafeCoin"
+		},
+		"Madcoin": {
+			"en": "Madcoin"
+		},
+		"Mycelium Token": {
+			"en": "Mycelium Token"
+		},
+		"Nav Coin": {
+			"en": "Nav Coin"
+		},
+		"NuBits": {
+			"en": "NuBits"
+		},
+		"Namecoin": {
+			"en": "Namecoin"
+		},
+		"Nxt": {
+			"en": "Nxt"
+		},
+		"DeepOnion": {
+			"en": "DeepOnion"
+		},
+		"Particl": {
+			"en": "Particl"
+		},
+		"Pascal Coin": {
+			"en": "Pascal Coin"
+		},
+		"Pepe Cash": {
+			"en": "Pepe Cash"
+		},
+		"PIVX": {
+			"en": "PIVX"
+		},
+		"Pranacoin": {
+			"en": "Pranacoin"
+		},
+		"PostCoin": {
+			"en": "PostCoin"
+		},
+		"ReddCoin": {
+			"en": "ReddCoin"
+		},
+		"Siacoin": {
+			"en": "Siacoin"
+		},
+		"Siafund": {
+			"en": "Siafund"
+		},
+		"Safe FileSystem Coin": {
+			"en": "Safe FileSystem Coin"
+		},
+		"Sibcoin": {
+			"en": "Sibcoin"
+		},
+		"STEEM": {
+			"en": "STEEM"
+		},
+		"Terracoin": {
+			"en": "Terracoin"
+		},
+		"Unobtanium": {
+			"en": "Unobtanium"
+		},
+		"WACoins": {
+			"en": "WACoins"
+		},
+		"WILD Token": {
+			"en": "WILD Token"
+		},
+		"Cryptonite": {
+			"en": "Cryptonite"
+		},
+		"Counterparty": {
+			"en": "Counterparty"
+		},
+		"Monero": {
+			"en": "Monero"
+		},
+		"Spectrecoin": {
+			"en": "Spectrecoin"
+		},
+		"Zcoin": {
+			"en": "Zcoin"
+		},
+		"Zcash": {
+			"en": "Zcash"
+		},
+		"ZenCash": {
+			"en": "ZenCash"
+		}
 	}
 }

@@ -5,6 +5,9 @@
 		},
 		"Welcome_p1":{
 			"en":"You are connected to your own Bisq server at: "
+		},
+		"This is a regtest demonstration with trading partners:":{
+			"en":"This is a regtest demonstration with trading partners:"
 		}
 	}
 }

@@ -110,7 +110,7 @@ class Market extends Component {
 				<div className = {classes.selects} >
 					<form autoComplete="off">
 						<FormControl className={classes.select}>
-							<InputLabel htmlFor="primary_market" classes = {{root:classes.label}}>Primary Market</InputLabel>
+							<InputLabel htmlFor="primary_market" classes = {{root:classes.label}}>{babel('Primary Market',{category:'forms'})}</InputLabel>
 							<Select
 								value={this.l}
 								onChange={this.handleSelect}
@@ -118,7 +118,7 @@ class Market extends Component {
 								native
 							>
 								{m.left.map((item,i)=>{
-									return <option value={item.lsymbol} key={i}>{item.lsymbol} - {item.lname}</option>
+									return <option value={item.lsymbol} key={i}>{item.lsymbol} - {babel(item.lname,{category:'currency'})}</option>
 								})}
 
 							</Select>
@@ -126,7 +126,7 @@ class Market extends Component {
 					</form>
 					<form autoComplete="off">
 						<FormControl className={classes.select}>
-							<InputLabel htmlFor="secondary_market">Secondary Market</InputLabel>
+							<InputLabel htmlFor="secondary_market">{babel('Secondary Market',{category:'forms'})}</InputLabel>
 							<Select
 								value={this.r}
 								onChange={this.handleSelect}
@@ -135,7 +135,7 @@ class Market extends Component {
 
 							>
 								{this.right.map((item,i2)=>{
-									return <option value={item.rsymbol} key={i2}>{item.rsymbol} - {item.rname}</option>
+									return <option value={item.rsymbol} key={i2}>{item.rsymbol} - {babel(item.rname,{category:'currency'})}</option>
 								})}
 							</Select>
 						</FormControl>

@@ -115,7 +115,7 @@ class Forms extends Component {
 		}).then(function(data){
 			console.log(data);
 			if(data === true){
-				root('api').generate(1);
+				//root('api').generate(1);
 				self.handleNext();
 			}
 		})
@@ -318,7 +318,7 @@ class Forms extends Component {
 								</Button>
 								<Button raised color='primary' onClick={()=>{
 									root('FullScreenDialogClose')();
-									root('screen')('Portfolio');
+									root('screen','Portfolio');
 								}} className={classes.button}>
 									{babel('Open Trades',{category:'forms'})}
 								</Button>
