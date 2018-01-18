@@ -1,21 +1,21 @@
 **Early work to create a web based GUI for BISQ using the bisq-api**
 
 Table of Contents
-==
-1. [Proposal](#Proposal)
- - [Proof of Concept - POC](#Proof of Concept - POC)
- - [Usage scenarios](#Usage scenarios)
- - [Motivation](#Motivation)
-2. [Architecture](#Architecture)
- - [Server](#Server)
- - [Client](#Client)
-3. [Security](#Security)
-4. [Accessibility](#Accessibility)
- - [Devices](#Devices)
- - [Language](#Language)
- - [People with disabilities](#People with disabilities)
-5. [Install](#Install)
-6. [Run](#Run)
+=================
+1. [Proposal](#proposal)
+  - [Proof of Concept (POC)](#proof)
+  - [Usage scenarios](#usage)
+  - [Motivation](#motivation)
+2. [Architecture](#architecture)
+  - [Server](#server)
+  - [Client](#client)
+3. [Security](#security)
+4. [Accessibility](#accessibility)
+  - [Devices](#devices)
+  - [Language](#language)
+  - [People with disabilities](#people)
+5. [Install](#install)
+6. [Run](#run)
 
 
 Proposal
@@ -24,7 +24,7 @@ With Bisq-front it is proposed to interface the Bisq-api to make manual and auto
 
 This is proposed to be a web-client / server model where a GUI is provided in a web browser. The server is singular for each client and is wholly owned and controlled by the human BISQ user.
 
-### Proof of Concept - POC ###
+### Proof of Concept (POC) ###
 ##### To Do #####
 Awaiting resolution of issue: https://github.com/mrosseel/bisq-api/issues/6
 
@@ -86,7 +86,7 @@ Security
 Initial security priorities for bisq-front are two-fold:
 1. Protect the anonymity and content of the [data stream](#Server) so that the nature of data passed over the internet cannot be identified as BISQ trading or interfered with.
 
-2. Provide token based and two-factor authentication to the web client to protect the user from unauthorised access. (Not implemented in [POC](#Proof of Concept (POC)))
+2. Provide token based and two-factor authentication to the web client to protect the user from unauthorised access. (Not implemented in [POC](#proof))
 
 Accessibility
 =============
