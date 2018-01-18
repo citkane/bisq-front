@@ -4,7 +4,7 @@ Table of Contents
 =================
 
 1. [Proposal](#proposal)
-   * [Proof of Concept (POC)](#proof-of-concep-poc)
+   * [Proof of Concept (POC)](#proof-of-concept-poc)
    * [Usage scenarios](#usage-scenarios)
    * [Motivation](#motivation)
   
@@ -91,7 +91,7 @@ Security
 Initial security priorities for bisq-front are two-fold:
 1. Protect the anonymity and content of the [data stream](#Server) so that the nature of data passed over the internet cannot be identified as BISQ trading or interfered with.
 
-2. Provide token based and two-factor authentication to the web client to protect the user from unauthorised access. (Not implemented in [POC](#proof-of-concep-poc))
+2. Provide token based and two-factor authentication to the web client to protect the user from unauthorised access. (Not implemented in [POC](#proof-of-concept-poc))
 
 Accessibility
 =============
