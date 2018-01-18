@@ -1,5 +1,7 @@
 **Early work to create a web based GUI for BISQ using the bisq-api**
 
+![bisq-front](https://user-images.githubusercontent.com/998947/35113983-2c8a7e78-fc7b-11e7-88cf-855d2478b1b2.jpg)
+
 Table of Contents
 =================
 
