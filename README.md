@@ -91,7 +91,7 @@ The client uses established frameworks and typologies to provide a consistent in
 Security
 ========
 Initial security priorities for bisq-front are two-fold:
-1. Protect the anonymity and content of the [data stream](#Server) so that the nature of data passed over the internet cannot be identified as BISQ trading or interfered with.
+1. Protect the anonymity and content of the [data stream](#server) so that the nature of data passed over the internet cannot be identified as BISQ trading or interfered with.
 
 2. Provide token based and two-factor authentication to the web client to protect the user from unauthorised access. (Not implemented in [POC](#proof-of-concept-poc))
 
@@ -105,7 +105,7 @@ Any device of any reasonable screen size which has a mainstream browser (phone, 
 Provide a programmatic interface to the [Google translate](https://cloud.google.com/translate/docs/) API which makes the UI translatable to all available human languages.
 
 ### People with disabilities ###
-Integrate the [ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) methodology in HTML market and the language translation interface.
+Integrate the [ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) methodology in HTML mark-up and the language translation interface.
 
 
 Install
