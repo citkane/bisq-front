@@ -2,18 +2,23 @@
 
 Table of Contents
 =================
-1. [Proposal](#proposal)
-	i. [Proof of Concept (POC)](#proof-of-concep-poc)
-	ii. [Usage scenarios](#usage-scenarios)
-	iii. [Motivation](#motivation)
+
+1.[Proposal](#proposal)
+  i.[Proof of Concept (POC)](#proof-of-concep-poc)
+  ii.[Usage scenarios](#usage-scenarios)
+  iii.[Motivation](#motivation)
+  
 2. [Architecture](#architecture)
  * [Server](#server)
  * [Client](#client)
+ 
 3. [Security](#security)
+
 4. [Accessibility](#accessibility)
  * [Devices](#devices)
  * [Language](#language)
  * [People with disabilities](#people-with-disabilities)
+ 
 5. [Install](#install)
 6. [Run](#run)
 
