@@ -113,7 +113,7 @@ Integrate the [ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/
 
 Automated Trading
 =================
-Not in [POC](#proof-of-concept-toc)
+Not in [POC](#proof-of-concept-poc)
 
 Using the [server](#server) layer, it is envisaged to connect to blockchain and [STRIPE](https://stripe.com/ie) API's which can programmatically determine the status of payments.
 
