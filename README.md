@@ -30,6 +30,9 @@ Table of Contents
 
 Proposal
 ========
+[top](#table-of-contents)
+
+
 With Bisq-front it is proposed to interface the Bisq-api to make manual and automated trading possible from anywhere and on any device.
 
 This is proposed to be a web-client / server model where a GUI is provided in a web browser. The server is singular for each client and is wholly owned and controlled by the human BISQ user.
@@ -62,8 +65,12 @@ I am of the opinion that in order for BISQ trading adoption to grow towards main
 
 - **Always available:** As political intervention remains unforeseeable, bisq-front could afford the user the possibility to locate their exchange in any friendly juristriction and continue trading regardless of their own geo-political circumstance.
 
+
 Architecture
 ============
+[top](#table-of-contents)
+
+
 Bisq-front is based around the following concepts:
 - All API related data to/from the browser client is handled over an encrypted websocket stream.
 
@@ -94,13 +101,20 @@ The client uses established frameworks and typologies to provide a consistent in
 
 Security
 ========
+[top](#table-of-contents)
+
+
 Initial security priorities for bisq-front are two-fold:
 1. Protect the anonymity and content of the [data stream](#server) so that the nature of data passed over the internet cannot be identified as BISQ trading or interfered with.
 
 2. Provide token based and two-factor authentication to the web client to protect the user from unauthorised access. (Not implemented in [POC](#proof-of-concept-poc))
 
+
 Accessibility
 =============
+[top](#table-of-contents)
+
+
 Bisq-front intends to be universally accessible.
 ### Devices ###
 Any device of any reasonable screen size which has a mainstream browser (phone, tablet, laptop and desktop)
@@ -111,9 +125,12 @@ Provide a programmatic interface to the [Google translate](https://cloud.google.
 ### People with disabilities ###
 Integrate the [ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) methodology in HTML mark-up and the language translation interface.
 
+
 Automated Trading
 =================
+[top](#table-of-contents)
 Not in [POC](#proof-of-concept-poc)
+
 
 Using the [server](#server) layer, it is envisaged to connect to blockchain and [STRIPE](https://stripe.com/ie) API's which can programmatically determine the status of payments.
 
@@ -128,8 +145,12 @@ It is further envisaged to set up a GUI rules creator, eg:
 When market rises above ${x.xx}, automatically create offer to sell {y}BTC @ market rate. If market rate falls below $ {zz.zz}, cancel the offer.
 ```
 
+
 Install
 =======
+[top](#table-of-contents)
+
+
 #### Prerequisites ####
 Node js and NPM >= 8 ([Package managers](https://nodejs.org/en/download/package-manager/))
 ```
@@ -187,8 +208,13 @@ git clone https://github.com/citkane/bisq-front.git ./
 
 npm install
 ```
+
+
 Run
 ===
+[top](#table-of-contents)
+
+
 #### Set up the regtest environment: ####
 ```
 npm run setup
