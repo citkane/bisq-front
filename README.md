@@ -133,11 +133,11 @@ Automated Trading
 Not in [POC](#proof-of-concept-poc)
 
 
-Using the [server](#server) layer, it is envisaged to connect to blockchain and [STRIPE](https://stripe.com/ie) API's which can programmatically determine the status of payments.
+Using the [server](#server) layer, it is envisaged to connect to blockchain and [STRIPE](https://stripe.com) API's which can programmatically determine the status of payments.
 
 Stripe integration will be voluntary, and the user will need to set themselves up as a business on the Stripe network, then provide their API key into bisq-front. 
 
-Stripe has [payment charges](https://stripe.com/ie/pricing) and the user will need to evaluate the following benefits:
+Stripe has [payment charges](https://stripe.com/pricing) and the user will need to evaluate the following benefits:
 - Accept payments from any fiat currency to their own bank account via Visa, Mastercard, etc, etc.....
 - An automated, one-click trading experience when selling and automation when buying from another Stripe peer.
 
