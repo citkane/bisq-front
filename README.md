@@ -20,14 +20,17 @@ Table of Contents
    * [Devices](#devices)
    * [Language](#language)
    * [People with disabilities](#people-with-disabilities)
- 
-5. [Install](#install)
-6. [Run](#run)
+   
+5. [Automated Trading](#automated-trading)
+
+6. [Install](#install)
+
+7. [Run](#run)
 
 
 Proposal
 ========
-With Bisq-front it is proposed to interface the Bisq-api to make manual and automated trading possible from anywhere on any device.
+With Bisq-front it is proposed to interface the Bisq-api to make manual and automated trading possible from anywhere and on any device.
 
 This is proposed to be a web-client / server model where a GUI is provided in a web browser. The server is singular for each client and is wholly owned and controlled by the human BISQ user.
 
@@ -108,6 +111,22 @@ Provide a programmatic interface to the [Google translate](https://cloud.google.
 ### People with disabilities ###
 Integrate the [ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) methodology in HTML mark-up and the language translation interface.
 
+Automated Trading
+=================
+Not in [POC](#proof-of-concept-toc)
+
+Using the [server](#server) layer, it is envisaged to connect to blockchain and [STRIPE](https://stripe.com/ie) API's which can programmatically determine the status of payments.
+
+Stripe integration will be voluntary, and the user will need to set themselves up as a business on the Stripe network, then provide their API key into bisq-front. 
+
+Stripe has [payment charges](https://stripe.com/ie/pricing) and the user will need to evaluate the following benefits:
+- Accept payments from any fiat currency to their own bank account via Visa, Mastercard, etc, etc.....
+- An automated, one-click trading experience when selling and automation when buying from another Stripe peer.
+
+It is further envisaged to set up a GUI rules creator, eg:
+```
+When market rises above ${x.xx}, automatically create offer to sell {y}BTC @ market rate. If market rate falls below $ {zz.zz}, cancel the offer.
+```
 
 Install
 =======
