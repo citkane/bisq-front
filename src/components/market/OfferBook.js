@@ -52,7 +52,6 @@ class OfferBook extends Component {
 		this.pair = this.props.root('pair_market');
 		const api = this.props.root('api');
 		api.market('offers',{market:this.pair}).then((data)=>{
-			console.error(data[Object.keys(data)[0]]);
 			this.setState({
 				offers:data[Object.keys(data)[0]]
 			})

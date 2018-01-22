@@ -20,8 +20,9 @@
  */
 
 const request = require('request');
-const tools = require('./tools.js');
-const market = require('./market.js')
+const tools = require('../src/resources/modules/tools.js');
+const market = require('./market.js');
+const convert = require('./conversion_filters/bisq.js')
 
 var api = function(socket,port){
 	this.socket = socket;
@@ -52,7 +53,7 @@ api.prototype.get = function(data){
 			url:url,
 			json:true,
 		},function(err,resp,body){
-			resolve(body);
+			resolve(convert.get(data.command,body));
 		})
 	})
 }
@@ -63,21 +64,9 @@ api.prototype.delete = function(data){
 			url:url,
 			json:true,
 		},function(err,resp,body){
-			resolve(body);
+			resolve(convert.get(data.command,body));
 		})
 	})
 }
-/*
-api.prototype.market = function(data){
-	var url = 'https://markets.bisq.network/api/'+data.command+tools.params(data.params);
-	return new Promise(function(resolve,reject){
-		request.get({
-			url:url,
-			json:true,
-		},function(err,resp,body){
-			resolve(body);
-		})
-	})
-}
-*/
+
 module.exports = api;

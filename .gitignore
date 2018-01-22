@@ -22,3 +22,5 @@ yarn-error.log*
 
 nohup.out
 package-lock.json
+twister
+src/data

@@ -177,6 +177,15 @@
 		},
 		"Open Trades":{
 			"en":"Open Trades"
+		},
+		"above":{
+			"en":"above"
+		},
+		"below":{
+			"en":"below"
+		},
+		"market":{
+			"en":"market"
 		}
 	},
 	"dialog":{

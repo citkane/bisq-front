@@ -29,6 +29,9 @@ import Input, { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import Select from 'material-ui/Select';
+import market from '../../resources/modules/markets.js';
+console.error(market)
+
 
 var Charts;
 import('./Charts.js').then((charts)=>{
@@ -76,9 +79,9 @@ class Market extends Component {
 		this.root = this.props.root;
 		this.l = this.root('primary_market');
 		this.r = this.root('secondary_market');
-		this.m = this.props.data.market.markets;
-		this.right = this.m.right.filter((item)=>{
-			return !!this.m.list[this.l.toLowerCase()+'_'+item.rsymbol.toLowerCase()]
+
+		this.right = market.right.filter((item)=>{
+			return !!market.list[this.l.toLowerCase()+'_'+item.rsymbol.toLowerCase()]
 		})
 	}
 	state = {
@@ -88,8 +91,8 @@ class Market extends Component {
 	handleSelect = event => {
 		if(event.target.name === 'primary_market'){
 			this.l = event.target.value;
-			this.right = this.m.right.filter((item)=>{
-				return !!this.m.list[this.l.toLowerCase()+'_'+item.rsymbol.toLowerCase()]
+			this.right = market.right.filter((item)=>{
+				return !!market.list[this.l.toLowerCase()+'_'+item.rsymbol.toLowerCase()]
 			})
 			this.r = this.right[0].rsymbol
 		}else{
@@ -98,7 +101,6 @@ class Market extends Component {
 		this.root("primary_market",this.l);
 		this.root("secondary_market",this.r);
 		var pair = this.l.toLowerCase()+'_'+this.r.toLowerCase();
-		console.error(pair)
 		this.root('pair_market',pair);
 
 
@@ -114,9 +116,6 @@ class Market extends Component {
 		if(!Charts) return null;
 		const {classes,babel,data,root} = this.props;
 		const {value} = this.state;
-		const m = data.market.markets;
-		//console.error(data.market.markets);
-		if(!m.left.length || !m.right.length) return null;
 		return (
 			<div className={classes.root}>
 				<AppBar position="static" color = 'default'>
@@ -136,7 +135,7 @@ class Market extends Component {
 								input={<Input name="primary_market" id="primary_market" />}
 								native
 							>
-								{m.left.map((item,i)=>{
+								{market.left.map((item,i)=>{
 									return <option value={item.lsymbol} key={i}>{item.lsymbol} - {babel(item.lname,{category:'currency'})}</option>
 								})}
 

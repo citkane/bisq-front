@@ -20,7 +20,10 @@
  */
 
 const request = require('request');
-const tools = require('./tools.js');
+const tools = require('../src/resources/modules/tools.js');
+const convert = require('./conversion_filters/bisq.js');
+const fs = require('fs');
+const path = require('path');
 
 var market = function(){}
 
@@ -31,25 +34,32 @@ market.prototype.get = function(command,params){
 			url:url,
 			json:true,
 		},function(err,resp,body){
-			resolve(body);
+			if(err){
+				reject(err);
+				return;
+			}
+			resolve(convert.get(command,body));
 		})
 	})
 }
 market.prototype.formatMarkets = function(data){
 	var left = {};
 	var right = {};
-	/*
-	var m = Object.keys(data).map((key)=>{
-		return data[key];
-	})
-	m.forEach((market)=>{
-		if(left.indexOf(market.pair.split('_')[0]+' - '+market.lname)===-1) left.push(market.pair.split('_')[0]+' - '+market.lname);
-		if(right.indexOf(market.pair.split('_')[1]+' - '+market.rname)===-1) right.push(market.pair.split('_')[1]+' - '+market.rname);
-	})
-	*/
+	var curr = {};
+	var sides = ['l','r'];
 	Object.keys(data).forEach((key)=>{
 		if(!left[data[key].lsymbol]) left[data[key].lsymbol] = data[key];
 		if(!right[data[key].rsymbol]) right[data[key].rsymbol] = data[key];
+		sides.forEach((s)=>{
+			if(!curr[data[key][s+'symbol']]) curr[data[key][s+'symbol']]={
+				name:data[key][s+'name'],
+				precision:data[key][s+'precision'],
+				type:data[key][s+'type'],
+				todec:function(amount){
+					return amount;
+				}
+			}
+		})
 	})
 	left = Object.keys(left).filter((lkey)=>{
 		return Object.keys(right).some((rkey)=>{
@@ -61,13 +71,41 @@ market.prototype.formatMarkets = function(data){
 	right = Object.keys(right).map((key)=>{
 		return right[key];
 	})
-	//left = left.sort()
-	//right = right.sort()
 	var markets = {
 		left:left,
 		right:right,
-		list:data
+		list:data,
+		currencies:curr
 	}
 	return markets;
+}
+market.prototype.make = function(){
+	console.log('> Getting latest currency data from https://markets.bisq.network\nPlease wait...\n')
+	var count = 0;
+	var done = false;
+	var exists = fs.existsSync(path.join(appRoot,'src/data/markets.json'))
+	return new Promise((resolve,reject)=>{
+		this.get('markets').then((data)=>{
+			if(done) return;
+			clearTimeout(to);
+			data = this.formatMarkets(data);
+			data = JSON.stringify(data,null,'\t');
+			fs.writeFileSync(path.join(appRoot,'src/data/markets.json'),data);
+			resolve(false);
+		},(err)=>{
+			if(done) return;
+			clearTimeout(to);
+			if(exists){
+				resolve(err.toString());
+			}else{
+				reject(err.toString());
+			}
+		})
+		var to = setTimeout(()=>{
+			done = true;
+			var m = 'https://markets.bisq.network is not responding in time.'
+			exists?resolve(m):reject(m);
+		},1000)
+	})
 }
 module.exports = new market();

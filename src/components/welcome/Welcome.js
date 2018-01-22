@@ -46,7 +46,7 @@ class Welcome extends Component {
 					<Typography type = 'body2'>{babel('This is a regtest demonstration with trading partners:',{category:'content'})}</Typography>
 					{root('peers').map((peer,i)=>{
 						return(
-							<div index = {i}>
+							<div key = {i}>
 								<Typography><a href = {'http://localhost:'+peer.port} target = '_blank'>{peer.name}</a></Typography>
 							</div>
 						)

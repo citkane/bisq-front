@@ -31,6 +31,8 @@ import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import Forms from './Forms.js';
 import Create from './Create.js';
+import money from '../../resources/modules/markets.js';
+const M = money.currencies;
 
 const styles = theme => ({
 	svgIcon: {
@@ -167,21 +169,23 @@ class BuySell extends Component {
 			<div>
 				{dir!=='OWN' && <Create root = {root} babel = {babel} data ={data}/>}
 				<Grid container spacing={16}>{trades.map(t => {
-
+					/*
 					data.currency_list.some((currency)=>{
 						var curr = t.other_currency;
 						if(curr === 'EUR') curr = '€';
 						if(curr === 'GBP') curr = '£';
-						console.log(curr,currency.symbol.trim())
 						if(curr === currency.symbol.trim()){
 							t.currency = currency;
+							console.error(currency)
 							return true;
 						}
 						return false;
 					})
-
-					const fiat = t.currency.type === 'fiat';
-					t.other_amount = fiat?t.other_amount:Math.round((1/t.other_amount)*1000000000000)/1000000000000;
+					*/
+					t.currency = M[t.other_currency];
+					t.fiat = t.currency.type === 'fiat';
+					const symbol = t.currency.symbol;
+					const amount = t.other_amount
 					var title;
 					if(dir === 'OWN'||t.owner){
 						title = babel('You want to '+t.direction.toLowerCase(),{category:'cards'});
@@ -205,12 +209,12 @@ class BuySell extends Component {
 										<Typography color = 'primary'>{babel('price',{category:'cards'})+' / 1 BTC: '}</Typography>
 										{t.price_detail.use_market_price && (
 											<span>
-												<Typography>({fiat?t.price_detail.market_price_margin*100:t.price_detail.market_price_margin*-100}%) </Typography>
+												<Typography>({t.price_detail.market_price_margin}%) </Typography>
 												<div className = 'spacer'></div>
-												<Typography type="body2" > {t.other_amount}</Typography>
+												<Typography type="body2" > {M[t.other_currency].round(amount)}</Typography>
 											</span>
 										)}
-										{!t.price_detail.use_market_price && <Typography type="body2" > {t.other_amount}</Typography>}
+										{!t.price_detail.use_market_price && <Typography type="body2" > {M[t.other_currency].round(amount)}</Typography>}
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
@@ -220,7 +224,10 @@ class BuySell extends Component {
 									<Divider inset light />
 									<div className = 'cardrow'>
 										<Typography component = 'span' color = 'primary'>{t.other_currency} {babel('cost',{category:'cards'})}: {t.min_btc_amount!==t.btc_amount && "(min|max)"} </Typography>
-										<Typography component = 'span'>{t.min_btc_amount!==t.btc_amount && (Math.round(t.other_amount*t.min_btc_amount*100))/100 +' | '} {(Math.round(t.other_amount*t.btc_amount*100))/100}</Typography>
+										<Typography component = 'span'>
+											{t.min_btc_amount!==t.btc_amount && (M[t.other_currency].round(amount*t.min_btc_amount)+' | ')}
+											{M[t.other_currency].round(amount*t.btc_amount)}
+										</Typography>
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>

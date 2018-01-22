@@ -96,7 +96,6 @@ class Transfer extends Component {
 							api.get('move_funds_to_bisq_wallet',{
 								trade_id:trade.id
 							}).then((data)=>{
-								console.error(data);
 								api.ticker();
 								root('FullScreenDialogClose')()
 							})
@@ -129,7 +128,6 @@ class Received extends Component {
 							api.get('payment_received',{
 								trade_id:trade.id
 							}).then((data)=>{
-								console.error(data);
 								api.ticker();
 								root('FullScreenDialogClose')()
 							})
@@ -165,7 +163,6 @@ class StartPayment extends Component {
 							api.get('payment_started',{
 								trade_id:trade.id
 							}).then((data)=>{
-								console.error(data);
 								api.ticker();
 								root('FullScreenDialogClose')()
 							})
@@ -268,6 +265,14 @@ class Detail extends Component {
 			<div>
 				<Grid container spacing={16}>
 					{trades.map((t,i) => {
+
+						if(!t.fiat){
+							/* Invert the market representation for consistent human language representation */
+							Object.keys(t.invert).forEach((key)=>{
+								t[key] = t.invert[key];
+							})
+						}
+
 						return (
 							<Grid item lg={3} md = {6} sm = {6} xs = {12} key = {i} className = 'card'>
 								<Card>
@@ -281,12 +286,12 @@ class Detail extends Component {
 										<Typography type = 'caption'>{babel(t.type[1],{category:'cards',type:'text'})}</Typography>
 										<div className = 'cardrow'>
 											<Typography component = 'span' color = 'primary'>{babel('For',{category:'cards'})}:</Typography>
-											<Typography component = 'span' type='body2'>{t.volume} {t.base==='BTC'?t.counter:t.base}</Typography>
+											<Typography component = 'span' type='body2'>{t.volume} {t.counter}</Typography>
 										</div>
 										<Divider inset light />
 										<div className = 'cardrow'>
 											<Typography component = 'span' color = 'primary'>{babel('At',{category:'cards'})}:</Typography>
-											<Typography component = 'span' type='caption' >{t.price} {t.base==='BTC'?t.counter:t.base} / BTC</Typography>
+											<Typography component = 'span' type='caption' >{t.price} {t.counter} / {t.base}</Typography>
 										</div>
 										<Divider inset light />
 										<div className = 'cardrow'>

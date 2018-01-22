@@ -20,7 +20,7 @@
  */
 
 const child = require('child_process');
-const tools = require('./tools.js');
+const tools = require('../src/resources/modules/tools.js');
 const Btc = require('bitcoin-core');
 const btc = new Btc({
 	network:'regtest',
@@ -38,7 +38,9 @@ dev.prototype.make = function(port,gui){
 	this.core = child.spawn(gui?'bitcoin-qt':'bitcoind',['-regtest','-server','-printtoconsole','-rpcuser=regtest','-rpcpassword=test']);
 	this.seedNode = child.spawn('java',['-jar','SeedNode.jar','--baseCurrencyNetwork=BTC_REGTEST','--useLocalhost=true','--myAddress=localhost:'+port,'--nodePort='+port,'--appName=bisq_seed_node_localhost_'+port],{cwd:'/var/opt/bisq-network/seednode/target/'});
 	var count = 0;
+
 	return new Promise((resolve,reject)=>{
+
 		this.seedNode.stdout.on('data',(data)=>{
 			data = `${data}`;
 			if(data.indexOf('onHiddenServicePublished')!==-1){
@@ -53,6 +55,7 @@ dev.prototype.make = function(port,gui){
 				if(count === 2) resolve(port)
 			}
 		})
+
 	})
 }
 dev.prototype.log = function(){

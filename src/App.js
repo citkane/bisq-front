@@ -52,11 +52,11 @@ const s = document.location.protocol+'//'+document.location.hostname+':'+process
 const socket = socketIOClient(s);
 const api = new Api(socket);
 
-
+/*
 var market;
 socket.on('market',(data)=>{
 	market = data;
-	/*
+
 	var curr = [];
 	var list = market.markets.list;
 	Object.keys(list).forEach((key)=>{
@@ -70,9 +70,9 @@ socket.on('market',(data)=>{
 		}
 	})
 	console.log(JSON.stringify(foo))
-	*/
-})
 
+})
+*/
 
 class App extends Component {
 	constructor(props) {
@@ -94,7 +94,8 @@ class App extends Component {
 			showown:true,
 			primary_market:'BTC',
 			secondary_market:'USD',
-			pair_market:'btc_usd'
+			pair_market:'btc_usd',
+			base_market:'BTC'
 		}
 	}
 	babel(key,opts){
@@ -178,9 +179,11 @@ class App extends Component {
 	componentDidMount(){
 		//console.log('theme',this.theme);
 		var data = {
-			market:market
+			//market:market
 		};
-		['currency_list','market_list'].forEach(function(command){
+		/*
+		//['currency_list','market_list'].forEach(function(command){
+		['market_list'].forEach(function(command){
 			socket.on(command, function(data2){
 				//self.root(command,data)
 				data[command] = data2
@@ -189,9 +192,10 @@ class App extends Component {
 			});
 			api.get(command);
 		})
+		*/
 		var log;
 		socket.on('ticker',(data2)=>{
-			data2.market = market;
+			//data2.market = market;
 			Object.keys(data2).forEach(function(key){
 				if(!log){
 					console.log(key,data2[key]);
@@ -206,7 +210,7 @@ class App extends Component {
 		socket.emit('getSettings');
 		socket.once('getSettings',(data)=>{
 			if(data){
-				console.log(data)
+				//console.log(data)
 				var G = this.state.Global
 				Object.keys(data).forEach((key)=>{
 					G[key] = data[key];
@@ -220,6 +224,7 @@ class App extends Component {
 				this.makeTheme();
 			}
 		})
+		/*
 		api.market('markets').then((data)=>{
 			var left = [];
 			var right = [];
@@ -241,6 +246,7 @@ class App extends Component {
 			}
 			this.setState({Global:G});
 		})
+		*/
 	}
 	render() {
 		if(!this.state.data||!this.state.theme) return(

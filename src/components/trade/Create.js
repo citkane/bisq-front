@@ -32,6 +32,8 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import Select from 'material-ui/Select';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
+import money from '../../resources/modules/markets.js';
+const M = money.currencies;
 
 const styles = theme => ({
 	wrapper:{
@@ -87,28 +89,24 @@ const styles = theme => ({
 	panels:{
 		margin:theme.spacing.unit,
 		marginBottom:theme.spacing.unit * 3
+	},
+	warn:{
+		color:theme.palette.secondary[500]
+	},
+	nowarn:{
+		color:theme.palette.primary[500]
 	}
 })
 class Form extends Component {
 	constructor(props){
 		super(props);
+		this.accounts = this.props.data.account_list;
 		this.currency = [];
-		this.accounts = this.props.data.account_list.map((ac)=>{
-			var type = ac.payment_method_details.contractData.paymentMethodId;
-			var fiat = type==='BLOCK_CHAINS'?false:true;
-			var currency = ac.trade_currencies[0];
-			if(this.currency.indexOf(currency) === -1) this.currency.push(currency)
-			type = fiat?type:currency;
-			return {
-				id:ac.payment_account_id,
-				name:ac.account_name,
-				type:type,
-				pair:fiat?'BTC_'+currency:currency+'_BTC',
-				currency:currency,
-				fiat:fiat
-			}
-		});
-
+		this.accounts.forEach((ac)=>{
+			//Get a list of available currencies for the user
+			if(this.currency.indexOf(ac.currency) === -1) this.currency.push(ac.currency)
+		})
+		this.base = this.props.root('base_market');
 		this.state = {
 			activeStep:0,
 			accountId:this.accounts[0].id,
@@ -167,14 +165,15 @@ class Form extends Component {
 		});
 	};
 	setVol = (event,min) => {
+		var account = this.state.account;
 		var val;
 		if(event.target.value === '0.'||event.target.value === '.'){
 			val = '0.'
 		}else{
 			val = event.target.value.length?event.target.value:""
 		}
-		if(val*1 && val*1 > this.limit.max) val = this.limit.max.toString()
-		if(val*1 && val*1 < this.limit.min) val = this.limit.min.toString()
+		if(val*1 && val*1 > account.limit.max) val = account.limit.max.toString()
+		if(val*1 && val*1 < account.limit.min) val = account.limit.min.toString()
 
 		if(!min) this.setState({
 			amount:val
@@ -205,30 +204,48 @@ class Form extends Component {
 		return true;
 	}
 	submit = () =>{
-		var tools = this.props.root('tools');
-		var fixed = 0;
-		if(this.state.priceType === 'FIXED') fixed = this.state.account.fiat?this.state.fixed*10000:Math.floor(100000000/this.state.fixed)
-		var percent = (this.state.percent*1)/100;
-		if(!this.state.account.fiat) percent = percent*-1
-		var data = {
-			payment_account_id:this.state.account.id,
-			direction:this.props.dir,
-			price_type:this.state.priceType,
-			market_pair:this.state.account.pair,
-			percentage_from_market_price:percent,
-			fixed_price:fixed,
-			amount:tools.toSatoshi(this.state.amount*1||this.state.min_amount*1),
-			min_amount:tools.toSatoshi(this.state.min_amount*1||this.state.amount*1)
-		}
+		var {priceType,account,fixed,percent,amount,min_amount} = this.state;
+		console.log('account',account)
+		const {dir,root} = this.props;
+		//var tools = this.props.root('tools');
+		const api = root('api');
+		//var fixed = 0;
+		//M[this.base]
+		//M[account.currency]
+		//if(priceType === 'FIXED') fixed = account.fiat?fixed*10000:Math.floor(100000000/fixed)
+		if(priceType === 'FIXED') fixed = account.fiat?
+		M[account.currency].fromDecimal(fixed):
+		M[this.base].fromDecimal(M[account.currency].invert(M[account.currency].fromDecimal(fixed)))
 
-		var api = this.props.root('api');
+	/*HACK fiat currencies are two decimal places too low for bisq-api*/
+		if(priceType === 'FIXED' && account.fiat) fixed = fixed*100
+	/* End HACK */
+
+	/*Invert percentages to suite offer conditions*/
+		percent = dir.toLowerCase()==='buy'?(percent*-1)/100:(percent*1)/100;
+		//percent = (percent*1)/100;
+		//if(!account.fiat) percent = percent*-1
+	/*END inversion */
+
+		var data = {
+			payment_account_id:account.id,
+			direction:dir,
+			price_type:priceType,
+			market_pair:account.pair,
+			percentage_from_market_price:percent||0,
+			amount:M[this.base].fromDecimal(amount*1||min_amount*1),//tools.toSatoshi(amount*1||min_amount*1),
+			min_amount:M[this.base].fromDecimal(min_amount*1||amount*1)//tools.toSatoshi(min_amount*1||amount*1)
+		}
+		if(fixed) data.fixed_price = fixed;
+		console.log('data',data)
+
 		api.get('offer_make',data).then((data)=>{
 
 			if(data === true){
 				api.ticker();
-				this.props.root('FullScreenDialogClose')();
+				root('FullScreenDialogClose')();
 			}else{
-				console.log(data)
+				console.error(data)
 			}
 		})
 	}
@@ -244,18 +261,14 @@ class Form extends Component {
 	}
 	render(){
 		const {dir,classes,babel} = this.props;
-		function getSteps() {
-			return [
-				babel('Select your trade account',{category:'forms'}),babel('Set your trade amount and price',{category:'forms'}),babel('Confirm and publish',{category:'forms'})
-			];
-		}
-		const steps = getSteps();
-		const {activeStep,expanded} = this.state;
-		const fiat = this.state.account.fiat
-		this.limit = {
-			min:0.001,
-			max:fiat?0.125:1
-		}
+		const {activeStep,expanded,account,amount,min_amount,currency,accountId,priceType,percent,fixed,accepted} = this.state;
+		const steps = [
+			babel('Select your trade account',{category:'forms'}),
+			babel('Set your trade amount and price',{category:'forms'}),
+			babel('Confirm and publish',{category:'forms'})
+		];
+
+		const fiat = account.fiat
 		const getStepContent = (step) => {
 			switch (step) {
 				case 0:
@@ -266,7 +279,7 @@ class Form extends Component {
 								<Select
 
 									native
-									value={this.state.currency}
+									value={currency}
 									onChange={this.handleAccount('currency')}
 									input={<Input id="currency" />}
 								>
@@ -279,23 +292,23 @@ class Form extends Component {
 								<InputLabel htmlFor="account_list" shrink>{babel('Select account',{category:'forms'})}</InputLabel>
 								<Select
 									native
-									value={this.state.accountId}
+									value={accountId}
 									onChange={this.handleAccount('accountId')}
 									input={<Input id="account_list" />}
 								>
 									{this.accounts.filter((ac)=>{
-										return this.state.currency === ac.currency;
+										return currency === ac.currency;
 									}).map((ac,i)=>{
-										return <option value={ac.id} key = {i}>{ac.type}: {ac.name.replace(ac.type+':','').replace(ac.type,'').trim()}</option>
+										return <option value={ac.id} key = {i}>{ac.type}: {ac.name}</option>
 									})}
 								</Select>
 							</FormControl>
 						</Paper>
 					)
 				case 1:
-					var proceed = this.state.amount*1||this.state.min_amount*1;
-					if(this.state.min_amount.length && isNaN(this.state.min_amount*1)) proceed = 0;
-					if(this.state.amount.length && isNaN(this.state.amount*1)) proceed = 0;
+					var proceed = amount*1||min_amount*1;
+					if(min_amount.length && isNaN(min_amount*1)) proceed = 0;
+					if(amount.length && isNaN(amount*1)) proceed = 0;
 
 					return(
 						<Paper className = {classes.paper2}>
@@ -305,10 +318,10 @@ class Form extends Component {
 										id="min_amount"
 										label = {dir==='SELL'?babel('Min BTC to sell',{category:'forms'}):babel('Min BTC to buy',{category:'forms'})}
 										InputLabelProps = {{className:classes.formControl2}}
-										value={this.state.min_amount}
+										value={min_amount}
 										onChange={(e)=>this.setVol(e,true)}
 										className={classes.item}
-										helperText={'min: '+this.limit.min+' BTC'}
+										helperText={'min: '+account.limit.min+' BTC'}
 										margin="normal"
 									/>
 								</form>
@@ -316,12 +329,12 @@ class Form extends Component {
 									<TextField
 										id="amount"
 										label = {dir==='SELL'?babel('BTC to sell',{category:'forms',type:'text'}):babel('BTC to buy',{category:'forms',type:'text'})}
-										value={this.state.amount}
+										value={amount}
 										onChange={(e)=>this.setVol(e)}
 										className={classes.item}
-										helperText={'max: '+this.limit.max+' BTC'}
+										helperText={'max: '+account.limit.max+' BTC'}
 										margin="normal"
-										classes={{input:classes.formControl2}}
+										classes = {{root:classes.formControl2}}
 									/>
 								</form>
 							</div>
@@ -334,7 +347,7 @@ class Form extends Component {
 											<InputLabel htmlFor="priceType">{babel('Price type',{category:'forms'})}</InputLabel>
 											<Select
 												native
-												defaultValue = {this.state.priceType}
+												defaultValue = {priceType}
 												onChange={this.handleAccount('priceType')}
 												input={<Input id="priceType" />}
 											>
@@ -346,26 +359,26 @@ class Form extends Component {
 									</div>
 									<Divider light className={classes.spacer}/>
 									<div className = {classes.row}>
-										{this.state.priceType==='PERCENTAGE' && <form noValidate autoComplete="off" className={classes.formControl}>
+										{priceType==='PERCENTAGE' && <form noValidate autoComplete="off" className={classes.formControl}>
 											<TextField
 												id="percent"
 												required
 												label = {babel("Percentage variation",{category:'forms'})}
-												defaultValue={this.state.percent}
+												defaultValue={percent}
 												onChange={(e)=>this.setPrice(e,true)}
 												labelClassName={classes.label}
 												helperText='min -10 max 10 (%)'
 											/>
 										</form>}
-										{this.state.priceType==='FIXED' && <form noValidate autoComplete="off" className={classes.formControl}>
+										{priceType==='FIXED' && <form noValidate autoComplete="off" className={classes.formControl}>
 											<TextField
 												id="fixed"
 												required
-												label = {babel('Price in',{category:'forms'})+' '+this.state.currency}
-												defaultValue={this.state.fixed}
+												label = {babel('Price in',{category:'forms'})+' '+currency}
+												defaultValue={fixed}
 												onChange={(e)=>this.setPrice(e)}
 												className={classes.item}
-												helperText={babel('Fixed price for one BTC',{category:'forms'})+' ('+this.state.currency+')'}
+												helperText={babel('Fixed price for one BTC',{category:'forms'})+' ('+currency+')'}
 											/>
 										</form>}
 									</div>
@@ -374,14 +387,25 @@ class Form extends Component {
 						</Paper>
 					)
 				case 2:
-					var min = this.state.min_amount||this.state.amount;
-					var max = this.state.amount||this.state.min_amount;
+					var min = min_amount||amount;
+					var max = amount||min_amount;
+					var perc = '0% '
+
+					if(percent*1) perc = percent*1 > 0?
+						<span className = {dir==='BUY'?classes.warn:classes.nowarn}>
+							{percent+'% '+babel('above',{category:'forms'})+' '}
+						</span>:
+						<span className = {dir==='SELL'?classes.warn:classes.nowarn}>
+							{(percent*-1)+'%'} {babel('below',{category:'forms'})+' '}
+						</span>;
 					return (
 						<div>
 							<Paper className = {classes.paper2}>
 								<Typography type = 'title'>
-									{babel('Offer to '+dir,{category:'forms'})} {min!==max && min+' - '} {max} BTC @ {this.state.priceType === 'PERCENTAGE' && this.state.percent+'% '+this.state.currency+' market.'} {this.state.priceType === 'FIXED' && this.state.fixed+' '+this.state.currency+' / BTC'}
-
+									{babel('Offer to '+dir,{category:'forms'})} {min!==max && min+' - '}
+									{max} BTC @ {priceType === 'PERCENTAGE' && perc}
+									{priceType === 'PERCENTAGE' && currency+' '+babel('market',{category:'forms'})}
+									{priceType === 'FIXED' && fixed+' '+currency+' / BTC'}
 								</Typography>
 							</Paper>
 							<div className={classes.panels}>
@@ -415,7 +439,7 @@ class Form extends Component {
 									<FormControlLabel
 										control={
 											<Switch
-												checked={this.state.accepted}
+												checked={accepted}
 												onChange={this.consent}
 											/>
 										}
@@ -463,7 +487,7 @@ class Form extends Component {
 													color="primary"
 													onClick={this.submit}
 													className={classes.button}
-													disabled = {!this.state.accepted}
+													disabled = {!accepted}
 												>
 													{babel('Submit your offer to '+dir,{category:'forms'})}
 												</Button>

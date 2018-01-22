@@ -65,11 +65,7 @@ class Portfolio extends Component {
 	render() {
 		const {classes,root,babel,data} = this.props;
 		const {value} = this.state;
-		const trades = data.trade_list.map(function(trade){
-			return tools.formatTrade(trade)
-		}).sort(function(a,b){
-			return a.date < b.date?0:1
-		})
+		const trades = data.trade_list;
 		return (
 			<div className={classes.root}>
 				<AppBar position="static" color = 'default'>
