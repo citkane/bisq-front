@@ -104,5 +104,10 @@
 		"I have completed the deposit":{
 			"en":"I have completed the deposit"
 		}
+	},
+	"help":{
+		"You have no active trades.":{
+			"en":"You have no active trades."
+		}
 	}
 }

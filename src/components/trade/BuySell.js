@@ -165,23 +165,17 @@ class BuySell extends Component {
 	render(){
 		const {trades} = this.state;
 		const {babel,data,root,dir} = this.props;
+		if(!trades.length) return (
+			<div>
+				<Create root = {root} babel = {babel} data ={data} dir = {dir}/>
+				{dir!=='OWN' && <Typography type = 'title'>{babel('There are no offers to '+(dir==='SELL'?'buy':'sell'),{category:'help'})}</Typography>}
+				{dir==='OWN' && <Typography type = 'title'>{babel('You have no open offers',{category:'help'})}</Typography>}
+			</div>
+		)
 		return(
 			<div>
-				{dir!=='OWN' && <Create root = {root} babel = {babel} data ={data}/>}
+				<Create root = {root} babel = {babel} data ={data} dir = {dir}/>
 				<Grid container spacing={16}>{trades.map(t => {
-					/*
-					data.currency_list.some((currency)=>{
-						var curr = t.other_currency;
-						if(curr === 'EUR') curr = '€';
-						if(curr === 'GBP') curr = '£';
-						if(curr === currency.symbol.trim()){
-							t.currency = currency;
-							console.error(currency)
-							return true;
-						}
-						return false;
-					})
-					*/
 					t.currency = M[t.other_currency];
 					t.fiat = t.currency.type === 'fiat';
 					const symbol = t.currency.symbol;

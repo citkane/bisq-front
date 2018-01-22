@@ -38,7 +38,8 @@ market.prototype.get = function(command,params){
 				reject(err);
 				return;
 			}
-			resolve(convert.get(command,body));
+			var data = convert.get(command,body);
+			!data?reject('failed to process market data'):resolve(data);
 		})
 	})
 }

@@ -43,13 +43,18 @@ ticker.prototype.emit = function(){
 	var data = {};
 	var count = 0;
 	var endpoints = ['trade_list','account_list','wallet_tx_list','offer_list','wallet_detail'];
+	var error;
 	endpoints.forEach((end)=>{
 		this.api.get({command:end}).then((d)=>{
 			data[end]=d;
 			count++;
 			if(count === endpoints.length){
-				this.socket.emit('ticker',data);
+				if(!error) this.socket.emit('ticker',data);
+				if(error) this.socket.emit('ticker',{error:'There was an error getting ticker data'});
 			}
+		},(err)=>{
+			count++;
+			error = true;
 		})
 	})
 }

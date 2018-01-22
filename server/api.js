@@ -38,7 +38,6 @@ var api = function(socket,port){
 			/*END inversion */
 
 			/*HACK fiat currencies are two decimal places too low for bisq-api*/
-			console.log()
 				if(data.params.price_type === 'FIXED' && data.params.fiat) data.params.fixed_price = data.params.fixed_price*100
 			/* End HACK */
 
@@ -46,6 +45,8 @@ var api = function(socket,port){
 		}
 		self.get(data).then(function(response){
 			self.socket.emit(data.command,response);
+		},(err)=>{
+			self.socket.emit(data.command,{error:err});
 		});
 	})
 	this.socket.on('delete',function(data){
@@ -57,6 +58,8 @@ var api = function(socket,port){
 	this.socket.on('market',function(data){
 		market.get(data.command,data.params).then(function(response){
 			self.socket.emit(data.command,response);
+		},(err)=>{
+			self.socket.emit(data.command,{error:err});
 		});
 	})
 }
@@ -68,7 +71,9 @@ api.prototype.get = function(data){
 			url:url,
 			json:true,
 		},function(err,resp,body){
-			resolve(convert.get(data.command,body));
+			if(err) reject(err.toString())
+			var d = convert.get(data.command,body)
+			!d?reject('Failed to get '+data.command):resolve(d);
 		})
 	})
 }

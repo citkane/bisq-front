@@ -261,6 +261,9 @@ Account = withStyles(styles)(Account);
 class Detail extends Component {
 	render(){
 		const {trades,babel,root,classes} = this.props;
+		if(!trades.length) return(
+			<Typography type = 'title'>{babel('You have no active trades.',{category:'help'})}</Typography>
+		)
 		return(
 			<div>
 				<Grid container spacing={16}>

@@ -78,11 +78,12 @@ class Forms extends Component {
 		super(props);
 
 		this.accounts = this.props.data.account_list.filter((ac)=>{
+			console.error(this.props.offer.other_currency,ac);
 			return ac.trade_currencies.indexOf(this.props.offer.other_currency)!==-1;
-		}).map(function(ac){
+		}).map((ac)=>{
 			return {
-				id:ac.payment_account_id,
-				name:ac.account_name
+				id:ac.id,
+				name:this.props.offer.other_currency+': '+ac.name
 			}
 		});
 		this.state = {

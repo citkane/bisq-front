@@ -52,27 +52,6 @@ const s = document.location.protocol+'//'+document.location.hostname+':'+process
 const socket = socketIOClient(s);
 const api = new Api(socket);
 
-/*
-var market;
-socket.on('market',(data)=>{
-	market = data;
-
-	var curr = [];
-	var list = market.markets.list;
-	Object.keys(list).forEach((key)=>{
-		if (curr.indexOf(list[key].lname)===-1) curr.push(list[key].lname)
-		if (curr.indexOf(list[key].rname)===-1) curr.push(list[key].rname)
-	})
-	var foo = {}
-	curr.forEach((v)=>{
-		foo[v]={
-			"en":v
-		}
-	})
-	console.log(JSON.stringify(foo))
-
-})
-*/
 
 class App extends Component {
 	constructor(props) {
@@ -181,21 +160,13 @@ class App extends Component {
 		var data = {
 			//market:market
 		};
-		/*
-		//['currency_list','market_list'].forEach(function(command){
-		['market_list'].forEach(function(command){
-			socket.on(command, function(data2){
-				//self.root(command,data)
-				data[command] = data2
-				console.log(command,data2);
-				console.log('');
-			});
-			api.get(command);
-		})
-		*/
+
 		var log;
 		socket.on('ticker',(data2)=>{
-			//data2.market = market;
+			if(data2.error){
+				console.error(data2.error);
+				return;
+			}
 			Object.keys(data2).forEach(function(key){
 				if(!log){
 					console.log(key,data2[key]);
@@ -224,29 +195,6 @@ class App extends Component {
 				this.makeTheme();
 			}
 		})
-		/*
-		api.market('markets').then((data)=>{
-			var left = [];
-			var right = [];
-			var G = this.state.Global;
-
-			data = Object.keys(data).map((key)=>{
-				return data[key];
-			})
-			data.forEach((market)=>{
-				if(left.indexOf(market.pair.split('_')[0]+' - '+market.lname)===-1) left.push(market.pair.split('_')[0]+' - '+market.lname);
-				if(right.indexOf(market.pair.split('_')[1]+' - '+market.rname)===-1) right.push(market.pair.split('_')[1]+' - '+market.rname);
-			})
-			left = left.sort()
-			right = right.sort()
-			G.markets = {
-				left:left,
-				right:right,
-				list:data
-			}
-			this.setState({Global:G});
-		})
-		*/
 	}
 	render() {
 		if(!this.state.data||!this.state.theme) return(

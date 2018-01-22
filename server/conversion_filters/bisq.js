@@ -37,52 +37,66 @@ const convert = function(){
 }
 
 convert.prototype.trade_list = function(data){
+	var error;
 	data = data.map((trade)=>{
+		if(!trade) error = true;
 		return formatTrade(trade);
-	}).sort(function(a,b){
+	})
+	if(!error)data = data.sort(function(a,b){
 		return a.date < b.date?0:1
 	})
-	return data;
+	return !error?data:false;
 }
 convert.prototype.trade_detail = function(data){
 	return formatTrade(data);
 }
 convert.prototype.offer_list = function(data){
+	var error;
 	data = data.map((offer)=>{
+		if(!offer) error = true;
 		return formatOffer(offer);
 	})
-	return data;
+	return !error?data:false;
 }
 convert.prototype.offer_detail = function(offer){
 	return formatOffer(offer);
 }
 convert.prototype.account_list = function(data){
+	var error;
 	data = data.map((ac)=>{
-		var type = ac.payment_method_details.contractData.paymentMethodId;
-		var fiat = type==='BLOCK_CHAINS'?false:true;
-		var currency = ac.trade_currencies[0];
-		type = fiat?type:currency;
-		var name = ac.account_name.replace(type+':','').replace(type,'').trim();
-		if(!name.length) name = ac.account_name;
+		try {
+			var type = ac.payment_method_details.contractData.paymentMethodId;
+			var fiat = type==='BLOCK_CHAINS'?false:true;
+			var currency = ac.trade_currencies[0];
+			type = fiat?type:currency;
+			var name = ac.account_name.replace(type+':','').replace(type,'').trim();
+			if(!name.length) name = ac.account_name;
 
-	/*HACK can't find way yet to determine account min/max from API - hack to allow proof of concept to function */
-		var limit = {
-			min:0.001,
-			max:fiat?0.125:1
+		/*HACK can't find way yet to determine account min/max from API - hack to allow proof of concept to function */
+			var limit = {
+				min:0.001,
+				max:fiat?0.125:1
+			}
+		/*End HACK */
+
+			return {
+				id:ac.payment_account_id,
+				name:name,
+				type:type,
+				pair:fiat?'BTC_'+currency:currency+'_BTC', //invert the pair for crypto trade
+				currency:currency,
+				fiat:fiat,
+				limit:limit,
+				trade_currencies:ac.trade_currencies
+			}
 		}
-	/*End HACK */
-
-		return {
-			id:ac.payment_account_id,
-			name:name,
-			type:type,
-			pair:fiat?'BTC_'+currency:currency+'_BTC', //invert the pair for crypto trade
-			currency:currency,
-			fiat:fiat,
-			limit:limit,
+		catch(err){
+			console.error(err);
+			error =true;
+			return false;
 		}
 	});
-	return data;
+	return !error?data:false;
 }
 /*
 convert.prototype.offer_cancel = function(data){
@@ -121,14 +135,20 @@ convert.prototype.wallet_tx_list = function(data){
 */
 
 function formatOffer(offer){
-	var M = money[offer.other_currency]
-	if(M.type!=='fiat'){
-		offer.other_amount = M.fromDecimal(offer.other_amount);
-		offer.other_amount = M.invert(offer.other_amount);
+	try {
+		var M = money[offer.other_currency]
+		if(M.type!=='fiat'){
+			offer.other_amount = M.fromDecimal(offer.other_amount);
+			offer.other_amount = M.invert(offer.other_amount);
+		}
+		/*Invert semantics for human language*/
+		if(offer.price_detail.use_market_price) offer.price_detail.market_price_margin = offer.price_detail.market_price_margin*(offer.direction==='SELL'?100:-100);
+		return offer;
 	}
-	/*Invert semantics for human language*/
-	if(offer.price_detail.use_market_price) offer.price_detail.market_price_margin = offer.price_detail.market_price_margin*(offer.direction==='SELL'?100:-100);
-	return offer;
+	catch(err){
+		console.error(err);
+		return false;
+	}
 }
 
 const types = {
@@ -138,73 +158,80 @@ const types = {
 	'buyerAsMakerTrade':['buying','maker']
 }
 function formatTrade(trade){
-	var type = Object.keys(trade)[0];
-	trade = trade[type].trade;
-	//console.log(type,trade)
-	var offer = trade.offer.offerPayload;
-	var fiat = offer.paymentMethodId==='BLOCK_CHAINS'?false:true
-	var account = trade.processModel.tradingPeer.paymentAccountPayload;
-	Object.keys(account).forEach(function(key){
-		if(key.indexOf('AccountPayload')!==-1) account = account[key];
-	})
-	Object.keys(account).some(function(key){
-		if(key.indexOf('AccountPayload')!==-1){
-			account = account[key];
-			return true;
+	try {
+		var type = Object.keys(trade)[0];
+		trade = trade[type].trade;
+		//console.log(type,trade)
+		var offer = trade.offer.offerPayload;
+		var fiat = offer.paymentMethodId==='BLOCK_CHAINS'?false:true
+		var account = trade.processModel.tradingPeer.paymentAccountPayload;
+		Object.keys(account).forEach(function(key){
+			if(key.indexOf('AccountPayload')!==-1) account = account[key];
+		})
+		Object.keys(account).some(function(key){
+			if(key.indexOf('AccountPayload')!==-1){
+				account = account[key];
+				return true;
+			}
+			return false;
+		})
+		var base = offer.baseCurrencyCode;
+		var counter = offer.counterCurrencyCode;
+
+	/*HACK fiat currencies are coming in at two decimal places too high from bisq-api*/
+
+		if(money[counter].type === 'fiat') trade.contract.tradePrice = trade.contract.tradePrice/100
+
+	/*END HACK*/
+
+		var invert = false;
+		if(!fiat){
+			invert = {
+				method:offer.counterCurrencyCode
+			}
+			invert.price = money[counter].invert(trade.contract.tradePrice);
+			invert.volume = money[counter].toDecimal(trade.contract.tradeAmount*invert.price);
+			invert.amount = money[base].toDecimal(trade.contract.tradeAmount);
 		}
+
+		var amount = money[base].toDecimal(trade.contract.tradeAmount);
+		var volume = money[counter].toDecimal(amount*trade.contract.tradePrice);
+		var price = money[counter].toDecimal(trade.contract.tradePrice);
+
+		var stage = 0;
+		if (trade.state === 'DEPOSIT_CONFIRMED_IN_BLOCK_CHAIN') stage = 1;
+		if (trade.state === 'SELLER_RECEIVED_FIAT_PAYMENT_INITIATED_MSG'||trade.state === 'BUYER_SAW_ARRIVED_FIAT_PAYMENT_INITIATED_MSG') stage = 2;
+		if (trade.state === 'BUYER_RECEIVED_PAYOUT_TX_PUBLISHED_MSG'||trade.state === 'SELLER_SAW_ARRIVED_PAYOUT_TX_PUBLISHED_MSG') stage = 3
+
+		return{
+			type:types[type],
+			date:trade.takeOfferDate,
+			Date:new Date(trade.takeOfferDate*1).toUTCString(),
+			id:offer.id,
+			ago:tools.dateAgo(trade.takeOfferDate),
+			peer:trade.tradingPeerNodeAddress,
+			account:account,
+			base:base,
+			counter:counter,
+			state:trade.state,
+			method:offer.paymentMethodId,
+			stage:stage,
+			amount:amount,
+			price:price,
+			volume:volume,
+			deposit:{
+				selling:tools.toBtc(offer.sellerSecurityDeposit),
+				buying:tools.toBtc(offer.buyerSecurityDeposit)
+			},
+			fiat:fiat,
+			invert:invert
+		}
+	}
+	catch(err){
+		console.error(err);
 		return false;
-	})
-	var base = offer.baseCurrencyCode;
-	var counter = offer.counterCurrencyCode;
-
-/*HACK fiat currencies are coming in at two decimal places too high from bisq-api*/
-
-	if(money[counter].type === 'fiat') trade.contract.tradePrice = trade.contract.tradePrice/100
-
-/*END HACK*/
-
-	var invert = false;
-	if(!fiat){
-		invert = {
-			method:offer.counterCurrencyCode
-		}
-		invert.price = money[counter].invert(trade.contract.tradePrice);
-		invert.volume = money[counter].toDecimal(trade.contract.tradeAmount*invert.price);
-		invert.amount = money[base].toDecimal(trade.contract.tradeAmount);
 	}
 
-	var amount = money[base].toDecimal(trade.contract.tradeAmount);
-	var volume = money[counter].toDecimal(amount*trade.contract.tradePrice);
-	var price = money[counter].toDecimal(trade.contract.tradePrice);
-
-	var stage = 0;
-	if (trade.state === 'DEPOSIT_CONFIRMED_IN_BLOCK_CHAIN') stage = 1;
-	if (trade.state === 'SELLER_RECEIVED_FIAT_PAYMENT_INITIATED_MSG'||trade.state === 'BUYER_SAW_ARRIVED_FIAT_PAYMENT_INITIATED_MSG') stage = 2;
-	if (trade.state === 'BUYER_RECEIVED_PAYOUT_TX_PUBLISHED_MSG'||trade.state === 'SELLER_SAW_ARRIVED_PAYOUT_TX_PUBLISHED_MSG') stage = 3
-
-	return{
-		type:types[type],
-		date:trade.takeOfferDate,
-		Date:new Date(trade.takeOfferDate*1).toUTCString(),
-		id:offer.id,
-		ago:tools.dateAgo(trade.takeOfferDate),
-		peer:trade.tradingPeerNodeAddress,
-		account:account,
-		base:base,
-		counter:counter,
-		state:trade.state,
-		method:offer.paymentMethodId,
-		stage:stage,
-		amount:amount,
-		price:price,
-		volume:volume,
-		deposit:{
-			selling:tools.toBtc(offer.sellerSecurityDeposit),
-			buying:tools.toBtc(offer.buyerSecurityDeposit)
-		},
-		fiat:fiat,
-		invert:invert
-	}
 }
 
  module.exports = new convert();

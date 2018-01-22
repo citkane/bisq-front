@@ -6,6 +6,10 @@ api.prototype.get = function(command,params){
 	var self = this;
 	return new Promise(function(resolve,reject){
 		self.socket.once(command,function(data){
+			if(data.error){
+				reject(data.error);
+				return;
+			}
 			resolve(data);
 		})
 	})
@@ -15,6 +19,10 @@ api.prototype.market = function(command,params){
 	var self = this;
 	return new Promise(function(resolve,reject){
 		self.socket.once(command,function(data){
+			if(data.error){
+				reject(data.error);
+				return;
+			}
 			resolve(data);
 		})
 	})

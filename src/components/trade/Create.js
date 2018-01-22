@@ -494,8 +494,9 @@ Form.propTypes = {
 Form = withStyles(styles)(Form);
 
 class Create extends Component {
+
 	render(){
-		const {classes,babel,root,data} = this.props;
+		const {classes,babel,root,data,dir} = this.props;
 		return (
 			<div className = {classes.wrapper}>
 				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>root('FullScreenDialog')('Create offer to sell',<Form dir = 'SELL' root={root} babel = {babel} data = {data}/>)}>
@@ -504,7 +505,7 @@ class Create extends Component {
 				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>root('FullScreenDialog')('Create offer to buy',<Form dir = 'BUY' root={root} babel = {babel} data = {data}/>)}>
 					{babel('Create offer to buy BTC',{category:'chrome'})}
 				</Button>
-				<FormGroup>
+				{dir !== 'OWN' && <FormGroup>
 					<FormControlLabel
 						control={
 							<Switch
@@ -514,7 +515,7 @@ class Create extends Component {
 						}
 						label={babel("Show your own offers?",{category:'chrome'})}
 					/>
-				</FormGroup>
+				</FormGroup>}
 			</div>
 		)
 	}

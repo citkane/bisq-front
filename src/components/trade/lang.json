@@ -214,6 +214,15 @@
 		},
 		"terms_text3":{
 			"en":"Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros, vitae egestas augue. Duis vel est augue."
+		},
+		"There are no offers to buy":{
+			"en":"There are no offers to buy"
+		},
+		"There are no offers to sell":{
+			"en":"There are no offers to sell"
+		},
+		"You have no open offers":{
+			"en":"You have no open offers"
 		}
 	}
 }
