@@ -205,39 +205,24 @@ class Form extends Component {
 	}
 	submit = () =>{
 		var {priceType,account,fixed,percent,amount,min_amount} = this.state;
-		console.log('account',account)
 		const {dir,root} = this.props;
-		//var tools = this.props.root('tools');
 		const api = root('api');
-		//var fixed = 0;
-		//M[this.base]
-		//M[account.currency]
-		//if(priceType === 'FIXED') fixed = account.fiat?fixed*10000:Math.floor(100000000/fixed)
+
 		if(priceType === 'FIXED') fixed = account.fiat?
 		M[account.currency].fromDecimal(fixed):
 		M[this.base].fromDecimal(M[account.currency].invert(M[account.currency].fromDecimal(fixed)))
 
-	/*HACK fiat currencies are two decimal places too low for bisq-api*/
-		if(priceType === 'FIXED' && account.fiat) fixed = fixed*100
-	/* End HACK */
-
-	/*Invert percentages to suite offer conditions*/
-		percent = dir.toLowerCase()==='buy'?(percent*-1)/100:(percent*1)/100;
-		//percent = (percent*1)/100;
-		//if(!account.fiat) percent = percent*-1
-	/*END inversion */
-
 		var data = {
+			fiat:account.fiat,
 			payment_account_id:account.id,
 			direction:dir,
 			price_type:priceType,
 			market_pair:account.pair,
 			percentage_from_market_price:percent||0,
-			amount:M[this.base].fromDecimal(amount*1||min_amount*1),//tools.toSatoshi(amount*1||min_amount*1),
-			min_amount:M[this.base].fromDecimal(min_amount*1||amount*1)//tools.toSatoshi(min_amount*1||amount*1)
+			amount:M[this.base].fromDecimal(amount*1||min_amount*1),
+			min_amount:M[this.base].fromDecimal(min_amount*1||amount*1)
 		}
 		if(fixed) data.fixed_price = fixed;
-		console.log('data',data)
 
 		api.get('offer_make',data).then((data)=>{
 

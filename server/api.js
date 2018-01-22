@@ -29,6 +29,21 @@ var api = function(socket,port){
 	this.endpoint = 'http://localhost:'+port+'/api/v1/';
 	var self = this;
 	this.socket.on('get',function(data){
+		if(data.command === 'offer_make'){
+
+			/*Invert percentages to suite offer conditions*/
+				data.params.percentage_from_market_price = data.params.direction === 'BUY'?
+					(data.params.percentage_from_market_price*-1)/100:
+					(data.params.percentage_from_market_price*1)/100;
+			/*END inversion */
+
+			/*HACK fiat currencies are two decimal places too low for bisq-api*/
+			console.log()
+				if(data.params.price_type === 'FIXED' && data.params.fiat) data.params.fixed_price = data.params.fixed_price*100
+			/* End HACK */
+
+			delete data.params.fiat;
+		}
 		self.get(data).then(function(response){
 			self.socket.emit(data.command,response);
 		});

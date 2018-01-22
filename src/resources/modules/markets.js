@@ -23,5 +23,5 @@ Object.keys(markets.currencies).forEach((key)=>{
 		return Math.round(val*markets.currencies[key].precision)/markets.currencies[key].precision;
 	}
 })
-console.error(markets.currencies)
+
 module.exports = markets;
