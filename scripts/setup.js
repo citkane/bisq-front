@@ -20,7 +20,7 @@
  */
 
 const child = require('child_process');
-const tools = require('../server/tools.js');
+const tools = require('../src/resources/modules/tools.js');
 const dev = require('../server/makedev.js');
 const devsettings = require('../devSettings.js');
 
@@ -39,7 +39,7 @@ dev.make(devsettings.startport,true).then(()=>{
 			});
 			console.log('> Finished building production for '+client.dirname);
 		}
-		var user = dev.makeuser(client.dirname,client.port+2,client.gui,devsettings.startport);
+		var user = dev.makeuser(client.dirname,client.port+2,true,devsettings.startport);
 		user.stdout.on('data',(data)=>{
 			if(data.indexOf('Start parse blocks:') !== -1){
 				count++

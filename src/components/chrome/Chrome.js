@@ -182,8 +182,6 @@ class Chrome extends Component {
 	};
 
 	render() {
-		console.error(base.get('me'));
-
 		const {classes,theme,data,colors} = this.props;
 		const screen = base.get('screen');
 		const drawer = (
