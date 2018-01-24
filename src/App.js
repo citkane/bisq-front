@@ -41,6 +41,7 @@ import pink from 'material-ui/colors/pink';
 import lang from './resources/language/master_lang.json';
 import Api from './resources/modules/api.js';
 import tools from './resources/modules/tools.js';
+import base from './resources/modules/base.js';
 
 const Colors = {'teal':teal,'blue':blue,'purple':purple,'indigo':indigo,'cyan':cyan,'green':green,'amber':amber,'brown':brown};
 const colors = ['teal','blue','purple','indigo','cyan','green','amber','brown'];
@@ -60,15 +61,12 @@ window.ui_settings = {
 class App extends Component {
 	constructor(props) {
 		super(props);
-		this.root = this.root.bind(this);
-		//this.babel = this.babel.bind(this);
-	}
-	state = {
-		Global:{
+		var def = {
 			lang:"en",
 			langDir:"ltr",
 			screen:"Welcome",
 			api:api,
+			socket:socket,
 			tools:tools,
 			theme:'light',
 			color:'teal',
@@ -79,34 +77,12 @@ class App extends Component {
 			pair_market:'btc_usd',
 			base_market:'BTC'
 		}
+		this.state = {
+			Global:def,
+			theme:this.makeTheme(def.langDir,def.color,def.theme)
+		}
 	}
 	/*
-	babel(key,opts){
-		if(!opts.type) opts.type = 'text';
-		if(!opts.category || !lang[opts.category][key]){
-			Object.keys(lang).some(function(key2){
-				if(lang[key2][key]){
-					opts.category = key2;
-					return true;
-				}
-				return false;
-			})
-
-		}
-
-		var string;
-		if(!lang[opts.category][key]){
-			console.warn('"'+key+'" is not defined in Babel');
-			string = key;
-		}
-		if(!string) string = lang[opts.category][key][this.state.Global.lang];
-		if(!string) string = lang[opts.category][key].en;
-		if(opts.type === 'text') return string;
-		return(
-			<Babel lang={this.state.Global.lang} string = {string} category = {opts.category} type = {opts.type} aria = {opts.aria}/>
-		)
-	}
-	*/
 	root(key,val){
 		if(typeof val === 'undefined') return this.state.Global[key];
 		var G = this.state.Global;
@@ -138,81 +114,74 @@ class App extends Component {
 		})
 
 	}
-	makeTheme = () =>{
-		this.setState({
-			theme:createMuiTheme({
-				direction:this.state.Global.langDir,
-				palette: {
-					primary: Colors[this.state.Global.color],
-					secondary:pink,
-					type:this.state.Global.theme
-				},
-				status: {
-					danger: 'orange',
-				},
-			})
-		},()=>{
-			console.log(this.state.theme);
+	*/
+	makeTheme = (dir,color,theme) =>{
+		var out = createMuiTheme({
+			direction:dir,
+			palette: {
+				primary: Colors[color],
+				secondary:pink,
+				type:theme
+			},
+			status: {
+				danger: 'orange',
+			},
 		})
-	}
-	componentWillMount(){
-		this.root('api',api);
+		console.log('Theme',out);
+		return out;
 	}
 
 	componentDidMount(){
-		//console.log('theme',this.theme);
-		var data = {
-			//market:market
-		};
-
 		var log;
-		socket.on('ticker',(data2)=>{
-			if(data2.error){
-				console.error(data2.error);
+		socket.on('ticker',(data)=>{
+			if(data.error){
+				console.error(data.error);
 				return;
 			}
-			Object.keys(data2).forEach(function(key){
-				if(!log){
-					console.log(key,data2[key]);
+			if(!log){
+				Object.keys(data).forEach(function(key){
+					console.log(key,data[key]);
 					console.log('');
-				}
-				data[key] = data2[key];
-			})
-			log = true;
-			this.setState({data:data});
+				})
+				log = true;
+			}
+			this.setState({
+				data:data,
+				ready_data:true
+			});
 		})
 		api.ticker();
-		socket.emit('getSettings');
+
 		socket.once('getSettings',(data)=>{
-			if(data){
-				//console.log(data)
-				var G = this.state.Global
-				Object.keys(data).forEach((key)=>{
-					if(key === 'lang') window.ui_settings.lang = data[key];
-					G[key] = data[key];
-				})
-				this.setState({
-					Global:G
-				},()=>{
-					this.makeTheme();
-				})
-			}else{
-				this.makeTheme();
-			}
+			console.warn(data)
+			var G = this.state.Global
+			Object.keys(data).forEach((key)=>{
+				if(key === 'lang') window.ui_settings.lang = data[key];
+				G[key] = data[key];
+			})
+			base.make(this,this.state.Global);
+			base.set('api',api);
+
+			this.setState({
+				Global:G,
+				theme:this.makeTheme(G.langDir,G.color,G.theme),
+				ready_settings:true
+			})
 		})
+		socket.emit('getSettings');
 	}
 	render() {
 
-		if(!this.state.data||!this.state.theme) return(
+		if(!this.state.ready_data || !this.state.ready_settings) return(
 			<div>
-				Could not connect to backend at port:{process.env.SERVER_PORT}
+				Connecting to backend at port:{process.env.SERVER_PORT}
 			</div>
 		);
 		return (
 			<MuiThemeProvider theme={this.state.theme}>
-				<Chrome root = {this.root} data = {this.state.data} colors = {colors}/>
-				<FullScreenDialog root = {this.root} />
-				<AlertDialog root  = {this.root} />
+				<Chrome data = {this.state.data} colors = {colors}/>
+				<FullScreenDialog />
+				<AlertDialog />
 			</MuiThemeProvider>
 		);
 	}

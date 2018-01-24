@@ -29,6 +29,8 @@ import SupportIcon from 'material-ui-icons/Forum';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Babel from '../../resources/language/Babel.js';
+import base from '../../resources/modules/base.js';
+
 
 const styles = theme => ({
 	active:{
@@ -43,35 +45,35 @@ const styles = theme => ({
 class SideDrawer extends Component {
 
 	render() {
-		const {classes,root} = this.props;
+		const {classes} = this.props;
 		return (
 			<div>
 				<List>
-					<ListItem className = {root('screen') === 'Market'?classes.active:classes.list} button onClick = {()=>root('screen','Market')}>
+					<ListItem className = {base.get('screen') === 'Market'?classes.active:classes.list} button onClick = {()=>base.set('screen','Market',true)}>
 						<ListItemIcon>
 							<PublicIcon />
 						</ListItemIcon>
 						<ListItemText primary ={<Babel cat = 'chrome' aria>Market</Babel>} />
 					</ListItem>
-					<ListItem className = {root('screen') === 'Trade'?classes.active:classes.list} button onClick = {()=>root('screen','Trade')}>
+					<ListItem className = {base.get('screen') === 'Trade'?classes.active:classes.list} button onClick = {()=>base.set('screen','Trade',true)}>
 						<ListItemIcon>
 							<TradeIcon />
 						</ListItemIcon>
 						<ListItemText primary ={<Babel cat = 'chrome' aria>Trade</Babel>} />
 					</ListItem>
-					<ListItem className = {root('screen') === 'Portfolio'?classes.active:classes.list} button onClick = {()=>root('screen','Portfolio')}>
+					<ListItem className = {base.get('screen') === 'Portfolio'?classes.active:classes.list} button onClick = {()=>base.set('screen','Portfolio',true)}>
 						<ListItemIcon>
 							<FolderIcon />
 						</ListItemIcon>
 						<ListItemText primary ={<Babel cat = 'chrome' aria>Portfolio</Babel>} />
 					</ListItem>
-					<ListItem className = {root('screen') === 'Funds'?classes.active:classes.list} button onClick = {()=>root('screen','Funds')}>
+					<ListItem className = {base.get('screen') === 'Funds'?classes.active:classes.list} button onClick = {()=>base.set('screen','Funds',true)}>
 						<ListItemIcon>
 							<WalletIcon />
 						</ListItemIcon>
 						<ListItemText primary ={<Babel cat = 'chrome' aria>Funds</Babel>} />
 					</ListItem>
-					<ListItem className = {root('screen') === 'Support'?classes.active:classes.list} button onClick = {()=>root('screen','Support')}>
+					<ListItem className = {base.get('screen') === 'Support'?classes.active:classes.list} button onClick = {()=>base.set('screen','Support',true)}>
 						<ListItemIcon>
 							<SupportIcon />
 						</ListItemIcon>

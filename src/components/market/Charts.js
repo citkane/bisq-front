@@ -22,6 +22,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
+import base from '../../resources/modules/base.js';
 import AnyChart from 'anychart-react';
 import anychart from 'anychart';
 import 'anychart/dist/css/anychart-ui.min.css';
@@ -63,15 +64,14 @@ const styles = theme => ({
 class Charts extends Component {
 	constructor(props) {
 		super(props);
-		this.root = this.props.root;
-		this.pair = this.root('pair_market');
+		this.pair = base.get('pair_market');
 		this.state = {};
 
 	}
 
 	getChart = (chart)=>{
-		this.pair=this.props.root('pair_market')
-		const api = this.props.root('api');
+		this.pair=base.get('pair_market')
+		const api = base.get('api');
 		chart.table1.remove();
 		chart.table2.remove();
 
@@ -116,10 +116,10 @@ class Charts extends Component {
 		//})
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(this.pair!==this.props.root('pair_market')) this.getChart(this.chart);
+		if(this.pair!==base.get('pair_market')) this.getChart(this.chart);
 	}
 	render(){
-		const {classes,root} = this.props;
+		const {classes} = this.props;
 		return(
 			<Paper className={classes.paper}>
 				<div id='anychart'></div>

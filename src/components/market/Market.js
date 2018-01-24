@@ -30,6 +30,7 @@ import { FormControl, FormHelperText } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import market from '../../resources/modules/markets.js';
 import Babel from '../../resources/language/Babel.js';
+import base from '../../resources/modules/base.js';
 
 /*HACK - react does not want to render `<Babel /> - {somether var}` within an option tag */
 	import Lang from '../../resources/language/master_lang.json';
@@ -79,9 +80,8 @@ const styles = theme => ({
 class Market extends Component {
 	constructor(props) {
 		super(props);
-		this.root = this.props.root;
-		this.l = this.root('primary_market');
-		this.r = this.root('secondary_market');
+		this.l = base.get('primary_market');
+		this.r = base.get('secondary_market');
 
 		this.right = market.right.filter((item)=>{
 			return !!market.list[this.l.toLowerCase()+'_'+item.rsymbol.toLowerCase()]
@@ -101,15 +101,10 @@ class Market extends Component {
 		}else{
 			this.r = event.target.value
 		}
-		this.root("primary_market",this.l);
-		this.root("secondary_market",this.r);
+		base.set("primary_market",this.l);
+		base.set("secondary_market",this.r);
 		var pair = this.l.toLowerCase()+'_'+this.r.toLowerCase();
-		this.root('pair_market',pair);
-
-
-		//var l = event.target.name === 'primary_market'?event.target.value:this.root('primary_market').toLowerCase();
-		//var r = event.target.name === 'secondary_market'?event.target.value:this.root('secondary_market').toLowerCase();
-		//this.root('pair_market',l+'_'+r);
+		base.set('pair_market',pair,true);
 	};
 	handleChange = (event, value) => {
 		this.setState({ value });
@@ -117,7 +112,7 @@ class Market extends Component {
 
 	render() {
 		if(!Charts) return null;
-		const {classes,data,root} = this.props;
+		const {classes,data} = this.props;
 		const {value} = this.state;
 		return (
 			<div className={classes.root}>
@@ -174,8 +169,8 @@ class Market extends Component {
 						</FormControl>
 					</form>
 				</div>
-				{value === 0 && <TabContainer  className={classes.content}><OfferBook root={root} /></TabContainer>}
-				{value === 1 && <TabContainer className={classes.content}><Charts root={root} /></TabContainer>}
+				{value === 0 && <TabContainer  className={classes.content}><OfferBook /></TabContainer>}
+				{value === 1 && <TabContainer className={classes.content}><Charts /></TabContainer>}
 
 			</div>
 		);

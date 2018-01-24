@@ -33,6 +33,7 @@ import Select from 'material-ui/Select';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 import Babel from '../../resources/language/Babel.js';
+import base from '../../resources/modules/base.js';
 import money from '../../resources/modules/markets.js';
 const M = money.currencies;
 
@@ -107,7 +108,7 @@ class Form extends Component {
 			//Get a list of available currencies for the user
 			if(this.currency.indexOf(ac.currency) === -1) this.currency.push(ac.currency)
 		})
-		this.base = this.props.root('base_market');
+		this.base = base.get('base_market');
 		this.state = {
 			activeStep:0,
 			accountId:this.accounts[0].id,
@@ -206,8 +207,8 @@ class Form extends Component {
 	}
 	submit = () =>{
 		var {priceType,account,fixed,percent,amount,min_amount} = this.state;
-		const {dir,root} = this.props;
-		const api = root('api');
+		const {dir} = this.props;
+		const api = base.get('api');
 
 		if(priceType === 'FIXED') fixed = account.fiat?
 		M[account.currency].fromDecimal(fixed):
@@ -219,17 +220,17 @@ class Form extends Component {
 			direction:dir,
 			price_type:priceType,
 			market_pair:account.pair,
-			percentage_from_market_price:percent||0,
+			percentage_from_market_price:percent*1||0,
 			amount:M[this.base].fromDecimal(amount*1||min_amount*1),
-			min_amount:M[this.base].fromDecimal(min_amount*1||amount*1)
+			min_amount:M[this.base].fromDecimal(min_amount*1||amount*1),
+			fixed_price:fixed||0,
 		}
-		if(fixed) data.fixed_price = fixed;
-
+		console.log(data);
 		api.get('offer_make',data).then((data)=>{
 
 			if(data === true){
 				api.ticker();
-				root('FullScreenDialogClose')();
+				base.get('FullScreenDialogClose')();
 			}else{
 				console.error(data)
 			}
@@ -525,21 +526,21 @@ Form = withStyles(styles)(Form);
 class Create extends Component {
 
 	render(){
-		const {classes,root,data,dir} = this.props;
+		const {classes,data,dir} = this.props;
 		return (
 			<div className = {classes.wrapper}>
-				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>root('FullScreenDialog')(<Babel cat='chrome'>Create offer to sell</Babel>,<Form dir = 'SELL' root={root} data = {data}/>)}>
+				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>base.get('FullScreenDialog')(<Babel cat='chrome'>Create offer to sell</Babel>,<Form dir = 'SELL' data = {data}/>)}>
 					<Babel cat = 'chrome'>Create offer to sell BTC</Babel>
 				</Button>
-				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>root('FullScreenDialog')(<Babel cat='chrome'>Create offer to buy</Babel>,<Form dir = 'BUY' root={root} data = {data}/>)}>
+				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>base.get('FullScreenDialog')(<Babel cat='chrome'>Create offer to buy</Babel>,<Form dir = 'BUY' data = {data}/>)}>
 					<Babel cat = 'chrome'>Create offer to buy BTC</Babel>
 				</Button>
 				{dir !== 'OWN' && <FormGroup>
 					<FormControlLabel
 						control={
 							<Switch
-								checked={root('showown')}
-								onChange={(event,checked) => root('showown',checked)}
+								checked={base.get('showown')}
+								onChange={(event,checked) => base.set('showown',checked,true)}
 							/>
 						}
 						label={<Babel cat = 'chrome'>Show your own offers?</Babel>}

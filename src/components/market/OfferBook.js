@@ -25,6 +25,7 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
 import Babel from '../../resources/language/Babel.js';
+import base from '../../resources/modules/base.js';
 
 const styles = theme => ({
 	paper:{
@@ -44,14 +45,13 @@ const styles = theme => ({
 class OfferBook extends Component {
 	constructor(props) {
 		super(props);
-		this.root = this.props.root;
-		this.pair = this.root('pair_market');
+		this.pair = base.get('pair_market');
 		this.state = {};
 	}
 
 	getOffers = ()=>{
-		this.pair = this.props.root('pair_market');
-		const api = this.props.root('api');
+		this.pair = base.get('pair_market');
+		const api = base.get('api');
 		api.market('offers',{market:this.pair}).then((data)=>{
 			this.setState({
 				offers:data[Object.keys(data)[0]]
@@ -62,15 +62,12 @@ class OfferBook extends Component {
 		this.getOffers();
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(this.pair!==this.props.root('pair_market')) this.getOffers();
+		if(this.pair !== base.get('pair_market')) this.getOffers();
 	}
 	render(){
-		const {classes,root} = this.props;
+		const {classes} = this.props;
 		const {offers} = this.state;
 		if(!offers) return null;
-		//console.log(root('pair_market'))
-		//const offers = this.state.offers[root('pair_market')];
-
 		return(
 			<Grid container>
 				<Grid item sm={12} md ={6}>
@@ -85,9 +82,9 @@ class OfferBook extends Component {
 									<div className={classes.row}>
 										<div>
 											<Typography className={classes.inline} type = 'body2' component='span'>{offer.price*1} </Typography>
-											{root('secondary_market')} / {root('primary_market')}
+											{base.get('secondary_market')} / {base.get('primary_market')}
 										</div>
-										<Typography type = 'caption'>({offer.amount*1===offer.min_amount*1?offer.amount*1:offer.min_amount*1+' - '+offer.amount*1} {root('primary_market')})</Typography>
+										<Typography type = 'caption'>({offer.amount*1===offer.min_amount*1?offer.amount*1:offer.min_amount*1+' - '+offer.amount*1} {base.get('primary_market')})</Typography>
 									</div>
 								</div>
 							)
@@ -106,9 +103,9 @@ class OfferBook extends Component {
 									<div className={classes.row}>
 										<div>
 											<Typography className={classes.inline} type = 'body2' component='span'>{offer.price*1} </Typography>
-											{root('secondary_market')} / {root('primary_market')}
+											{base.get('secondary_market')} / {base.get('primary_market')}
 										</div>
-										<Typography type = 'caption'>({offer.amount*1===offer.min_amount*1?offer.amount*1:offer.min_amount*1+' - '+offer.amount*1} {root('primary_market')})</Typography>
+										<Typography type = 'caption'>({offer.amount*1===offer.min_amount*1?offer.amount*1:offer.min_amount*1+' - '+offer.amount*1} {base.get('primary_market')})</Typography>
 									</div>
 								</div>
 							)

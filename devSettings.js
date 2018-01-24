@@ -1,6 +1,6 @@
 "use strict"
 
-const gui = true;
+const gui = false;
 var devsettings = function(){
 	this.startport = 3100;
 	this.clients = {

@@ -24,6 +24,7 @@ import Paper from 'material-ui/Paper';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Babel from '../../resources/language/Babel.js';
+import base from '../../resources/modules/base.js';
 
 const styles = theme => ({
 	root:{
@@ -38,7 +39,7 @@ const styles = theme => ({
 class Welcome extends Component {
 
 	render(){
-		const {classes,root} = this.props;
+		const {classes} = this.props;
 		return(
 			<div className = {classes.root}>
 				<Typography type='title' gutterBottom color='primary'>
@@ -52,7 +53,7 @@ class Welcome extends Component {
 					<Typography type = 'body2'>
 						<Babel cat = 'content'>This is a regtest demonstration with trading partners:</Babel>
 					</Typography>
-					{root('peers').map((peer,i)=>{
+					{base.get('peers').map((peer,i)=>{
 						return(
 							<div key = {i}>
 								<Typography><a href = {'http://localhost:'+peer.port} target = '_blank'>{peer.name}</a></Typography>

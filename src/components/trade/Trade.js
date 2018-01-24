@@ -62,7 +62,7 @@ class Trade extends Component {
 	};
 
 	render() {
-		const {classes,root,data} = this.props;
+		const {classes,data} = this.props;
 		const { value } = this.state;
 
 		return (
@@ -77,8 +77,8 @@ class Trade extends Component {
 						}/>
 					</Tabs>
 				</AppBar>
-				{value === 0 && <TabContainer  className={classes.content}><BuySell dir = 'SELL' root = {root} data = {data} /></TabContainer>}
-				{value === 1 && <TabContainer className={classes.content}><BuySell dir = 'BUY' root = {root} data = {data} /></TabContainer>}
+				{value === 0 && <TabContainer  className={classes.content}><BuySell dir = 'SELL' data = {data} /></TabContainer>}
+				{value === 1 && <TabContainer className={classes.content}><BuySell dir = 'BUY' data = {data} /></TabContainer>}
 			</div>
 		);
 	}

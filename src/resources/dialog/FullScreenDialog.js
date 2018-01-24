@@ -27,6 +27,7 @@ import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
+import base from '../modules/base.js';
 
 const styles  = theme => ({
 	appBar: {
@@ -55,9 +56,8 @@ function Transition(props) {
 class FullScreenDialog extends React.Component {
 	constructor(props) {
 		super(props);
-		this.root = this.props.root;
-		this.root('FullScreenDialog',this.handleClickOpen)
-		this.root('FullScreenDialogClose',this.handleClose)
+		base.set('FullScreenDialog',this.handleClickOpen)
+		base.set('FullScreenDialogClose',this.handleClose)
 	}
 	state = {
 		open: false,

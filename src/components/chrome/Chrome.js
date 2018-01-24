@@ -45,6 +45,7 @@ import Portfolio from '../portfolio/Portfolio.js';
 import Funds from '../funds/Funds.js';
 import Support from '../support/Support.js';
 import Babel from '../../resources/language/Babel.js';
+import base from '../../resources/modules/base.js';
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -181,19 +182,20 @@ class Chrome extends Component {
 	};
 
 	render() {
+		console.error(base.get('me'));
 
-		const {classes,theme,root,data,colors} = this.props;
-		const screen = this.props.root('screen');
+		const {classes,theme,data,colors} = this.props;
+		const screen = base.get('screen');
 		const drawer = (
 			<div>
 				<div className={classes.drawerHeader}>
 					<div className = {theme.direction==='rtl'?classes.logo:null}>
-						<Bisq id = 'logo' action = {()=>root('screen','Welcome')} />
+						<Bisq id = 'logo' action = {()=>base.set('screen','Welcome',true)} />
 					</div>
 				</div>
-				<Wallet root = {root} wallet = {data.wallet_detail}/>
+				<Wallet wallet = {data.wallet_detail}/>
 				<Divider />
-				<SideDrawer root={root} />
+				<SideDrawer />
 			</div>
 		);
 		return (
@@ -218,9 +220,9 @@ class Chrome extends Component {
 							</Grid>
 						</Toolbar>
 						<div className = {classes.settings}>
-							<span className = {classes.me}>{root('me').name}</span>
+							<span className = {classes.me}>{base.get('me').name}</span>
 							<SettingsIcon className = {classes.hover} onClick={()=>{
-								root('FullScreenDialog')(<Babel cat='chrome'>Settings</Babel>,<Settings root={root} colors={colors}/>)
+								base.get('FullScreenDialog')(<Babel cat='chrome'>Settings</Babel>,<Settings colors={colors}/>)
 							}}/>
 						</div>
 
@@ -254,12 +256,12 @@ class Chrome extends Component {
 						</Drawer>
 		            </Hidden>
 					<main className={classes.content}>
-						{screen === 'Welcome' && <Welcome root={root} data={data}/>}
-						{screen === 'Market' && <Market root={root} data = {data}/>}
-						{screen === 'Trade' && <Trade root={root} data={data}/>}
-						{screen === 'Portfolio' && <Portfolio root={root} data={data}/>}
-						{screen === 'Funds' && <Funds root={root} data={data}/>}
-						{screen === 'Support' && <Support root={root} data={data}/>}
+						{screen === 'Welcome' && <Welcome data={data}/>}
+						{screen === 'Market' && <Market data = {data}/>}
+						{screen === 'Trade' && <Trade data={data}/>}
+						{screen === 'Portfolio' && <Portfolio data={data}/>}
+						{screen === 'Funds' && <Funds data={data}/>}
+						{screen === 'Support' && <Support data={data}/>}
 					</main>
 				</div>
 			</div>

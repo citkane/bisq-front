@@ -28,6 +28,7 @@ import Select from 'material-ui/Select';
 import TranslateIcon from 'material-ui-icons/Translate';
 import Avatar from 'material-ui/Avatar';
 import Babel from '../../resources/language/Babel.js';
+import base from '../../resources/modules/base.js';
 
 const styles = theme => ({
 	paper:{
@@ -54,7 +55,7 @@ class Settings extends Component {
 		super(props);
 		this.state = {
 			theme:'light',
-			lang:this.props.root('lang')
+			lang:base.get('lang')
 		}
 
 	}
@@ -63,12 +64,12 @@ class Settings extends Component {
 		var val = event.target.value
 		if(name === 'lang') window.ui_settings.lang = val;
 		this.setState({ [name]:val},()=>{
-			this.props.root(name,val)
+			base.set(name,val,true)
 		});
 
 	};
 	render(){
-		const {classes,colors,root} = this.props;
+		const {classes,colors} = this.props;
 		return (
 			<div>
 				<Paper className = {classes.paper}>
@@ -91,7 +92,7 @@ class Settings extends Component {
 								onChange={this.handleChange('lang')}
 								input={<Input id="language" />}
 							>
-								{root('langList').map((lang,i)=>{
+								{base.get('langList').map((lang,i)=>{
 									return <option key={i} value={lang.language} >
 										{lang.dir === 'ltr'?lang.language+' - '+lang.name:lang.name+' - '+lang.language}
 									</option>
@@ -112,7 +113,7 @@ class Settings extends Component {
 						</InputLabel>
 							<Select
 								native
-								value={root('theme')}
+								value={base.get('theme')}
 								onChange={this.handleChange('theme')}
 								input={<Input id="theme" />}
 							>
@@ -133,7 +134,7 @@ class Settings extends Component {
 						</InputLabel>
 							<Select
 								native
-								value={root('color')}
+								value={base.get('color')}
 								onChange={this.handleChange('color')}
 								input={<Input id="color" />}
 							>

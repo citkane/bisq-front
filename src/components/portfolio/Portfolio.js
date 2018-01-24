@@ -64,7 +64,7 @@ class Portfolio extends Component {
 	};
 
 	render() {
-		const {classes,root,data} = this.props;
+		const {classes,data} = this.props;
 		const {value} = this.state;
 		const trades = data.trade_list;
 		return (
@@ -85,8 +85,8 @@ class Portfolio extends Component {
 						}/>
 					</Tabs>
 				</AppBar>
-				{value === 0 && <TabContainer  className={classes.content}><Detail trades = {trades} root = {root}/></TabContainer>}
-				{value === 1 && <TabContainer className={classes.content}><div><BuySell dir = 'OWN' root = {root} data = {data} /></div></TabContainer>}
+				{value === 0 && <TabContainer  className={classes.content}><Detail trades = {trades} /></TabContainer>}
+				{value === 1 && <TabContainer className={classes.content}><div><BuySell dir = 'OWN' data = {data} /></div></TabContainer>}
 				{value === 2 && <TabContainer  className={classes.content}><div>ToDo</div></TabContainer>}
 				{value === 3 && <TabContainer className={classes.content}><div>ToDo</div></TabContainer>}
 			</div>

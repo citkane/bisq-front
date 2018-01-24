@@ -32,6 +32,7 @@ import Button from 'material-ui/Button';
 import Forms from './Forms.js';
 import Create from './Create.js';
 import Babel from '../../resources/language/Babel.js';
+import base from '../../resources/modules/base.js';
 import money from '../../resources/modules/markets.js';
 const M = money.currencies;
 
@@ -62,7 +63,7 @@ class Action extends Component {
 		this.setState({anchorEl:null});
 	};
 	reject = (id) =>{
-		var api = this.props.root('api')
+		var api = base.get('api')
 		api.delete('offer_cancel',{
 			offer_id:id
 		}).then(function(data){
@@ -71,7 +72,7 @@ class Action extends Component {
 	}
 	render(){
 		const {anchorEl} = this.state;
-		const {classes,offer,data,root} = this.props;
+		const {classes,offer,data} = this.props;
 		const open = !!anchorEl;
 		const title = offer.direction === 'BUY'?
 			<Babel cat = 'chrome'>Sell BTC</Babel>:
@@ -85,7 +86,7 @@ class Action extends Component {
 						<Chip
 							avatar = {<Avatar onMouseOver={this.handlePopoverOpen} onMouseOut={this.handlePopoverClose} ><FaceIcon className={classes.svgIcon} /></Avatar>}
 							label={title}
-							onClick={()=>root('FullScreenDialog')(title,<Forms root = {root} data = {data} offer = {offer} type = {offer.direction} />)}
+							onClick={()=>base.get('FullScreenDialog')(title,<Forms data = {data} offer = {offer} type = {offer.direction} />)}
 						/>
 						<Popover
 							className={classes.popover}
@@ -109,7 +110,7 @@ class Action extends Component {
 					</div>
 				)}
 				{owner && <Button raised color="accent" className={classes.button} onClick = {
-					()=>root('AlertDialog')(()=>this.reject(offer.offer_id),
+					()=>base.get('AlertDialog')(()=>this.reject(offer.offer_id),
 					{
 						title:<Babel cat = 'dialog'>cancel_title</Babel>,
 						description:<Babel cat = 'dialog'>cancel_description</Babel>,
@@ -142,7 +143,7 @@ class BuySell extends Component {
 			var owner = trade.offerer.split(':')[1]*1===(process.env.SERVER_PORT*1+1);
 			if(this.props.dir==='OWN'){
 				return owner;
-			}else if(this.props.root('showown')){
+			}else if(base.get('showown')){
 				return trade.direction === this.props.dir;
 			}else{
 				return trade.direction === this.props.dir && !owner
@@ -168,10 +169,10 @@ class BuySell extends Component {
 
 	render(){
 		const {trades} = this.state;
-		const {data,root,dir} = this.props;
+		const {data,dir} = this.props;
 		if(!trades.length) return (
 			<div>
-				<Create root = {root} data ={data} dir = {dir}/>
+				<Create data ={data} dir = {dir}/>
 				{dir!=='OWN' && <Typography type = 'title'>
 					<Babel cat = 'help'>{'There are no offers to '+(dir==='SELL'?'buy':'sell')}</Babel>
 				</Typography>}
@@ -182,7 +183,7 @@ class BuySell extends Component {
 		)
 		return(
 			<div>
-				<Create root = {root} data ={data} dir = {dir}/>
+				<Create data ={data} dir = {dir}/>
 				<Grid container spacing={16}>{trades.map(t => {
 					t.currency = M[t.other_currency];
 					t.fiat = t.currency.type === 'fiat';
@@ -243,7 +244,7 @@ class BuySell extends Component {
 										<Typography component = 'span'>???</Typography>
 									</div>
 									<Divider inset light />
-									<Action root = {root} offer = {t} data = {data}/>
+									<Action offer = {t} data = {data}/>
 								</CardContent>
 							</Card>
 						</Grid>

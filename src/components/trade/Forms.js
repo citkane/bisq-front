@@ -32,7 +32,9 @@ import Switch from 'material-ui/Switch';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import Select from 'material-ui/Select';
 import Babel from '../../resources/language/Babel.js';
-import tools from '../../resources/modules/tools.js';
+import base from '../../resources/modules/base.js';
+
+var tools;
 
 const styles  = theme => ({
 	paper:{
@@ -76,7 +78,7 @@ const styles  = theme => ({
 class Forms extends Component {
 	constructor(props){
 		super(props);
-
+		tools = base.get('tools');
 		this.accounts = this.props.data.account_list.filter((ac)=>{
 			console.error(this.props.offer.other_currency,ac);
 			return ac.trade_currencies.indexOf(this.props.offer.other_currency)!==-1;
@@ -125,24 +127,22 @@ class Forms extends Component {
 		})
 	}
 	acceptOffer = (id) =>{
-		const {root} = this.props;
 		console.warn(id,this.state.account,tools.toSatoshi(this.state.btc));
 		var self = this;
-		root('api').get('offer_take',{
+		base.get('api').get('offer_take',{
 			offer_id:id,
 			payment_account_id:this.state.account,
 			amount:tools.toSatoshi(this.state.btc)*1
 		}).then(function(data){
 			console.log(data);
 			if(data === true){
-				//root('api').generate(1);
 				self.handleNext();
 			}
 		})
 	}
 	render(){
 		const {btc} = this.state;
-		const {type,offer,classes,root} = this.props;
+		const {type,offer,classes} = this.props;
 
 		const fixed = offer.btc_amount === offer.min_btc_amount;
 		const market = offer.price_detail.use_market_price;
@@ -379,12 +379,12 @@ class Forms extends Component {
 								<Typography gutterBottom>
 									<Babel cat = 'forms'>accepted trade</Babel>
 								</Typography>
-								<Button raised color='primary' onClick={root('FullScreenDialogClose')} className={classes.button}>
+								<Button raised color='primary' onClick={base.get('FullScreenDialogClose')} className={classes.button}>
 									<Babel cat = 'forms'>Offers</Babel>
 								</Button>
 								<Button raised color='primary' onClick={()=>{
-									root('FullScreenDialogClose')();
-									root('screen','Portfolio');
+									base.get('FullScreenDialogClose')();
+									base.get('screen','Portfolio');
 								}} className={classes.button}>
 									<Babel cat = 'forms'>Open Trades</Babel>
 								</Button>

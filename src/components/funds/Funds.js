@@ -24,6 +24,7 @@ import Paper from 'material-ui/Paper';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import Bitcoin from '../../resources/icons/Bitcoin.js'
+import base from '../../resources/modules/base.js';
 
 const styles = theme => ({
 	main:{
@@ -49,13 +50,12 @@ const styles = theme => ({
 class Funds extends Component {
 	constructor(props) {
 		super(props);
-		this.root = this.props.root;
 	}
 	render(){
-		const {root,data,classes} = this.props
+		const {data,classes} = this.props
 		var wallet = data.wallet_tx_list;
 
-		const tools = root('tools');
+		const tools = base.get('tools');
 		wallet = wallet.filter((trans)=>{
 			return trans.confidence && trans.confidence.indexOf('height')!==-1 && trans.confidence.indexOf('depth')!==-1
 		}).map((trans)=>{

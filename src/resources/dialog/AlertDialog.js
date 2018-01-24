@@ -28,6 +28,7 @@ import Dialog, {
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Babel from '../language/Babel.js';
+import base from '../modules/base.js';
 
 const styles  = theme => ({
 	root:{
@@ -38,8 +39,7 @@ const styles  = theme => ({
 class AlertDialog extends React.Component {
 	constructor(props){
 		super(props);
-		this.root = this.props.root;
-		this.root('AlertDialog',this.handleClickOpen);
+		base.set('AlertDialog',this.handleClickOpen);
 	}
 	state = {
 		open: false,
