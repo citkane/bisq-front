@@ -24,3 +24,4 @@ nohup.out
 package-lock.json
 twister
 src/data
+server/language/api_key.txt

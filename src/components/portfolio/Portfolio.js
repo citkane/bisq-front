@@ -27,6 +27,7 @@ import Detail from './Detail.js';
 import BuySell from '../trade/BuySell.js';
 import './Portfolio.css';
 import tools from '../../resources/modules/tools'
+import Babel from '../../resources/language/Babel.js';
 
 function TabContainer(props) {
 	return (
@@ -63,21 +64,29 @@ class Portfolio extends Component {
 	};
 
 	render() {
-		const {classes,root,babel,data} = this.props;
+		const {classes,root,data} = this.props;
 		const {value} = this.state;
 		const trades = data.trade_list;
 		return (
 			<div className={classes.root}>
 				<AppBar position="static" color = 'default'>
 					<Tabs value={value} onChange={this.handleChange} indicatorColor = 'primary'>
-						<Tab label={babel('Open trades',{type:'span',category:'chrome',aria:true})}/>
-						<Tab label={babel('Open offers',{type:'span',category:'chrome',aria:true})}/>
-						<Tab label={babel('History',{type:'span',category:'chrome',aria:true})}/>
-						<Tab label={babel('Failed',{type:'span',category:'chrome',aria:true})}/>
+						<Tab label={
+							<Babel cat = 'chrome' aria>Open trades</Babel>
+						}/>
+						<Tab label={
+							<Babel cat = 'chrome' aria>Open offers</Babel>
+						}/>
+						<Tab label={
+							<Babel cat = 'chrome' aria>History</Babel>
+						}/>
+						<Tab label={
+							<Babel cat = 'chrome' aria>Failed</Babel>
+						}/>
 					</Tabs>
 				</AppBar>
-				{value === 0 && <TabContainer  className={classes.content}><Detail trades = {trades} babel = {babel} root = {root}/></TabContainer>}
-				{value === 1 && <TabContainer className={classes.content}><div><BuySell dir = 'OWN' root = {root} babel = {babel} data = {data} /></div></TabContainer>}
+				{value === 0 && <TabContainer  className={classes.content}><Detail trades = {trades} root = {root}/></TabContainer>}
+				{value === 1 && <TabContainer className={classes.content}><div><BuySell dir = 'OWN' root = {root} data = {data} /></div></TabContainer>}
 				{value === 2 && <TabContainer  className={classes.content}><div>ToDo</div></TabContainer>}
 				{value === 3 && <TabContainer className={classes.content}><div>ToDo</div></TabContainer>}
 			</div>

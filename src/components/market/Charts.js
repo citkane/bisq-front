@@ -119,7 +119,7 @@ class Charts extends Component {
 		if(this.pair!==this.props.root('pair_market')) this.getChart(this.chart);
 	}
 	render(){
-		const {classes,babel,root} = this.props;
+		const {classes,root} = this.props;
 		return(
 			<Paper className={classes.paper}>
 				<div id='anychart'></div>

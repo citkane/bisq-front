@@ -31,8 +31,10 @@ import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import Forms from './Forms.js';
 import Create from './Create.js';
+import Babel from '../../resources/language/Babel.js';
 import money from '../../resources/modules/markets.js';
 const M = money.currencies;
+
 
 const styles = theme => ({
 	svgIcon: {
@@ -69,9 +71,11 @@ class Action extends Component {
 	}
 	render(){
 		const {anchorEl} = this.state;
-		const {classes,offer,babel,data,root} = this.props;
+		const {classes,offer,data,root} = this.props;
 		const open = !!anchorEl;
-		const title = offer.direction === 'BUY'?babel('sell',{category:'cards'})+' BTC':babel('buy',{category:'cards'})+' BTC';
+		const title = offer.direction === 'BUY'?
+			<Babel cat = 'chrome'>Sell BTC</Babel>:
+			<Babel cat = 'chrome'>Buy BTC</Babel>
 		const owner = offer.owner;
 
 		return(
@@ -81,7 +85,7 @@ class Action extends Component {
 						<Chip
 							avatar = {<Avatar onMouseOver={this.handlePopoverOpen} onMouseOut={this.handlePopoverClose} ><FaceIcon className={classes.svgIcon} /></Avatar>}
 							label={title}
-							onClick={()=>root('FullScreenDialog')(title,<Forms babel = {babel} root = {root} data = {data} offer = {offer} type = {offer.direction} />)}
+							onClick={()=>root('FullScreenDialog')(title,<Forms root = {root} data = {data} offer = {offer} type = {offer.direction} />)}
 						/>
 						<Popover
 							className={classes.popover}
@@ -107,13 +111,13 @@ class Action extends Component {
 				{owner && <Button raised color="accent" className={classes.button} onClick = {
 					()=>root('AlertDialog')(()=>this.reject(offer.offer_id),
 					{
-						title:babel('cancel_title',{category:'dialog',type:'text'}),
-						description:babel('cancel_description',{category:'dialog',type:'text'}),
-						yes:babel('yes',{category:'chrome',type:'text'}),
-						no:babel('no',{category:'chrome',type:'text'})
+						title:<Babel cat = 'dialog'>cancel_title</Babel>,
+						description:<Babel cat = 'dialog'>cancel_description</Babel>,
+						yes:<Babel cat = 'chrome'>yes</Babel>,
+						no:<Babel cat = 'chrome'>no</Babel>
 					})}
 				>
-					{babel('Cancel Offer',{category:'cards'})}
+					<Babel cat = 'cards'>Cancel Offer</Babel>
 				</Button>}
 			</CardActions>
 		)
@@ -164,17 +168,21 @@ class BuySell extends Component {
 
 	render(){
 		const {trades} = this.state;
-		const {babel,data,root,dir} = this.props;
+		const {data,root,dir} = this.props;
 		if(!trades.length) return (
 			<div>
-				<Create root = {root} babel = {babel} data ={data} dir = {dir}/>
-				{dir!=='OWN' && <Typography type = 'title'>{babel('There are no offers to '+(dir==='SELL'?'buy':'sell'),{category:'help'})}</Typography>}
-				{dir==='OWN' && <Typography type = 'title'>{babel('You have no open offers',{category:'help'})}</Typography>}
+				<Create root = {root} data ={data} dir = {dir}/>
+				{dir!=='OWN' && <Typography type = 'title'>
+					<Babel cat = 'help'>{'There are no offers to '+(dir==='SELL'?'buy':'sell')}</Babel>
+				</Typography>}
+				{dir==='OWN' && <Typography type = 'title'>
+					<Babel cat = 'help'>You have no open offers</Babel>
+				</Typography>}
 			</div>
 		)
 		return(
 			<div>
-				<Create root = {root} babel = {babel} data ={data} dir = {dir}/>
+				<Create root = {root} data ={data} dir = {dir}/>
 				<Grid container spacing={16}>{trades.map(t => {
 					t.currency = M[t.other_currency];
 					t.fiat = t.currency.type === 'fiat';
@@ -182,9 +190,9 @@ class BuySell extends Component {
 					const amount = t.other_amount
 					var title;
 					if(dir === 'OWN'||t.owner){
-						title = babel('You want to '+t.direction.toLowerCase(),{category:'cards'});
+						title = <Babel cat = 'cards'>{'You want to '+t.direction.toLowerCase()}</Babel>;
 					}else{
-						title = babel(t.direction==='BUY'?'sell':'buy',{category:'cards'});
+						title = <Babel cat = 'cards'>{t.direction==='BUY'?'sell':'buy'}</Babel>;
 					}
 					return (
 						<Grid item lg={3} md = {6} sm = {6} xs = {12} key = {t.offer_id} className = 'card'>
@@ -195,12 +203,16 @@ class BuySell extends Component {
 									</div>
 									<Divider light />
 									<div className = 'cardrow'>
-										<Typography component = 'span' color = 'primary'>{babel('market',{category:'cards'})+': '}</Typography>
+										<Typography component = 'span' color = 'primary'>
+											<Babel cat = 'cards'>You have no open offers</Babel>:
+										</Typography>
 										<Typography component = 'span'>{t.other_currency}</Typography>
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
-										<Typography color = 'primary'>{babel('price',{category:'cards'})+' / 1 BTC: '}</Typography>
+										<Typography color = 'primary'>
+											<Babel cat = 'cards'>price</Babel> / 1 BTC:
+										</Typography>
 										{t.price_detail.use_market_price && (
 											<span>
 												<Typography>({t.price_detail.market_price_margin}%) </Typography>
@@ -217,7 +229,7 @@ class BuySell extends Component {
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
-										<Typography component = 'span' color = 'primary'>{t.other_currency} {babel('cost',{category:'cards'})}: {t.min_btc_amount!==t.btc_amount && "(min|max)"} </Typography>
+										<Typography component = 'span' color = 'primary'>{t.other_currency} <Babel cat = 'cards'>cost</Babel>: {t.min_btc_amount!==t.btc_amount && "(min|max)"} </Typography>
 										<Typography component = 'span'>
 											{t.min_btc_amount!==t.btc_amount && (M[t.other_currency].round(amount*t.min_btc_amount)+' | ')}
 											{M[t.other_currency].round(amount*t.btc_amount)}
@@ -225,11 +237,13 @@ class BuySell extends Component {
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
-										<Typography component = 'span' color = 'primary'>{babel('payment method',{category:'cards'})+': '}</Typography>
+										<Typography component = 'span' color = 'primary'>
+											<Babel cat = 'cards'>payment method</Babel>:
+										</Typography>
 										<Typography component = 'span'>???</Typography>
 									</div>
 									<Divider inset light />
-									<Action babel = {babel} root = {root} offer = {t} data = {data}/>
+									<Action root = {root} offer = {t} data = {data}/>
 								</CardContent>
 							</Card>
 						</Grid>

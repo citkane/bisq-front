@@ -32,6 +32,7 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import Select from 'material-ui/Select';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
+import Babel from '../../resources/language/Babel.js';
 import money from '../../resources/modules/markets.js';
 const M = money.currencies;
 
@@ -245,12 +246,12 @@ class Form extends Component {
 		})
 	}
 	render(){
-		const {dir,classes,babel} = this.props;
+		const {dir,classes} = this.props;
 		const {activeStep,expanded,account,amount,min_amount,currency,accountId,priceType,percent,fixed,accepted} = this.state;
 		const steps = [
-			babel('Select your trade account',{category:'forms'}),
-			babel('Set your trade amount and price',{category:'forms'}),
-			babel('Confirm and publish',{category:'forms'})
+			<Babel cat = 'forms'>Select your trade account</Babel>,
+			<Babel cat = 'forms'>Set your trade amount and price</Babel>,
+			<Babel cat = 'forms'>Confirm and publish</Babel>
 		];
 
 		const fiat = account.fiat
@@ -260,7 +261,9 @@ class Form extends Component {
 					return(
 						<Paper className = {classes.paper}>
 							<FormControl className={classes.formControl}>
-								<InputLabel htmlFor="currency" shrink>{babel('Select currency',{category:'forms'})}</InputLabel>
+								<InputLabel htmlFor="currency" shrink>
+									<Babel cat = 'forms'>Select currency</Babel>
+								</InputLabel>
 								<Select
 
 									native
@@ -274,7 +277,9 @@ class Form extends Component {
 								</Select>
 							</FormControl>
 							<FormControl className={classes.formControl}>
-								<InputLabel htmlFor="account_list" shrink>{babel('Select account',{category:'forms'})}</InputLabel>
+								<InputLabel htmlFor="account_list" shrink>
+									<Babel cat = 'forms'>Select account</Babel>
+								</InputLabel>
 								<Select
 									native
 									value={accountId}
@@ -301,7 +306,10 @@ class Form extends Component {
 								<form noValidate autoComplete="off" className={classes.formControl2}>
 									<TextField
 										id="min_amount"
-										label = {dir==='SELL'?babel('Min BTC to sell',{category:'forms'}):babel('Min BTC to buy',{category:'forms'})}
+										label = {dir==='SELL'?
+											<Babel cat = 'forms'>Min BTC to sell</Babel>:
+											<Babel cat = 'forms'>Min BTC to buy</Babel>
+										}
 										InputLabelProps = {{className:classes.formControl2}}
 										value={min_amount}
 										onChange={(e)=>this.setVol(e,true)}
@@ -313,7 +321,10 @@ class Form extends Component {
 								<form noValidate autoComplete="off" className={classes.formControl2}>
 									<TextField
 										id="amount"
-										label = {dir==='SELL'?babel('BTC to sell',{category:'forms',type:'text'}):babel('BTC to buy',{category:'forms',type:'text'})}
+										label = {dir==='SELL'?
+											<Babel cat = 'forms'>BTC to sell</Babel>:
+											<Babel cat = 'forms'>BTC to buy</Babel>
+										}
 										value={amount}
 										onChange={(e)=>this.setVol(e)}
 										className={classes.item}
@@ -329,15 +340,21 @@ class Form extends Component {
 									<div className = {classes.row}>
 
 										<FormControl className={classes.formControl}>
-											<InputLabel htmlFor="priceType">{babel('Price type',{category:'forms'})}</InputLabel>
+											<InputLabel htmlFor="priceType">
+												<Babel cat = 'forms'>Price type</Babel>
+											</InputLabel>
 											<Select
 												native
 												defaultValue = {priceType}
 												onChange={this.handleAccount('priceType')}
 												input={<Input id="priceType" />}
 											>
-												<option value='PERCENTAGE' key = '2'>{babel('Percentage from market average',{category:'forms'})}</option>
-												<option value='FIXED' key = '1'>{babel('Fixed price',{category:'forms'})}</option>
+												<option value='PERCENTAGE' key = '2'>
+													<Babel cat = 'forms'>Percentage from market average</Babel>
+												</option>
+												<option value='FIXED' key = '1'>
+													<Babel cat = 'forms'>Fixed price</Babel>
+												</option>
 											</Select>
 
 										</FormControl>
@@ -348,7 +365,7 @@ class Form extends Component {
 											<TextField
 												id="percent"
 												required
-												label = {babel("Percentage variation",{category:'forms'})}
+												label = {<Babel cat = 'forms'>Percentage variation</Babel>}
 												defaultValue={percent}
 												onChange={(e)=>this.setPrice(e,true)}
 												labelClassName={classes.label}
@@ -359,11 +376,11 @@ class Form extends Component {
 											<TextField
 												id="fixed"
 												required
-												label = {babel('Price in',{category:'forms'})+' '+currency}
+												label = {<span><Babel cat = 'forms'>Price in</Babel> {currency}</span>}
 												defaultValue={fixed}
 												onChange={(e)=>this.setPrice(e)}
 												className={classes.item}
-												helperText={babel('Fixed price for one BTC',{category:'forms'})+' ('+currency+')'}
+												helperText={<span><Babel cat = 'forms'>Fixed price for one BTC</Babel> ({currency})</span>}
 											/>
 										</form>}
 									</div>
@@ -378,44 +395,56 @@ class Form extends Component {
 
 					if(percent*1) perc = percent*1 > 0?
 						<span className = {dir==='BUY'?classes.warn:classes.nowarn}>
-							{percent+'% '+babel('above',{category:'forms'})+' '}
+							<span>{percent+'%'} <Babel cat = 'forms'>above</Babel> </span>
 						</span>:
 						<span className = {dir==='SELL'?classes.warn:classes.nowarn}>
-							{(percent*-1)+'%'} {babel('below',{category:'forms'})+' '}
+							<span>{(percent*-1)+'%'} <Babel cat = 'forms'>below</Babel> </span>
 						</span>;
 					return (
 						<div>
 							<Paper className = {classes.paper2}>
 								<Typography type = 'title'>
-									{babel('Offer to '+dir,{category:'forms'})} {min!==max && min+' - '}
+									<Babel cat = 'forms'>{'Offer to '+dir}</Babel> {min!==max && min+' - '}
 									{max} BTC @ {priceType === 'PERCENTAGE' && perc}
-									{priceType === 'PERCENTAGE' && currency+' '+babel('market',{category:'forms'})}
+									{priceType === 'PERCENTAGE' && (<span>{currency} <Babel cat = 'forms'>market</Babel></span>)}
 									{priceType === 'FIXED' && fixed+' '+currency+' / BTC'}
 								</Typography>
 							</Paper>
 							<div className={classes.panels}>
 								<ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handlePanel('panel1')}>
 									<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-										<Typography type = 'body2' color = 'primary'>{babel('terms_title1',{category:'help',type:'text'})}</Typography>
+										<Typography type = 'body2' color = 'primary'>
+											<Babel cat = 'help'>terms_title1</Babel>
+										</Typography>
 									</ExpansionPanelSummary>
 									<ExpansionPanelDetails>
-										<Typography>{babel('terms_text1',{category:'help',type:'text'})}</Typography>
+										<Typography>
+											<Babel cat = 'help'>terms_text1</Babel>
+										</Typography>
 									</ExpansionPanelDetails>
 								</ExpansionPanel>
 								<ExpansionPanel expanded={expanded === 'panel2'} onChange={this.handlePanel('panel2')}>
 									<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-										<Typography type = 'body2' color = 'primary'>{babel('terms_title2',{category:'help',type:'text'})}</Typography>
+										<Typography type = 'body2' color = 'primary'>
+											<Babel cat = 'help'>terms_title2</Babel>
+										</Typography>
 									</ExpansionPanelSummary>
 									<ExpansionPanelDetails>
-										<Typography>{babel('terms_text2',{category:'help',type:'text'})}</Typography>
+										<Typography>
+											<Babel cat = 'help'>terms_text2</Babel>
+										</Typography>
 									</ExpansionPanelDetails>
 								</ExpansionPanel>
 								<ExpansionPanel expanded={expanded === 'panel3'} onChange={this.handlePanel('panel3')}>
 									<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-										<Typography type = 'body2' color = 'primary'>{babel('terms_title3',{category:'help',type:'text'})}</Typography>
+										<Typography type = 'body2' color = 'primary'>
+											<Babel cat = 'help'>terms_title3</Babel>
+										</Typography>
 									</ExpansionPanelSummary>
 									<ExpansionPanelDetails>
-										<Typography>{babel('terms_text3',{category:'help',type:'text'})}</Typography>
+										<Typography>
+											<Babel cat = 'help'>terms_text3</Babel>
+										</Typography>
 									</ExpansionPanelDetails>
 								</ExpansionPanel>
 							</div>
@@ -428,7 +457,7 @@ class Form extends Component {
 												onChange={this.consent}
 											/>
 										}
-										label={babel("acknowledge terms",{category:'forms'})}
+										label={<Babel cat = 'forms'>acknowledge terms</Babel>}
 									/>
 								</FormGroup>
 							</Paper>
@@ -453,7 +482,7 @@ class Form extends Component {
 												onClick={this.handleBack}
 												className={classes.button}
 											>
-												{babel('back',{category:'chrome',type:'text'})}
+												<Babel cat = 'chrome'>back</Babel>
 											</Button>
 											{activeStep !== steps.length - 1 &&
 												<Button
@@ -463,7 +492,7 @@ class Form extends Component {
 													className={classes.button}
 													disabled = {activeStep === 1 && !this.valid()}
 												>
-													{babel('next',{category:'chrome',type:'text'})}
+													<Babel cat = 'chrome'>next</Babel>
 												</Button>
 											}
 											{activeStep === steps.length - 1 &&
@@ -474,7 +503,7 @@ class Form extends Component {
 													className={classes.button}
 													disabled = {!accepted}
 												>
-													{babel('Submit your offer to '+dir,{category:'forms'})}
+													<Babel cat = 'forms'>{'Submit your offer to '+dir}</Babel>
 												</Button>
 											}
 										</div>
@@ -496,14 +525,14 @@ Form = withStyles(styles)(Form);
 class Create extends Component {
 
 	render(){
-		const {classes,babel,root,data,dir} = this.props;
+		const {classes,root,data,dir} = this.props;
 		return (
 			<div className = {classes.wrapper}>
-				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>root('FullScreenDialog')('Create offer to sell',<Form dir = 'SELL' root={root} babel = {babel} data = {data}/>)}>
-					{babel('Create offer to sell BTC',{category:'chrome'})}
+				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>root('FullScreenDialog')(<Babel cat='chrome'>Create offer to sell</Babel>,<Form dir = 'SELL' root={root} data = {data}/>)}>
+					<Babel cat = 'chrome'>Create offer to sell BTC</Babel>
 				</Button>
-				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>root('FullScreenDialog')('Create offer to buy',<Form dir = 'BUY' root={root} babel = {babel} data = {data}/>)}>
-					{babel('Create offer to buy BTC',{category:'chrome'})}
+				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>root('FullScreenDialog')(<Babel cat='chrome'>Create offer to buy</Babel>,<Form dir = 'BUY' root={root} data = {data}/>)}>
+					<Babel cat = 'chrome'>Create offer to buy BTC</Babel>
 				</Button>
 				{dir !== 'OWN' && <FormGroup>
 					<FormControlLabel
@@ -513,7 +542,7 @@ class Create extends Component {
 								onChange={(event,checked) => root('showown',checked)}
 							/>
 						}
-						label={babel("Show your own offers?",{category:'chrome'})}
+						label={<Babel cat = 'chrome'>Show your own offers?</Babel>}
 					/>
 				</FormGroup>}
 			</div>

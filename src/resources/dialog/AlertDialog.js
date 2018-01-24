@@ -27,6 +27,7 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
+import Babel from '../language/Babel.js';
 
 const styles  = theme => ({
 	root:{
@@ -65,9 +66,9 @@ class AlertDialog extends React.Component {
 		});
 	};
 	render() {
-		const {classes,babel} = this.props;
+		const {classes} = this.props;
 		const {action,title,description,yes,no} = this.state;
-		var No = no?no:babel('close',{category:'chrome',type:'text'});
+		var No = no?no:<Babel cat = 'chrome'>close</Babel>;
 		return (
 		<div>
 			<Dialog

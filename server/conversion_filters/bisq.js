@@ -62,6 +62,7 @@ convert.prototype.offer_detail = function(offer){
 	return formatOffer(offer);
 }
 convert.prototype.account_list = function(data){
+	if(!data) return false;
 	var error;
 	data = data.map((ac)=>{
 		try {

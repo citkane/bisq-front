@@ -24,9 +24,8 @@ import 'typeface-roboto';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 
 import Chrome from './components/chrome/Chrome.js';
-import Babel from './components/babel/Babel.js';
-import FullScreenDialog from './components/dialog/FullScreenDialog.js';
-import AlertDialog from './components/dialog/AlertDialog.js';
+import FullScreenDialog from './resources/dialog/FullScreenDialog.js';
+import AlertDialog from './resources/dialog/AlertDialog.js';
 
 import teal from 'material-ui/colors/teal';
 import blue from 'material-ui/colors/blue';
@@ -39,7 +38,7 @@ import brown from 'material-ui/colors/brown';
 
 import pink from 'material-ui/colors/pink';
 
-import lang from './resources/lang.json';
+import lang from './resources/language/master_lang.json';
 import Api from './resources/modules/api.js';
 import tools from './resources/modules/tools.js';
 
@@ -53,12 +52,16 @@ const socket = socketIOClient(s);
 const api = new Api(socket);
 
 
+window.ui_settings = {
+	lang:'en'
+}
+
+
 class App extends Component {
 	constructor(props) {
 		super(props);
 		this.root = this.root.bind(this);
-		this.babel = this.babel.bind(this);
-
+		//this.babel = this.babel.bind(this);
 	}
 	state = {
 		Global:{
@@ -77,6 +80,7 @@ class App extends Component {
 			base_market:'BTC'
 		}
 	}
+	/*
 	babel(key,opts){
 		if(!opts.type) opts.type = 'text';
 		if(!opts.category || !lang[opts.category][key]){
@@ -102,7 +106,7 @@ class App extends Component {
 			<Babel lang={this.state.Global.lang} string = {string} category = {opts.category} type = {opts.type} aria = {opts.aria}/>
 		)
 	}
-
+	*/
 	root(key,val){
 		if(typeof val === 'undefined') return this.state.Global[key];
 		var G = this.state.Global;
@@ -184,6 +188,7 @@ class App extends Component {
 				//console.log(data)
 				var G = this.state.Global
 				Object.keys(data).forEach((key)=>{
+					if(key === 'lang') window.ui_settings.lang = data[key];
 					G[key] = data[key];
 				})
 				this.setState({
@@ -197,6 +202,7 @@ class App extends Component {
 		})
 	}
 	render() {
+
 		if(!this.state.data||!this.state.theme) return(
 			<div>
 				Could not connect to backend at port:{process.env.SERVER_PORT}
@@ -204,9 +210,9 @@ class App extends Component {
 		);
 		return (
 			<MuiThemeProvider theme={this.state.theme}>
-				<Chrome root = {this.root} babel = {this.babel} data = {this.state.data} colors = {colors}/>
-				<FullScreenDialog root = {this.root} babel = {this.babel} />
-				<AlertDialog root  = {this.root} babel = {this.babel} />
+				<Chrome root = {this.root} data = {this.state.data} colors = {colors}/>
+				<FullScreenDialog root = {this.root} />
+				<AlertDialog root  = {this.root} />
 			</MuiThemeProvider>
 		);
 	}

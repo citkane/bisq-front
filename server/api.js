@@ -71,7 +71,10 @@ api.prototype.get = function(data){
 			url:url,
 			json:true,
 		},function(err,resp,body){
-			if(err) reject(err.toString())
+			if(err || body.errors){
+				reject(err?err.toString():body.errors);
+				return;
+			}
 			var d = convert.get(data.command,body)
 			!d?reject('Failed to get '+data.command):resolve(d);
 		})

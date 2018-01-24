@@ -31,7 +31,7 @@ import Button from 'material-ui/Button';
 import Switch from 'material-ui/Switch';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import Select from 'material-ui/Select';
-
+import Babel from '../../resources/language/Babel.js';
 import tools from '../../resources/modules/tools.js';
 
 const styles  = theme => ({
@@ -142,7 +142,7 @@ class Forms extends Component {
 	}
 	render(){
 		const {btc} = this.state;
-		const {type,offer,babel,classes,root} = this.props;
+		const {type,offer,classes,root} = this.props;
 
 		const fixed = offer.btc_amount === offer.min_btc_amount;
 		const market = offer.price_detail.use_market_price;
@@ -156,9 +156,11 @@ class Forms extends Component {
 			case 'SELL':
 				function getSteps() {
 					return [
-						babel('trade_step1',{category:'forms',type:'text'}),
-						type==='BUY'?babel('trade_step2',{category:'forms',type:'text'}):babel('trade_step3',{category:'forms',type:'text'}),
-						babel('trade_step4',{category:'forms',type:'text'})
+						<Babel cat = 'forms'>trade_step1</Babel>,
+						type==='BUY'?
+							<Babel cat = 'forms'>trade_step2</Babel>:
+							<Babel cat = 'forms'>trade_step3</Babel>,
+						<Babel cat = 'forms'>trade_step4</Babel>
 					];
 				}
 				const steps = getSteps();
@@ -174,18 +176,31 @@ class Forms extends Component {
 											id="amount"
 											required
 											disabled = {fixed}
-											label = {type==='BUY'?babel('Amount to sell',{category:'forms',type:'text'}):babel('Amount to buy',{category:'forms',type:'text'})}
+											label = {type==='BUY'?
+												<Babel cat = 'forms'>Amount to sell</Babel>:
+												<Babel cat = 'forms'>Amount to buy</Babel>
+											}
 											defaultValue={offer.btc_amount}
 											onChange={this.setVal}
 											className={classes.item}
-											helperText={fixed?babel('Volume is fixed',{category:'forms',type:'text'}):offer.min_btc_amount+' - '+offer.btc_amount}
+											helperText={
+												fixed?
+													<Babel cat = 'forms'>Volume is fixed</Babel>:
+													offer.min_btc_amount+' - '+offer.btc_amount
+											}
 											margin="normal"
 										/>
 									</form>
 									<div className = {classes.item}>x</div>
 									<div className = {classes.item}>
 										<Typography type = 'body1'>{offer.other_amount} {offer.other_currency}</Typography>
-										<Typography type = 'caption'>{market?deviation?deviation+'% '+babel('Market average',{category:'forms',type:'text'}):babel('Market average',{category:'forms',type:'text'}):babel('Fixed price',{category:'forms',type:'text'})} </Typography>
+										<Typography type = 'caption'>
+											{market?deviation?
+												(<span>{deviation+'%'} <Babel cat = 'forms'>Market average</Babel></span>):
+												<Babel cat = 'forms'>Market average</Babel>:
+												<Babel cat = 'forms'>Fixed price</Babel>
+											}
+										</Typography>
 									</div>
 									<div className = {classes.item}> = </div>
 									<Typography type = 'title' className = {classes.item}>{total} {offer.other_currency}</Typography>
@@ -196,34 +211,44 @@ class Forms extends Component {
 							return(
 								<div>
 									<Typography type = 'body1'>
-										{babel('Funds will be transferred',{category:'forms'})}
+										<Babel cat = 'forms'>Funds will be transferred</Babel>
 									</Typography>
 									<Paper className = {classes.paper}>
 										<div className = {classes.item}>
 											<Typography type = 'body1'>{fees.security.btc}</Typography>
-											<Typography type = 'caption'>{babel('Security deposit',{category:'forms'})} @{fees.security.rate}</Typography>
+											<Typography type = 'caption'>
+												<Babel cat = 'forms'>Security deposit</Babel> @{fees.security.rate}
+											</Typography>
 										</div>
 										<div className = {classes.item}>+</div>
 										<div className = {classes.item}>
 											<Typography type = 'body1'>{fees.trading.btc}</Typography>
-											<Typography type = 'caption'>{babel('Trading fee',{category:'forms'})} @{fees.trading.rate}</Typography>
+											<Typography type = 'caption'>
+												<Babel cat = 'forms'>Trading fee</Babel> @{fees.trading.rate}
+											</Typography>
 										</div>
 										<div className = {classes.item}>+</div>
 										<div className = {classes.item}>
 											<Typography type = 'body1'>{fees.mining.btc}</Typography>
-											<Typography type = 'caption'>{babel('Mining fee',{category:'forms'})} @{fees.mining.rate}</Typography>
+											<Typography type = 'caption'>
+												<Babel cat = 'forms'>Mining fee</Babel> @{fees.mining.rate}
+											</Typography>
 										</div>
 										{type==='BUY' && <div className = {classes.item}>+</div>}
 										{type==='BUY' && <div className = {classes.item}>
 											<Typography type = 'body1'>{btc}</Typography>
-											<Typography type = 'caption'>{babel('Trade amount',{category:'forms'})}</Typography>
+											<Typography type = 'caption'>
+												<Babel cat = 'forms'>Trade amount</Babel>
+											</Typography>
 										</div>}
 										<div className = {classes.item}>=</div>
 										<Typography type = 'title' className = {classes.item}>{fees.total.btc} BTC</Typography>
 									</Paper>
 									<Paper className = {classes.paper}>
 										<FormControl className={classes.formControl}>
-											<InputLabel htmlFor="account_list">{babel('Account Name',{category:'forms'})}</InputLabel>
+											<InputLabel htmlFor="account_list">
+												<Babel cat = 'forms'>Account Name</Babel>
+											</InputLabel>
 											<Select
 												native
 												value={this.state.account}
@@ -234,8 +259,12 @@ class Forms extends Component {
 													return <option value={ac.id} key = {i}>{ac.name}</option>
 												})}
 											</Select>
-											{fiat && <FormHelperText>{babel('Select your fiat account for this trade',{category:'forms'})}</FormHelperText>}
-											{!fiat && <FormHelperText>{babel('Select your altcoin account for this trade',{category:'forms'})}</FormHelperText>}
+											{fiat && <FormHelperText>
+												<Babel cat = 'forms'>Select your fiat account for this trade</Babel>
+											</FormHelperText>}
+											{!fiat && <FormHelperText>
+												<Babel cat = 'forms'>Select your altcoin account for this trade</Babel>
+											</FormHelperText>}
 										</FormControl>
 									</Paper>
 								</div>
@@ -246,26 +275,38 @@ class Forms extends Component {
 								<div className={classes.panels}>
 									<ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handlePanel('panel1')}>
 										<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-											<Typography type = 'body2' color = 'primary'>{babel('terms_title1',{category:'help',type:'text'})}</Typography>
+											<Typography type = 'body2' color = 'primary'>
+												<Babel cat = 'help'>terms_title1</Babel>
+											</Typography>
 										</ExpansionPanelSummary>
 										<ExpansionPanelDetails>
-											<Typography>{babel('terms_text1',{category:'help',type:'text'})}</Typography>
+											<Typography>
+												<Babel cat = 'help'>terms_text1</Babel>
+											</Typography>
 										</ExpansionPanelDetails>
 									</ExpansionPanel>
 									<ExpansionPanel expanded={expanded === 'panel2'} onChange={this.handlePanel('panel2')}>
 										<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-											<Typography type = 'body2' color = 'primary'>{babel('terms_title2',{category:'help',type:'text'})}</Typography>
+											<Typography type = 'body2' color = 'primary'>
+												<Babel cat = 'help'>terms_title2</Babel>
+											</Typography>
 										</ExpansionPanelSummary>
 										<ExpansionPanelDetails>
-											<Typography>{babel('terms_text2',{category:'help',type:'text'})}</Typography>
+											<Typography>
+												<Babel cat = 'help'>terms_text2</Babel>
+											</Typography>
 										</ExpansionPanelDetails>
 									</ExpansionPanel>
 									<ExpansionPanel expanded={expanded === 'panel3'} onChange={this.handlePanel('panel3')}>
 										<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-											<Typography type = 'body2' color = 'primary'>{babel('terms_title3',{category:'help',type:'text'})}</Typography>
+											<Typography type = 'body2' color = 'primary'>
+												<Babel cat = 'help'>terms_title3</Babel>
+											</Typography>
 										</ExpansionPanelSummary>
 										<ExpansionPanelDetails>
-											<Typography>{babel('terms_text3',{category:'help',type:'text'})}</Typography>
+											<Typography>
+												<Babel cat = 'help'>terms_text3</Babel>
+											</Typography>
 										</ExpansionPanelDetails>
 									</ExpansionPanel>
 								</div>
@@ -278,7 +319,7 @@ class Forms extends Component {
 													onChange={this.consent}
 												/>
 											}
-											label={babel('acknowledge terms',{category:'forms'})}
+											label={<Babel cat = 'forms'>acknowledge terms</Babel>}
 										/>
 									</FormGroup>
 								</Paper>
@@ -304,7 +345,7 @@ class Forms extends Component {
 														onClick={this.handleBack}
 														className={classes.button}
 													>
-														{babel('back',{category:'chrome',type:'text'})}
+														<Babel cat = 'chrome'>back</Babel>
 													</Button>
 													{activeStep !== steps.length - 1 && <Button
 														raised
@@ -312,7 +353,7 @@ class Forms extends Component {
 														onClick={this.handleNext}
 														className={classes.button}
 													>
-														{babel('next',{category:'chrome',type:'text'})}
+														<Babel cat = 'chrome'>next</Babel>
 													</Button>}
 													{activeStep === steps.length - 1 && <Button
 														disabled = {!this.state.accepted}
@@ -321,7 +362,10 @@ class Forms extends Component {
 														onClick = {()=>this.acceptOffer(offer.offer_id)}
 														className={classes.button}
 													>
-														{type === 'BUY'?babel('sell',{category:'cards',type:'text'}):babel('buy',{category:'cards',type:'text'})}
+														{type === 'BUY'?
+															<Babel cat = 'cards'>sell</Babel>:
+															<Babel cat = 'cards'>buy</Babel>
+														}
 													</Button>}
 												</div>
 											</div>
@@ -332,15 +376,17 @@ class Forms extends Component {
 						</Stepper>
 						{activeStep === steps.length && (
 							<Paper className={classes.paper2}>
-								<Typography gutterBottom>{babel('accepted trade',{category:'forms'})}</Typography>
+								<Typography gutterBottom>
+									<Babel cat = 'forms'>accepted trade</Babel>
+								</Typography>
 								<Button raised color='primary' onClick={root('FullScreenDialogClose')} className={classes.button}>
-									{babel('Offers',{category:'forms'})}
+									<Babel cat = 'forms'>Offers</Babel>
 								</Button>
 								<Button raised color='primary' onClick={()=>{
 									root('FullScreenDialogClose')();
 									root('screen','Portfolio');
 								}} className={classes.button}>
-									{babel('Open Trades',{category:'forms'})}
+									<Babel cat = 'forms'>Open Trades</Babel>
 								</Button>
 							</Paper>
 						)}

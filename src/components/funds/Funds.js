@@ -50,7 +50,6 @@ class Funds extends Component {
 	constructor(props) {
 		super(props);
 		this.root = this.props.root;
-		this.babel = this.props.babel;
 	}
 	render(){
 		const {root,data,classes} = this.props

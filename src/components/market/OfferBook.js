@@ -24,6 +24,7 @@ import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
+import Babel from '../../resources/language/Babel.js';
 
 const styles = theme => ({
 	paper:{
@@ -64,7 +65,7 @@ class OfferBook extends Component {
 		if(this.pair!==this.props.root('pair_market')) this.getOffers();
 	}
 	render(){
-		const {classes,babel,root} = this.props;
+		const {classes,root} = this.props;
 		const {offers} = this.state;
 		if(!offers) return null;
 		//console.log(root('pair_market'))
@@ -74,7 +75,9 @@ class OfferBook extends Component {
 			<Grid container>
 				<Grid item sm={12} md ={6}>
 					<Paper className = {classes.paper}>
-						<Typography type='title' gutterBottom>{babel('Offers to buy',{category:'cards'})}</Typography>
+						<Typography type='title' gutterBottom>
+							<Babel cat = 'cards'>Offers to buy</Babel>
+						</Typography>
 						{offers.buys.map((offer,i)=>{
 							return (
 								<div key = {i}>
@@ -93,7 +96,9 @@ class OfferBook extends Component {
 				</Grid>
 				<Grid item sm={12} md ={6}>
 					<Paper className = {classes.paper}>
-						<Typography type='title' gutterBottom>{babel('Offers to sell',{category:'cards'})}</Typography>
+						<Typography type='title' gutterBottom>
+							<Babel cat = 'cards'>Offers to sell</Babel>
+						</Typography>
 						{offers.sells.map((offer,i)=>{
 							return (
 								<div key = {i}>

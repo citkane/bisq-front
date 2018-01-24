@@ -25,6 +25,7 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
 import BuySell from './BuySell.js';
 import './Trade.css';
+import Babel from '../../resources/language/Babel.js';
 
 function TabContainer(props) {
 	return (
@@ -61,19 +62,23 @@ class Trade extends Component {
 	};
 
 	render() {
-		const {classes,root,babel,data} = this.props;
+		const {classes,root,data} = this.props;
 		const { value } = this.state;
 
 		return (
 			<div className={classes.root}>
 				<AppBar position="static" color = 'default'>
 					<Tabs value={value} onChange={this.handleChange} indicatorColor = 'primary'>
-						<Tab label={babel('Buy BTC',{type:'text',category:'chrome'})} aria-label = {babel('Buy BTC',{type:'text',category:'chrome'})}/>
-						<Tab label={babel('Sell BTC',{type:'text',category:'chrome'})} aria-label = {babel('Sell BTC',{type:'text',category:'chrome'})}/>
+						<Tab label={
+							<Babel cat = 'chrome' aria>Buy BTC</Babel>
+						}/>
+						<Tab label={
+							<Babel cat = 'chrome' aria>Sell BTC</Babel>
+						}/>
 					</Tabs>
 				</AppBar>
-				{value === 0 && <TabContainer  className={classes.content}><BuySell dir = 'SELL' root = {root} babel = {babel} data = {data} /></TabContainer>}
-				{value === 1 && <TabContainer className={classes.content}><BuySell dir = 'BUY' root = {root} babel = {babel} data = {data} /></TabContainer>}
+				{value === 0 && <TabContainer  className={classes.content}><BuySell dir = 'SELL' root = {root} data = {data} /></TabContainer>}
+				{value === 1 && <TabContainer className={classes.content}><BuySell dir = 'BUY' root = {root} data = {data} /></TabContainer>}
 			</div>
 		);
 	}

@@ -44,6 +44,7 @@ import Trade from '../trade/Trade.js';
 import Portfolio from '../portfolio/Portfolio.js';
 import Funds from '../funds/Funds.js';
 import Support from '../support/Support.js';
+import Babel from '../../resources/language/Babel.js';
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -156,12 +157,12 @@ Balance = withStyles(styles, { withTheme: true })(Balance);
 
 class Wallet extends Component{
 	render(){
-		const {wallet,babel} = this.props;
+		const {wallet} = this.props;
 		return(
 			<List>
-				<Balance balance = {wallet.available_balance} title = {babel('available',{category:'wallet',type:'text'})} />
-				<Balance balance = {wallet.reserved_balance} title = {babel('reserved',{category:'wallet',type:'text'})} />
-				<Balance balance = {wallet.locked_balance} title = {babel('locked',{category:'wallet',type:'text'})} />
+				<Balance balance = {wallet.available_balance} title = {<Babel cat = 'wallet'>available</Babel>} />
+				<Balance balance = {wallet.reserved_balance} title = {<Babel cat = 'wallet'>reserved</Babel>} />
+				<Balance balance = {wallet.locked_balance} title = {<Babel cat = 'wallet'>locked</Babel>} />
 			</List>
 		)
 	}
@@ -180,8 +181,9 @@ class Chrome extends Component {
 	};
 
 	render() {
-		const {classes,theme,babel,root,data,colors} = this.props;
-		const screen = root('screen');
+
+		const {classes,theme,root,data,colors} = this.props;
+		const screen = this.props.root('screen');
 		const drawer = (
 			<div>
 				<div className={classes.drawerHeader}>
@@ -189,9 +191,9 @@ class Chrome extends Component {
 						<Bisq id = 'logo' action = {()=>root('screen','Welcome')} />
 					</div>
 				</div>
-				<Wallet root = {root} babel = {babel} wallet = {data.wallet_detail}/>
+				<Wallet root = {root} wallet = {data.wallet_detail}/>
 				<Divider />
-				<SideDrawer root={root} babel={babel}/>
+				<SideDrawer root={root} />
 			</div>
 		);
 		return (
@@ -209,14 +211,16 @@ class Chrome extends Component {
 									>
 										<MenuIcon />
 									</IconButton>
-									<Typography type="title" color = 'inherit'>{babel(screen,{category:'chrome'})}</Typography>
+									<Typography type="title" color = 'inherit'>
+										<Babel cat = 'chrome'>{screen}</Babel>
+									</Typography>
 								</Grid>
 							</Grid>
 						</Toolbar>
 						<div className = {classes.settings}>
 							<span className = {classes.me}>{root('me').name}</span>
 							<SettingsIcon className = {classes.hover} onClick={()=>{
-								root('FullScreenDialog')('Settings',<Settings root={root} babel = {babel} colors={colors}/>)
+								root('FullScreenDialog')(<Babel cat='chrome'>Settings</Babel>,<Settings root={root} colors={colors}/>)
 							}}/>
 						</div>
 
@@ -250,12 +254,12 @@ class Chrome extends Component {
 						</Drawer>
 		            </Hidden>
 					<main className={classes.content}>
-						{screen === 'Welcome' && <Welcome babel={babel} root={root} data={data}/>}
-						{screen === 'Market' && <Market babel={babel} root={root} data = {data}/>}
-						{screen === 'Trade' && <Trade babel={babel} root={root} data={data}/>}
-						{screen === 'Portfolio' && <Portfolio babel={babel} root={root} data={data}/>}
-						{screen === 'Funds' && <Funds babel={babel} root={root} data={data}/>}
-						{screen === 'Support' && <Support babel={babel} root={root} data={data}/>}
+						{screen === 'Welcome' && <Welcome root={root} data={data}/>}
+						{screen === 'Market' && <Market root={root} data = {data}/>}
+						{screen === 'Trade' && <Trade root={root} data={data}/>}
+						{screen === 'Portfolio' && <Portfolio root={root} data={data}/>}
+						{screen === 'Funds' && <Funds root={root} data={data}/>}
+						{screen === 'Support' && <Support root={root} data={data}/>}
 					</main>
 				</div>
 			</div>

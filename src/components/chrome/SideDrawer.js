@@ -28,6 +28,7 @@ import WalletIcon from 'material-ui-icons/AccountBalanceWallet';
 import SupportIcon from 'material-ui-icons/Forum';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
+import Babel from '../../resources/language/Babel.js';
 
 const styles = theme => ({
 	active:{
@@ -42,7 +43,7 @@ const styles = theme => ({
 class SideDrawer extends Component {
 
 	render() {
-		const {classes,babel,root} = this.props;
+		const {classes,root} = this.props;
 		return (
 			<div>
 				<List>
@@ -50,31 +51,31 @@ class SideDrawer extends Component {
 						<ListItemIcon>
 							<PublicIcon />
 						</ListItemIcon>
-						<ListItemText primary ={babel('Market',{type:'span',category:'chrome',aria:true})} />
+						<ListItemText primary ={<Babel cat = 'chrome' aria>Market</Babel>} />
 					</ListItem>
 					<ListItem className = {root('screen') === 'Trade'?classes.active:classes.list} button onClick = {()=>root('screen','Trade')}>
 						<ListItemIcon>
 							<TradeIcon />
 						</ListItemIcon>
-						<ListItemText primary ={babel('Trade',{type:'span',category:'chrome',aria:true})} />
+						<ListItemText primary ={<Babel cat = 'chrome' aria>Trade</Babel>} />
 					</ListItem>
 					<ListItem className = {root('screen') === 'Portfolio'?classes.active:classes.list} button onClick = {()=>root('screen','Portfolio')}>
 						<ListItemIcon>
 							<FolderIcon />
 						</ListItemIcon>
-						<ListItemText primary ={babel('Portfolio',{type:'span',category:'chrome',aria:true})} />
+						<ListItemText primary ={<Babel cat = 'chrome' aria>Portfolio</Babel>} />
 					</ListItem>
 					<ListItem className = {root('screen') === 'Funds'?classes.active:classes.list} button onClick = {()=>root('screen','Funds')}>
 						<ListItemIcon>
 							<WalletIcon />
 						</ListItemIcon>
-						<ListItemText primary ={babel('Funds',{type:'span',category:'chrome',aria:true})} />
+						<ListItemText primary ={<Babel cat = 'chrome' aria>Funds</Babel>} />
 					</ListItem>
 					<ListItem className = {root('screen') === 'Support'?classes.active:classes.list} button onClick = {()=>root('screen','Support')}>
 						<ListItemIcon>
 							<SupportIcon />
 						</ListItemIcon>
-						<ListItemText primary ={babel('Support',{type:'span',category:'chrome',aria:true})} />
+						<ListItemText primary ={<Babel cat = 'chrome' aria>Support</Babel>} />
 					</ListItem>
 				</List>
 				<Divider />

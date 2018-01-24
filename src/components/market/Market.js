@@ -24,14 +24,17 @@ import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
 import OfferBook from './OfferBook.js';
-//import Charts from './Charts.js';
 import Input, { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import market from '../../resources/modules/markets.js';
-console.error(market)
+import Babel from '../../resources/language/Babel.js';
 
+/*HACK - react does not want to render `<Babel /> - {somether var}` within an option tag */
+	import Lang from '../../resources/language/master_lang.json';
+	const C = Lang.currency;
+/*END HACK */
 
 var Charts;
 import('./Charts.js').then((charts)=>{
@@ -114,21 +117,27 @@ class Market extends Component {
 
 	render() {
 		if(!Charts) return null;
-		const {classes,babel,data,root} = this.props;
+		const {classes,data,root} = this.props;
 		const {value} = this.state;
 		return (
 			<div className={classes.root}>
 				<AppBar position="static" color = 'default'>
 				<Tabs value={value} onChange={this.handleChange} indicatorColor = 'primary'>
-					<Tab label={babel('Offer Book',{type:'span',category:'chrome',aria:true})} />
-					<Tab label={babel('Charts',{type:'span',category:'chrome',aria:true})} />
+					<Tab label={
+						<Babel cat = 'chrome' aria>Offer Book</Babel>
+					} />
+					<Tab label={
+						<Babel cat = 'chrome' aria>Charts</Babel>
+					} />
 
 				</Tabs>
 				</AppBar>
 				<div className = {classes.selects} >
 					<form autoComplete="off">
 						<FormControl className={classes.select}>
-							<InputLabel htmlFor="primary_market" classes = {{root:classes.label}}>{babel('Primary Market',{category:'forms'})}</InputLabel>
+							<InputLabel htmlFor="primary_market" classes = {{root:classes.label}}>
+								<Babel cat = 'forms'>Primary Market</Babel>
+							</InputLabel>
 							<Select
 								value={this.l}
 								onChange={this.handleSelect}
@@ -136,7 +145,9 @@ class Market extends Component {
 								native
 							>
 								{market.left.map((item,i)=>{
-									return <option value={item.lsymbol} key={i}>{item.lsymbol} - {babel(item.lname,{category:'currency'})}</option>
+									return <option value={item.lsymbol} key={i} >
+										{item.lsymbol + ' - '+C[item.lname][window.ui_settings.lang]}
+									</option>
 								})}
 
 							</Select>
@@ -144,7 +155,9 @@ class Market extends Component {
 					</form>
 					<form autoComplete="off">
 						<FormControl className={classes.select}>
-							<InputLabel htmlFor="secondary_market">{babel('Secondary Market',{category:'forms'})}</InputLabel>
+							<InputLabel htmlFor="secondary_market">
+								<Babel cat = 'forms'>Secondary Market</Babel>
+							</InputLabel>
 							<Select
 								value={this.r}
 								onChange={this.handleSelect}
@@ -153,14 +166,16 @@ class Market extends Component {
 
 							>
 								{this.right.map((item,i2)=>{
-									return <option value={item.rsymbol} key={i2}>{item.rsymbol} - {babel(item.rname,{category:'currency'})}</option>
+									return <option value={item.rsymbol} key={i2}>
+										{item.rsymbol + ' - '+C[item.rname][window.ui_settings.lang]}
+									</option>
 								})}
 							</Select>
 						</FormControl>
 					</form>
 				</div>
-				{value === 0 && <TabContainer  className={classes.content}><OfferBook root={root} babel={babel}/></TabContainer>}
-				{value === 1 && <TabContainer className={classes.content}><Charts root={root} babel={babel}/></TabContainer>}
+				{value === 0 && <TabContainer  className={classes.content}><OfferBook root={root} /></TabContainer>}
+				{value === 1 && <TabContainer className={classes.content}><Charts root={root} /></TabContainer>}
 
 			</div>
 		);

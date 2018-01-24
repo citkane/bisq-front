@@ -23,6 +23,7 @@ import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
+import Babel from '../../resources/language/Babel.js';
 
 const styles = theme => ({
 	root:{
@@ -37,13 +38,20 @@ const styles = theme => ({
 class Welcome extends Component {
 
 	render(){
-		const {classes,babel,root} = this.props;
+		const {classes,root} = this.props;
 		return(
 			<div className = {classes.root}>
-				<Typography type='title' gutterBottom color='primary'>{babel('Welcome_title',{category:'content'})}</Typography>
-				<Typography gutterBottom>{babel('Welcome_p1',{category:'content'})}{document.location.origin}</Typography>
+				<Typography type='title' gutterBottom color='primary'>
+					<Babel cat = 'content'>Welcome_title</Babel>
+				</Typography>
+				<Typography gutterBottom>
+					<Babel cat = 'content'>Welcome_p1</Babel>
+					{document.location.origin}
+				</Typography>
 				<Paper className = {classes.paper}>
-					<Typography type = 'body2'>{babel('This is a regtest demonstration with trading partners:',{category:'content'})}</Typography>
+					<Typography type = 'body2'>
+						<Babel cat = 'content'>This is a regtest demonstration with trading partners:</Babel>
+					</Typography>
 					{root('peers').map((peer,i)=>{
 						return(
 							<div key = {i}>
