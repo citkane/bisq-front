@@ -20,7 +20,7 @@
  */
 
 const tools = require('../../src/resources/modules/tools.js');
-const coin = require('../../src/resources/modules/markets.js').currencies;
+var coin = require('../../src/resources/modules/markets.js').currencies;
 
 //This is a mapping of API (client and markets.bisq.network/api/) calls to format and return consistent data for bisq-front. Any future upgrade issues should be addressed here.
 const convert = function(){
@@ -170,7 +170,7 @@ function formatTrade(trade){
 		var method = payload.paymentMethodId;
 		var fiat = method==='BLOCK_CHAINS'?false:true;
 		var account = Trade.takerPaymentAccountPayload;
-		
+
 	/*HACK fiat currencies are coming in at two decimal places too high from bisq-api*/
 		if(coin[counter].type === 'fiat') Trade.tradePrice = Trade.tradePrice/100
 	/*END HACK*/

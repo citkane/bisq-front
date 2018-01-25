@@ -21,7 +21,6 @@
 
 const request = require('request');
 const tools = require('../src/resources/modules/tools.js');
-const convert = require('./conversion_filters/bisq.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -38,8 +37,7 @@ market.prototype.get = function(command,params){
 				reject(err);
 				return;
 			}
-			var data = convert.get(command,body);
-			!data?reject('failed to process market data'):resolve(data);
+			!body?reject('failed to process market data'):resolve(body);
 		})
 	})
 }

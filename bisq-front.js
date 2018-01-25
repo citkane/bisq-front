@@ -25,7 +25,7 @@ const app = require('express')();
 const child = require('child_process');
 const devsettings = require('./devSettings.js');
 const dev = require('./server/makedev.js');
-const Api = require('./server/api.js');
+var Api;
 const tools = require('./src/resources/modules/tools.js');
 const market = require('./server/market.js');
 const production = process.env.NODE_ENV==='production'?true:false;
@@ -39,7 +39,7 @@ market.make('markets').then((data)=>{
 	if(data){
 		console.log('> Could not connect to BISQ market api\n'+data+'\n\nMarket already on file, continuing...\n\n')
 	}
-	//coin = require('./src/resources/modules/markets.js').currencies;
+	Api = require('./server/api.js');
 /* END HACK */
 	dev.make(devsettings.startport).then((port)=>{
 		console.log('> Started the seednode on localhost:'+port);
