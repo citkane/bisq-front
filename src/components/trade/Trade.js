@@ -26,6 +26,7 @@ import Typography from 'material-ui/Typography';
 import BuySell from './BuySell.js';
 import './Trade.css';
 import Babel from '../../resources/language/Babel.js';
+import base from '../../resources/modules/base.js';
 
 function TabContainer(props) {
 	return (
@@ -64,16 +65,19 @@ class Trade extends Component {
 	render() {
 		const {classes,data} = this.props;
 		const { value } = this.state;
+		const active = base.get('active_market').symbol;
 
 		return (
 			<div className={classes.root}>
 				<AppBar position="static" color = 'default'>
 					<Tabs value={value} onChange={this.handleChange} indicatorColor = 'primary'>
 						<Tab label={
-							<Babel cat = 'chrome' aria>Buy BTC</Babel>
+							/*TODO add translations for all active_market posibilities */
+							<Babel cat = 'chrome' aria>{"Buy "+active}</Babel>
 						}/>
 						<Tab label={
-							<Babel cat = 'chrome' aria>Sell BTC</Babel>
+							/*TODO add translations for all active_market posibilities */
+							<Babel cat = 'chrome' aria>{"Sell "+active}</Babel>
 						}/>
 					</Tabs>
 				</AppBar>

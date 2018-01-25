@@ -35,7 +35,6 @@ import SettingsIcon from 'material-ui-icons/Settings';
 import List, {ListItem,ListItemText} from 'material-ui/List';
 import SideDrawer from './SideDrawer.js';
 import Bisq from '../../resources/icons/Bisq.js';
-import Bitcoin from '../../resources/icons/Bitcoin.js';
 
 import Settings from './Settings.js';
 import Welcome from '../welcome/Welcome.js';
@@ -142,11 +141,12 @@ const styles = theme => ({
 class Balance extends Component{
 
 	render(){
+		const Graphic = base.get('active_market').graphic;
 		const {classes} = this.props;
-		var btc = <span className={classes.price}><Bitcoin />{this.props.balance}</span>
+		var g = <span className={classes.price}><Graphic />{this.props.balance}</span>
 		return(
 			<ListItem className='balance' aria-label={this.props.title}>
-				<ListItemText primary = {btc} secondary = {this.props.title} />
+				<ListItemText primary = {g} secondary = {this.props.title} />
 			</ListItem>
 		)
 	}

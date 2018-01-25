@@ -64,13 +64,13 @@ const styles = theme => ({
 class Charts extends Component {
 	constructor(props) {
 		super(props);
-		this.pair = base.get('pair_market');
+		this.pair = base.get('market').pair_market;
 		this.state = {};
 
 	}
 
 	getChart = (chart)=>{
-		this.pair=base.get('pair_market')
+		this.pair=base.get('market').pair_market
 		const api = base.get('api');
 		chart.table1.remove();
 		chart.table2.remove();
@@ -116,7 +116,7 @@ class Charts extends Component {
 		//})
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(this.pair!==base.get('pair_market')) this.getChart(this.chart);
+		if(this.pair!==base.get('market').pair_market) this.getChart(this.chart);
 	}
 	render(){
 		const {classes} = this.props;

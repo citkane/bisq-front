@@ -45,12 +45,12 @@ const styles = theme => ({
 class OfferBook extends Component {
 	constructor(props) {
 		super(props);
-		this.pair = base.get('pair_market');
+		this.pair = base.get('market').pair_market;
 		this.state = {};
 	}
 
 	getOffers = ()=>{
-		this.pair = base.get('pair_market');
+		this.pair = base.get('market').pair_market;
 		const api = base.get('api');
 		api.market('offers',{market:this.pair}).then((data)=>{
 			this.setState({
@@ -62,7 +62,7 @@ class OfferBook extends Component {
 		this.getOffers();
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(this.pair !== base.get('pair_market')) this.getOffers();
+		if(this.pair !== base.get('market').pair_market) this.getOffers();
 	}
 	render(){
 		const {classes} = this.props;
@@ -82,9 +82,9 @@ class OfferBook extends Component {
 									<div className={classes.row}>
 										<div>
 											<Typography className={classes.inline} type = 'body2' component='span'>{offer.price*1} </Typography>
-											{base.get('secondary_market')} / {base.get('primary_market')}
+											{base.get('market').secondary_market} / {base.get('market').primary_market}
 										</div>
-										<Typography type = 'caption'>({offer.amount*1===offer.min_amount*1?offer.amount*1:offer.min_amount*1+' - '+offer.amount*1} {base.get('primary_market')})</Typography>
+										<Typography type = 'caption'>({offer.amount*1===offer.min_amount*1?offer.amount*1:offer.min_amount*1+' - '+offer.amount*1} {base.get('market').primary_market})</Typography>
 									</div>
 								</div>
 							)
@@ -103,9 +103,9 @@ class OfferBook extends Component {
 									<div className={classes.row}>
 										<div>
 											<Typography className={classes.inline} type = 'body2' component='span'>{offer.price*1} </Typography>
-											{base.get('secondary_market')} / {base.get('primary_market')}
+											{base.get('market').secondary_market} / {base.get('market').primary_market}
 										</div>
-										<Typography type = 'caption'>({offer.amount*1===offer.min_amount*1?offer.amount*1:offer.min_amount*1+' - '+offer.amount*1} {base.get('primary_market')})</Typography>
+										<Typography type = 'caption'>({offer.amount*1===offer.min_amount*1?offer.amount*1:offer.min_amount*1+' - '+offer.amount*1} {base.get('market').primary_market})</Typography>
 									</div>
 								</div>
 							)

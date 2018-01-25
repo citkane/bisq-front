@@ -79,13 +79,13 @@ class Forms extends Component {
 	constructor(props){
 		super(props);
 		tools = base.get('tools');
-		this.accounts = this.props.data.account_list.filter((ac)=>{
-			console.error(this.props.offer.other_currency,ac);
-			return ac.trade_currencies.indexOf(this.props.offer.other_currency)!==-1;
+		const {data,offer} = this.props
+		this.accounts = data.account_list.filter((ac)=>{
+			return ac.trade_currencies.indexOf(offer.other_currency)!==-1;
 		}).map((ac)=>{
 			return {
 				id:ac.id,
-				name:this.props.offer.other_currency+': '+ac.name
+				name:offer.other_currency+': '+ac.name
 			}
 		});
 		this.state = {
@@ -127,16 +127,13 @@ class Forms extends Component {
 		})
 	}
 	acceptOffer = (id) =>{
-		console.warn(id,this.state.account,tools.toSatoshi(this.state.btc));
-		var self = this;
 		base.get('api').get('offer_take',{
 			offer_id:id,
 			payment_account_id:this.state.account,
-			amount:tools.toSatoshi(this.state.btc)*1
-		}).then(function(data){
-			console.log(data);
+			amount:base.get('active_market').fromDecimal(this.state.btc)
+		}).then((data)=>{
 			if(data === true){
-				self.handleNext();
+				this.handleNext();
 			}
 		})
 	}
@@ -147,9 +144,8 @@ class Forms extends Component {
 		const fixed = offer.btc_amount === offer.min_btc_amount;
 		const market = offer.price_detail.use_market_price;
 		const deviation = offer.price_detail.market_price_margin*100;
-		const fiat = offer.currency.type === 'fiat';
-		const total = fiat?Math.round((btc*offer.other_amount)*100)/100:Math.round((btc*offer.other_amount)*1000000000000)/1000000000000;
-
+		const fiat = offer.coin.type === 'fiat';
+		const total = base.get('coin')[offer.other_currency].round(btc*offer.other_amount)
 
 		switch(type){
 			case 'BUY':
@@ -207,7 +203,7 @@ class Forms extends Component {
 								</Paper>
 							)
 						case 1:
-							var fees = (tools.fees(type,btc))
+							var fees = tools.fees(type,btc,base.get('active_market'))
 							return(
 								<div>
 									<Typography type = 'body1'>
@@ -242,7 +238,7 @@ class Forms extends Component {
 											</Typography>
 										</div>}
 										<div className = {classes.item}>=</div>
-										<Typography type = 'title' className = {classes.item}>{fees.total.btc} BTC</Typography>
+										<Typography type = 'title' className = {classes.item}>{fees.total.btc} {base.get('active_market').symbol}</Typography>
 									</Paper>
 									<Paper className = {classes.paper}>
 										<FormControl className={classes.formControl}>

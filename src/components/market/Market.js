@@ -25,10 +25,8 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
 import OfferBook from './OfferBook.js';
 import Input, { InputLabel } from 'material-ui/Input';
-import { MenuItem } from 'material-ui/Menu';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import {FormControl} from 'material-ui/Form';
 import Select from 'material-ui/Select';
-import market from '../../resources/modules/markets.js';
 import Babel from '../../resources/language/Babel.js';
 import base from '../../resources/modules/base.js';
 
@@ -38,6 +36,7 @@ import base from '../../resources/modules/base.js';
 /*END HACK */
 
 var Charts;
+var markets;
 import('./Charts.js').then((charts)=>{
 	Charts = charts.default;
 })
@@ -80,11 +79,11 @@ const styles = theme => ({
 class Market extends Component {
 	constructor(props) {
 		super(props);
-		this.l = base.get('primary_market');
-		this.r = base.get('secondary_market');
-
-		this.right = market.right.filter((item)=>{
-			return !!market.list[this.l.toLowerCase()+'_'+item.rsymbol.toLowerCase()]
+		this.l = base.get('market').primary_market;
+		this.r = base.get('market').secondary_market;
+		markets = base.get('market').markets;
+		this.right = markets.right.filter((item)=>{
+			return !!markets.list[this.l.toLowerCase()+'_'+item.rsymbol.toLowerCase()]
 		})
 	}
 	state = {
@@ -94,17 +93,19 @@ class Market extends Component {
 	handleSelect = event => {
 		if(event.target.name === 'primary_market'){
 			this.l = event.target.value;
-			this.right = market.right.filter((item)=>{
-				return !!market.list[this.l.toLowerCase()+'_'+item.rsymbol.toLowerCase()]
+			this.right = markets.right.filter((item)=>{
+				return !!markets.list[this.l.toLowerCase()+'_'+item.rsymbol.toLowerCase()]
 			})
 			this.r = this.right[0].rsymbol
 		}else{
 			this.r = event.target.value
 		}
-		base.set("primary_market",this.l);
-		base.set("secondary_market",this.r);
-		var pair = this.l.toLowerCase()+'_'+this.r.toLowerCase();
-		base.set('pair_market',pair,true);
+		var newmarket = base.get('market');
+		newmarket.primary_market = this.l;
+		newmarket.secondary_market = this.r;
+		newmarket.pair_market = this.l.toLowerCase()+'_'+this.r.toLowerCase();
+
+		base.set('market',newmarket,true);
 	};
 	handleChange = (event, value) => {
 		this.setState({ value });
@@ -112,7 +113,7 @@ class Market extends Component {
 
 	render() {
 		if(!Charts) return null;
-		const {classes,data} = this.props;
+		const {classes} = this.props;
 		const {value} = this.state;
 		return (
 			<div className={classes.root}>
@@ -139,7 +140,7 @@ class Market extends Component {
 								input={<Input name="primary_market" id="primary_market" />}
 								native
 							>
-								{market.left.map((item,i)=>{
+								{markets.left.map((item,i)=>{
 									return <option value={item.lsymbol} key={i} >
 										{item.lsymbol + ' - '+C[item.lname][window.ui_settings.lang]}
 									</option>

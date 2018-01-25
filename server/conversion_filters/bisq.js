@@ -20,7 +20,7 @@
  */
 
 const tools = require('../../src/resources/modules/tools.js');
-const money = require('../../src/resources/modules/markets.js').currencies;
+const coin = require('../../src/resources/modules/markets.js').currencies;
 
 //This is a mapping of API (client and markets.bisq.network/api/) calls to format and return consistent data for bisq-front. Any future upgrade issues should be addressed here.
 const convert = function(){
@@ -137,7 +137,7 @@ convert.prototype.wallet_tx_list = function(data){
 
 function formatOffer(offer){
 	try {
-		var M = money[offer.other_currency]
+		var M = coin[offer.other_currency]
 		if(M.type!=='fiat'){
 			offer.other_amount = M.fromDecimal(offer.other_amount);
 			offer.other_amount = M.invert(offer.other_amount);
@@ -159,45 +159,35 @@ const types = {
 	'buyerAsMakerTrade':['buying','maker']
 }
 function formatTrade(trade){
+
 	try {
 		var type = Object.keys(trade)[0];
 		trade = trade[type].trade;
-		//console.log(type,trade)
-		var offer = trade.offer.offerPayload;
-		var fiat = offer.paymentMethodId==='BLOCK_CHAINS'?false:true
-		var account = trade.processModel.tradingPeer.paymentAccountPayload;
-		Object.keys(account).forEach(function(key){
-			if(key.indexOf('AccountPayload')!==-1) account = account[key];
-		})
-		Object.keys(account).some(function(key){
-			if(key.indexOf('AccountPayload')!==-1){
-				account = account[key];
-				return true;
-			}
-			return false;
-		})
-		var base = offer.baseCurrencyCode;
-		var counter = offer.counterCurrencyCode;
-
+		var Trade = JSON.parse(trade.contractAsJson);
+		var payload = Trade.offerPayload;
+		var base = payload.baseCurrencyCode;
+		var counter = payload.counterCurrencyCode;
+		var method = payload.paymentMethodId;
+		var fiat = method==='BLOCK_CHAINS'?false:true;
+		var account = Trade.takerPaymentAccountPayload;
+		
 	/*HACK fiat currencies are coming in at two decimal places too high from bisq-api*/
-
-		if(money[counter].type === 'fiat') trade.contract.tradePrice = trade.contract.tradePrice/100
-
+		if(coin[counter].type === 'fiat') Trade.tradePrice = Trade.tradePrice/100
 	/*END HACK*/
 
 		var invert = false;
 		if(!fiat){
 			invert = {
-				method:offer.counterCurrencyCode
+				method:counter
 			}
-			invert.price = money[counter].invert(trade.contract.tradePrice);
-			invert.volume = money[counter].toDecimal(trade.contract.tradeAmount*invert.price);
-			invert.amount = money[base].toDecimal(trade.contract.tradeAmount);
+			invert.price = coin[counter].invert(Trade.tradePrice);
+			invert.volume = coin[counter].toDecimal(Trade.tradeAmount*invert.price);
+			invert.amount = coin[base].toDecimal(Trade.tradeAmount);
 		}
 
-		var amount = money[base].toDecimal(trade.contract.tradeAmount);
-		var volume = money[counter].toDecimal(amount*trade.contract.tradePrice);
-		var price = money[counter].toDecimal(trade.contract.tradePrice);
+		var amount = coin[base].toDecimal(Trade.tradeAmount);
+		var volume = coin[counter].toDecimal(amount*Trade.tradePrice);
+		var price = coin[counter].toDecimal(Trade.tradePrice);
 
 		var stage = 0;
 		if (trade.state === 'DEPOSIT_CONFIRMED_IN_BLOCK_CHAIN') stage = 1;
@@ -208,21 +198,21 @@ function formatTrade(trade){
 			type:types[type],
 			date:trade.takeOfferDate,
 			Date:new Date(trade.takeOfferDate*1).toUTCString(),
-			id:offer.id,
+			id:payload.id,
 			ago:tools.dateAgo(trade.takeOfferDate),
 			peer:trade.tradingPeerNodeAddress,
 			account:account,
 			base:base,
 			counter:counter,
 			state:trade.state,
-			method:offer.paymentMethodId,
+			method:method,
 			stage:stage,
 			amount:amount,
 			price:price,
 			volume:volume,
 			deposit:{
-				selling:tools.toBtc(offer.sellerSecurityDeposit),
-				buying:tools.toBtc(offer.buyerSecurityDeposit)
+				selling:coin[base].toDecimal(payload.sellerSecurityDeposit),
+				buying:coin[base].toDecimal(payload.buyerSecurityDeposit)
 			},
 			fiat:fiat,
 			invert:invert

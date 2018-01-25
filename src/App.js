@@ -22,11 +22,9 @@ import React, { Component } from 'react';
 import './App.css';
 import 'typeface-roboto';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-
 import Chrome from './components/chrome/Chrome.js';
 import FullScreenDialog from './resources/dialog/FullScreenDialog.js';
 import AlertDialog from './resources/dialog/AlertDialog.js';
-
 import teal from 'material-ui/colors/teal';
 import blue from 'material-ui/colors/blue';
 import purple from 'material-ui/colors/purple';
@@ -35,86 +33,71 @@ import cyan from 'material-ui/colors/cyan';
 import green from 'material-ui/colors/green';
 import amber from 'material-ui/colors/amber';
 import brown from 'material-ui/colors/brown';
-
 import pink from 'material-ui/colors/pink';
-
-import lang from './resources/language/master_lang.json';
+import Lang from './resources/language/master_lang.json';
+import markets from './resources/modules/markets.js';
 import Api from './resources/modules/api.js';
 import tools from './resources/modules/tools.js';
 import base from './resources/modules/base.js';
 
+/*TODO create vector icons for all potential base market currencies*/
+	import Bitcoin from './resources/icons/Bitcoin.js';
+	const graphics = {
+		Bitcoin:Bitcoin,
+		Dash:Bitcoin,
+		Dogecoin:Bitcoin,
+		Litecoin:Bitcoin,
+		fallback:Bitcoin
+	}
+/*END TODO*/
+
 const Colors = {'teal':teal,'blue':blue,'purple':purple,'indigo':indigo,'cyan':cyan,'green':green,'amber':amber,'brown':brown};
 const colors = ['teal','blue','purple','indigo','cyan','green','amber','brown'];
-
 const s = document.location.protocol+'//'+document.location.hostname+':'+process.env.SERVER_PORT;
-//console.log('process',process.env);
-
 const socket = socketIOClient(s);
 const api = new Api(socket);
 
 
+console.log('');
+console.log('process',process.env);
+console.log('');
+
 window.ui_settings = {
 	lang:'en'
 }
-
 
 class App extends Component {
 	constructor(props) {
 		super(props);
 		var def = {
 			lang:"en",
-			langDir:"ltr",
+			theme:{
+				langDir:"ltr",
+				theme:'light',
+				color:'teal'
+			},
 			screen:"Welcome",
 			api:api,
 			socket:socket,
 			tools:tools,
-			theme:'light',
-			color:'teal',
-			langList:lang.list,
+			Lang:Lang,
+			langList:Lang.list,
 			showown:true,
-			primary_market:'BTC',
-			secondary_market:'USD',
-			pair_market:'btc_usd',
-			base_market:'BTC'
+			coin:markets.currencies,
+			market:{
+				primary_market:'BTC',
+				secondary_market:'USD',
+				pair_market:'btc_usd'
+			}
 		}
+		delete markets.currencies;
+		def.market.markets = markets;
 		this.state = {
 			Global:def,
-			theme:this.makeTheme(def.langDir,def.color,def.theme)
+			theme:this.makeTheme(def.theme.langDir,def.theme.color,def.theme.theme)
 		}
 	}
-	/*
-	root(key,val){
-		if(typeof val === 'undefined') return this.state.Global[key];
-		var G = this.state.Global;
-		G[key] = val;
-		if(key==='lang'){
-			lang.list.some((l)=>{
-				if(l.language === val){
-					G.langDir = l.dir;
-					return true;
-				}
-				return false;
-			})
-		}
-		this.setState({
-			Global:G,
-		},()=>{
-			socket.emit('settings',{
-				lang:this.state.Global.lang,
-				langDir:this.state.Global.langDir,
-				screen:this.state.Global.screen,
-				theme:this.state.Global.theme,
-				color:this.state.Global.color,
-				showown:this.state.Global.showown,
-				primary_market:this.state.Global.primary_market,
-				secondary_market:this.state.Global.secondary_market,
-				pair_market:this.state.Global.pair_market
-			})
-			if(key === 'theme'||key === 'color'||key === 'lang') this.makeTheme();
-		})
 
-	}
-	*/
 	makeTheme = (dir,color,theme) =>{
 		var out = createMuiTheme({
 			direction:dir,
@@ -127,7 +110,6 @@ class App extends Component {
 				danger: 'orange',
 			},
 		})
-		console.log('Theme',out);
 		return out;
 	}
 
@@ -153,18 +135,26 @@ class App extends Component {
 		api.ticker();
 
 		socket.once('getSettings',(data)=>{
-			console.warn(data)
 			var G = this.state.Global
 			Object.keys(data).forEach((key)=>{
 				if(key === 'lang') window.ui_settings.lang = data[key];
+				if(key === 'active_market') {
+					data[key] = this.state.Global.coin[data[key]];
+					data[key].graphic = graphics[data[key].name]||graphics.fallback;
+				}
 				G[key] = data[key];
 			})
+
 			base.make(this,this.state.Global);
 			base.set('api',api);
-
+			var theme = this.makeTheme(G.theme.langDir,G.theme.color,G.theme.theme);
+			console.log('base',base.get());
+			console.log('');
+			console.log('theme',theme);
+			console.log('');
 			this.setState({
 				Global:G,
-				theme:this.makeTheme(G.langDir,G.color,G.theme),
+				theme:theme,
 				ready_settings:true
 			})
 		})

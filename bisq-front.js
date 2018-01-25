@@ -32,11 +32,15 @@ const production = process.env.NODE_ENV==='production'?true:false;
 const path = require('path');
 global.appRoot = path.resolve(__dirname);
 var ticker;
+//var coin;
 
+/* HACK - We need to get this from API as soon as it can provide enough detail */
 market.make('markets').then((data)=>{
 	if(data){
 		console.log('> Could not connect to BISQ market api\n'+data+'\n\nMarket already on file, continuing...\n\n')
 	}
+	//coin = require('./src/resources/modules/markets.js').currencies;
+/* END HACK */
 	dev.make(devsettings.startport).then((port)=>{
 		console.log('> Started the seednode on localhost:'+port);
 		ticker = require('./server/ticker.js');
@@ -45,12 +49,15 @@ market.make('markets').then((data)=>{
 
 		})
 	});
-	//dev.log();
+	//dev.log(); //enable logging to console for seednode and bicoin-core
+
+/* HACK */
 },(err)=>{
 	console.error('> Could not connect to BISQ market api\n'+err+'\n\nAborting...\n\n');
 })
+/* END HACK */
 
-/*
+/* TODO implement twister as communication layer for support (not dispute)
 devsettings.clients.forEach((client)=>{
 	var {port,name,dirname,gui,react} = client;
 	console.log(name,port)
@@ -98,7 +105,12 @@ function makeSocket(client2){
 		peers:devsettings.clients.filter((client2)=>{
 			return (client2.react && port!==client2.port)
 		}),
-		me:client2
+		me:client2,
+
+	/*TODO implement base market switching and automated API restart */
+		base_markets:['BTC','DOGE','DASH','LTC'],
+		active_market:'BTC'
+	/*END TODO*/
 	}
 	const http = require('http').Server(app);
 	const io = require('socket.io')(http);
@@ -111,6 +123,7 @@ function makeSocket(client2){
 
 		socket.on('settings',function(data){
 			Object.keys(data).forEach((key)=>{
+				if(key === 'active_market') data[key] = data[key].symbol
 				settings[key] = data[key];
 			})
 		})

@@ -18,21 +18,28 @@
  */
 
 import React, { Component } from 'react';
-import Lang from './master_lang.json';
+import base from '../modules/base.js';
 
-console.log("Language",Lang)
-
-var fallback = {};
-Object.keys(Lang).forEach((key)=>{
-	if(key === 'list') return;
-	Object.keys(Lang[key]).forEach((k)=>{
-		fallback[k.toLowerCase()] = Lang[key][k]
+var Lang;
+var fallback;
+function Fallback(l){
+	var fb = {};
+	Object.keys(l).forEach((key)=>{
+		if(key === 'list') return;
+		Object.keys(Lang[key]).forEach((k)=>{
+			fb[k.toLowerCase()] = l[key][k]
+		})
 	})
-})
+	return fb;
+}
+
+
 
 class Babel extends Component {
 	constructor(props) {
 		super(props);
+		Lang = base.get('Lang');
+		if(!fallback) fallback = Fallback(Lang);
 		this.prepare(this.props.children,this.props.lang);
 	}
 	prepare = (children,l)=>{
@@ -41,7 +48,7 @@ class Babel extends Component {
 			this.out = '..[error:no window.ui_settings.lang]..';
 			return;
 		}
-		const {aria,cat} = this.props;
+		const {cat} = this.props;
 		this.l = l||window.ui_settings.lang;
 
 		if(!children || typeof children!=='string'){

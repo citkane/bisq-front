@@ -26,7 +26,6 @@ import Typography from 'material-ui/Typography';
 import Detail from './Detail.js';
 import BuySell from '../trade/BuySell.js';
 import './Portfolio.css';
-import tools from '../../resources/modules/tools'
 import Babel from '../../resources/language/Babel.js';
 
 function TabContainer(props) {

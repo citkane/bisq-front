@@ -34,8 +34,6 @@ import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 import Babel from '../../resources/language/Babel.js';
 import base from '../../resources/modules/base.js';
-import money from '../../resources/modules/markets.js';
-const M = money.currencies;
 
 const styles = theme => ({
 	wrapper:{
@@ -108,7 +106,6 @@ class Form extends Component {
 			//Get a list of available currencies for the user
 			if(this.currency.indexOf(ac.currency) === -1) this.currency.push(ac.currency)
 		})
-		this.base = base.get('base_market');
 		this.state = {
 			activeStep:0,
 			accountId:this.accounts[0].id,
@@ -207,12 +204,18 @@ class Form extends Component {
 	}
 	submit = () =>{
 		var {priceType,account,fixed,percent,amount,min_amount} = this.state;
+		const C = account.currency;
 		const {dir} = this.props;
 		const api = base.get('api');
+		const active = base.get('active_market');
 
 		if(priceType === 'FIXED') fixed = account.fiat?
-		M[account.currency].fromDecimal(fixed):
-		M[this.base].fromDecimal(M[account.currency].invert(M[account.currency].fromDecimal(fixed)))
+		base.get('coin')[C].fromDecimal(fixed):
+		active.fromDecimal(
+			base.get('coin')[C].invert(
+				base.get('coin')[C].fromDecimal(fixed)
+			)
+		)
 
 		var data = {
 			fiat:account.fiat,
@@ -221,11 +224,10 @@ class Form extends Component {
 			price_type:priceType,
 			market_pair:account.pair,
 			percentage_from_market_price:percent*1||0,
-			amount:M[this.base].fromDecimal(amount*1||min_amount*1),
-			min_amount:M[this.base].fromDecimal(min_amount*1||amount*1),
+			amount:active.fromDecimal(amount*1||min_amount*1),
+			min_amount:active.fromDecimal(min_amount*1||amount*1),
 			fixed_price:fixed||0,
 		}
-		console.log(data);
 		api.get('offer_make',data).then((data)=>{
 
 			if(data === true){
@@ -255,7 +257,6 @@ class Form extends Component {
 			<Babel cat = 'forms'>Confirm and publish</Babel>
 		];
 
-		const fiat = account.fiat
 		const getStepContent = (step) => {
 			switch (step) {
 				case 0:
@@ -300,6 +301,7 @@ class Form extends Component {
 					var proceed = amount*1||min_amount*1;
 					if(min_amount.length && isNaN(min_amount*1)) proceed = 0;
 					if(amount.length && isNaN(amount*1)) proceed = 0;
+					var active = base.get('active_market').symbol;
 
 					return(
 						<Paper className = {classes.paper2}>
@@ -308,14 +310,15 @@ class Form extends Component {
 									<TextField
 										id="min_amount"
 										label = {dir==='SELL'?
-											<Babel cat = 'forms'>Min BTC to sell</Babel>:
-											<Babel cat = 'forms'>Min BTC to buy</Babel>
+											/*TODO add translations for all active_market posibilities */
+											<Babel cat = 'forms'>{"Min "+active+" to sell"}</Babel>:
+											<Babel cat = 'forms'>{"Min "+active+" to buy"}</Babel>
 										}
 										InputLabelProps = {{className:classes.formControl2}}
 										value={min_amount}
 										onChange={(e)=>this.setVol(e,true)}
 										className={classes.item}
-										helperText={'min: '+account.limit.min+' BTC'}
+										helperText={'min: '+account.limit.min+' '+active}
 										margin="normal"
 									/>
 								</form>
@@ -323,13 +326,14 @@ class Form extends Component {
 									<TextField
 										id="amount"
 										label = {dir==='SELL'?
-											<Babel cat = 'forms'>BTC to sell</Babel>:
-											<Babel cat = 'forms'>BTC to buy</Babel>
+											/*TODO add translations for all active_market posibilities */
+											<Babel cat = 'forms'>{active+" to sell"}</Babel>:
+											<Babel cat = 'forms'>{active+" to buy"}</Babel>
 										}
 										value={amount}
 										onChange={(e)=>this.setVol(e)}
 										className={classes.item}
-										helperText={'max: '+account.limit.max+' BTC'}
+										helperText={'max: '+account.limit.max+' '+active}
 										margin="normal"
 										classes = {{root:classes.formControl2}}
 									/>
@@ -381,7 +385,8 @@ class Form extends Component {
 												defaultValue={fixed}
 												onChange={(e)=>this.setPrice(e)}
 												className={classes.item}
-												helperText={<span><Babel cat = 'forms'>Fixed price for one BTC</Babel> ({currency})</span>}
+												/*TODO add translations for all active_market posibilities */
+												helperText={<span><Babel cat = 'forms'>{"Fixed price for one "+active}</Babel> ({currency})</span>}
 											/>
 										</form>}
 									</div>
@@ -406,9 +411,9 @@ class Form extends Component {
 							<Paper className = {classes.paper2}>
 								<Typography type = 'title'>
 									<Babel cat = 'forms'>{'Offer to '+dir}</Babel> {min!==max && min+' - '}
-									{max} BTC @ {priceType === 'PERCENTAGE' && perc}
+									{max} {active} {base.get('active_market').symbol} @ {priceType === 'PERCENTAGE' && perc}
 									{priceType === 'PERCENTAGE' && (<span>{currency} <Babel cat = 'forms'>market</Babel></span>)}
-									{priceType === 'FIXED' && fixed+' '+currency+' / BTC'}
+									{priceType === 'FIXED' && fixed+' '+currency+' / '+active}
 								</Typography>
 							</Paper>
 							<div className={classes.panels}>
@@ -527,13 +532,16 @@ class Create extends Component {
 
 	render(){
 		const {classes,data,dir} = this.props;
+		var active = base.get('active_market').symbol;
 		return (
 			<div className = {classes.wrapper}>
 				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>base.get('FullScreenDialog')(<Babel cat='chrome'>Create offer to sell</Babel>,<Form dir = 'SELL' data = {data}/>)}>
-					<Babel cat = 'chrome'>Create offer to sell BTC</Babel>
+					{/*TODO add translations for all active_market posibilities */}
+					<Babel cat = 'chrome'>{"Create offer to sell "+active}</Babel>
 				</Button>
 				<Button className = {classes.button} raised dense color = 'primary' onClick = {()=>base.get('FullScreenDialog')(<Babel cat='chrome'>Create offer to buy</Babel>,<Form dir = 'BUY' data = {data}/>)}>
-					<Babel cat = 'chrome'>Create offer to buy BTC</Babel>
+					{/*TODO add translations for all active_market posibilities */}
+					<Babel cat = 'chrome'>{"Create offer to buy "+active}</Babel>
 				</Button>
 				{dir !== 'OWN' && <FormGroup>
 					<FormControlLabel

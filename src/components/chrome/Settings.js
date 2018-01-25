@@ -64,7 +64,14 @@ class Settings extends Component {
 		var val = event.target.value
 		if(name === 'lang') window.ui_settings.lang = val;
 		this.setState({ [name]:val},()=>{
-			base.set(name,val,true)
+			if(name === 'theme'||name === 'color'){
+				var theme = base.get('theme');
+				theme[name] = val;
+				base.set('theme',theme,true)
+			}else{
+				base.set(name,val,true)
+			}
+
 		});
 
 	};
@@ -113,7 +120,7 @@ class Settings extends Component {
 						</InputLabel>
 							<Select
 								native
-								value={base.get('theme')}
+								value={base.get('theme').theme}
 								onChange={this.handleChange('theme')}
 								input={<Input id="theme" />}
 							>
@@ -134,7 +141,7 @@ class Settings extends Component {
 						</InputLabel>
 							<Select
 								native
-								value={base.get('color')}
+								value={base.get('theme').color}
 								onChange={this.handleChange('color')}
 								input={<Input id="color" />}
 							>

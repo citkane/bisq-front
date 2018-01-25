@@ -23,7 +23,6 @@ import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
-import Bitcoin from '../../resources/icons/Bitcoin.js'
 import base from '../../resources/modules/base.js';
 
 const styles = theme => ({
@@ -48,9 +47,7 @@ const styles = theme => ({
 	}
 })
 class Funds extends Component {
-	constructor(props) {
-		super(props);
-	}
+
 	render(){
 		const {data,classes} = this.props
 		var wallet = data.wallet_tx_list;
@@ -62,10 +59,10 @@ class Funds extends Component {
 			var dir = trans.value > 0?'+':'-';
 			trans.value = dir==='-'?trans.value*-1:trans.value;
 			return {
-				value:tools.toBtc(trans.value),
+				value:base.get('active_market').toDecimal(trans.value),
 				height:trans.confidence.split('height')[1].split(',')[0].trim()*1000+trans.confidence.split('depth')[1].split('.')[0].trim()*1,
 				dir:dir,
-				fee:trans.fee > 0?tools.toBtc(trans.fee):false,
+				fee:trans.fee > 0?base.get('active_market').toDecimal(trans.fee):false,
 				hash:trans.hash
 			}
 		}).sort((a,b)=>{
@@ -73,13 +70,14 @@ class Funds extends Component {
 			if(a.height < b.height)return 1;
 			return 0;
 		})
+		const Graphic = base.get('active_market').graphic;
 		return(
 			<div className = {classes.main}>
 				{wallet.map((trans,i)=>{
 					return <Paper key = {i} className = {classes.paper}>
 						<div className = {classes.amount}>
 							<Typography component='span'>{trans.dir}</Typography>
-							<Typography component='span' color = {trans.dir==='-'?'accent':'default'}><Bitcoin />{trans.value}&nbsp;</Typography>
+							<Typography component='span' color = {trans.dir==='-'?'accent':'default'}><Graphic />{trans.value}&nbsp;</Typography>
 							{trans.fee && <Typography component='span' type='caption'> (fee:{trans.fee})</Typography>}
 						</div>
 						<Typography type='caption'>

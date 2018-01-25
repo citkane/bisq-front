@@ -1,4 +1,5 @@
 var fees = {
+	/* HACK - we need to be able to get the fee data from the API, hardcoding it for now for development purposes */
 	SELL:{
 		security:2.73/100,
 		trading:.2/100,
@@ -9,47 +10,38 @@ var fees = {
 		trading:.2/100,
 		mining:5.14/100
 	}
+	/* END HACK */
 }
 var tools = function(){};
 
 //Shared Server and client
 
-tools.prototype.toXMR = function(xmr){
-	return xmr/100000000;
-}
-tools.prototype.toFiat = function(amount){
-	return amount/10000;
-}
-tools.prototype.toSatoshi = function(btc){
-	return btc*100000000;
-}
-tools.prototype.toBtc = function(sat){
-	return sat/100000000;
-}
-tools.prototype.fees = function(dir,btc){
-	var fee = fees[dir];
-	var sat = this.toSatoshi(btc);
+tools.prototype.fees = function(dir,btc,func){
+
+	var fee = fees[dir]; /* See HACK at top of file */
+
+	var sat = func.fromDecimal(btc);
 	var data =  {
 		security:{
 			rate:fee.security*100+'%',
 			value:sat*fee.security,
-			btc:this.toBtc(sat*fee.security)
+			btc:func.toDecimal(sat*fee.security)
 		},
 		trading:{
 			rate:fee.trading*100+'%',
 			value:sat*fee.trading,
-			btc:this.toBtc(sat*fee.trading)
+			btc:func.toDecimal(sat*fee.trading)
 		},
 		mining:{
 			rate:fee.mining*100+'%',
 			value:sat*fee.mining,
-			btc:this.toBtc(sat*fee.mining)
+			btc:func.toDecimal(sat*fee.mining)
 		}
 	}
 	data.total = {
 		value:data.security.value+data.trading.value+data.mining.value+(dir==='BUY'?sat:0)
 	}
-	data.total.btc = this.toBtc(data.total.value);
+	data.total.btc = func.toDecimal(data.total.value);
 	return data;
 }
 

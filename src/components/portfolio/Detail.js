@@ -31,11 +31,9 @@ import DoneIcon from 'material-ui-icons/Done';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
-import Bitcoin from '../../resources/icons/Bitcoin.js';
 import Babel from '../../resources/language/Babel.js';
 import base from '../../resources/modules/base.js';
 
-const api = base.get('api');
 const styles = theme => ({
 	svgIcon: {
 		color: theme.palette.common.darkBlack,
@@ -79,18 +77,21 @@ class Transfer extends Component {
 	render(){
 
 		const {trade,classes} = this.props;
+		const Graphic = base.get('active_market').graphic;
+		const api = base.get('api');
+
 		return (
 			<div>
 				<Paper className = {classes.paper3}>
 					<div className = {classes.item} >
-						<Typography component='span'><Bitcoin />{trade.deposit[trade.type[0]]}</Typography>
+						<Typography component='span'><Graphic />{trade.deposit[trade.type[0]]}</Typography>
 						<Typography type = 'caption'>
 							<Babel cat = 'forms'>Security deposit</Babel>
 						</Typography>
 					</div>
 					{trade.type[0]==='buying' && <div className = {classes.item}>+</div>}
 					{trade.type[0]==='buying' && <div className = {classes.item}>
-						<Typography component = 'span'><Bitcoin />{trade.amount}</Typography>
+						<Typography component = 'span'><Graphic />{trade.amount}</Typography>
 						<Typography type = 'caption'>
 							<Babel cat = 'forms'>Purchased amount</Babel>
 						</Typography>
@@ -111,7 +112,8 @@ class Transfer extends Component {
 
 						}
 					}>
-						<Babel cat = 'forms'>Move funds to my Bisq BTC wallet</Babel>
+						{/*TODO add translations for all active_market posibilities */}
+						<Babel cat = 'forms'>{'Move funds to my Bisq '+base.get('active_market').symbol+' wallet'}</Babel>
 					</Button>
 				</div>
 			</div>
@@ -125,15 +127,16 @@ Transfer = withStyles(styles)(Transfer);
 
 class Received extends Component {
 	render(){
-
 		const {trade,classes} = this.props;
+		const api = base.get('api');
+		var active = base.get('active_market').symbol;
 		return (
 			<div>
 				<Typography gutterBottom type='title' className = {classes.top}>
-					<Babel cat = 'forms'>Please check that you have received from the following account:</Babel> ({trade.volume} {trade.base==='BTC'?trade.counter:trade.base} | {trade.method})
+					<Babel cat = 'forms'>Please check that you have received from the following account:</Babel> ({trade.volume} {trade.base===active?trade.counter:trade.base} | {trade.method})
 				</Typography>
 				<Paper className = {classes.paper2}><AccountDetails trade = {trade} /></Paper>
-				{trade.base==='BTC' && <div className = {classes.bottom}>
+				{trade.base===active && <div className = {classes.bottom}>
 					<Babel cat = 'forms'>Ensure that the trading account holder\'s name matches that on your statement. If not, consider cancelling and opening a support ticket</Babel>
 				</div>}
 				<div className = {classes.bottom} >
@@ -169,16 +172,18 @@ Received.propTypes = {
 Received = withStyles(styles)(Received);
 
 class StartPayment extends Component {
-	render(){
 
+	render(){
+		const api = base.get('api');
 		const {trade,classes} = this.props;
+		var active = base.get('active_market').symbol;
 		return (
 			<div>
 				<Typography gutterBottom type='title' className = {classes.top}>
-					<Babel cat = 'forms'>Please deposit to the following account:</Babel> ({trade.volume} {trade.base==='BTC'?trade.counter:trade.base} | {trade.method})
+					<Babel cat = 'forms'>Please deposit to the following account:</Babel> ({trade.volume} {trade.base===active?trade.counter:trade.base} | {trade.method})
 				</Typography>
 				<Paper className = {classes.paper2}><AccountDetails trade = {trade} /></Paper>
-					{trade.base==='BTC' && <div className = {classes.bottom}>
+					{trade.base===active && <div className = {classes.bottom}>
 						<Babel cat = 'forms'>Please ensure that your account name is exactly as entered on BISQ otherwise your trading partner may open a dispute</Babel>
 					</div>}
 				<div className = {classes.bottom} >
@@ -298,6 +303,7 @@ class Detail extends Component {
 				<Babel cat = 'help'>You have no active trades.</Babel>
 			</Typography>
 		)
+		const Graphic = base.get('active_market').graphic;
 		return(
 			<div>
 				<Grid container spacing={16}>
@@ -318,7 +324,7 @@ class Detail extends Component {
 											<Typography type='title'>
 												<Babel cat = 'cards'>{t.type[0]}</Babel>
 											</Typography>
-											<Typography component = 'span' type='body2'>&nbsp;&nbsp;<Bitcoin />{t.amount}</Typography>
+											<Typography component = 'span' type='body2'>&nbsp;&nbsp;<Graphic />{t.amount}</Typography>
 										</div>
 
 										<Divider light />
@@ -334,9 +340,9 @@ class Detail extends Component {
 										<Divider inset light />
 										<div className = 'cardrow'>
 											<Typography component = 'span' color = 'primary'>
-												<Babel cat = 'cards'>At</Babel>
+												<Babel cat = 'cards'>Rate</Babel>
 											</Typography>
-											<Typography component = 'span' type='caption' >{t.price} {t.counter} / {t.base}</Typography>
+											<Typography component = 'span' type='caption' >{t.price} {t.counter} / {base.get('active_market').symbol}</Typography>
 										</div>
 										<Divider inset light />
 										<div className = 'cardrow'>

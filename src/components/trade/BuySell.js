@@ -33,8 +33,6 @@ import Forms from './Forms.js';
 import Create from './Create.js';
 import Babel from '../../resources/language/Babel.js';
 import base from '../../resources/modules/base.js';
-import money from '../../resources/modules/markets.js';
-const M = money.currencies;
 
 
 const styles = theme => ({
@@ -74,9 +72,12 @@ class Action extends Component {
 		const {anchorEl} = this.state;
 		const {classes,offer,data} = this.props;
 		const open = !!anchorEl;
+		var active = base.get('active_market').symbol;
+
+		/*TODO add translations for all active_market posibilities */
 		const title = offer.direction === 'BUY'?
-			<Babel cat = 'chrome'>Sell BTC</Babel>:
-			<Babel cat = 'chrome'>Buy BTC</Babel>
+			<Babel cat = 'chrome'>{"Sell "+active}</Babel>:
+			<Babel cat = 'chrome'>{"Buy "+active}</Babel>
 		const owner = offer.owner;
 
 		return(
@@ -170,6 +171,8 @@ class BuySell extends Component {
 	render(){
 		const {trades} = this.state;
 		const {data,dir} = this.props;
+		var active = base.get('active_market').symbol;
+
 		if(!trades.length) return (
 			<div>
 				<Create data ={data} dir = {dir}/>
@@ -182,12 +185,13 @@ class BuySell extends Component {
 			</div>
 		)
 		return(
+
 			<div>
 				<Create data ={data} dir = {dir}/>
 				<Grid container spacing={16}>{trades.map(t => {
-					t.currency = M[t.other_currency];
-					t.fiat = t.currency.type === 'fiat';
-					const symbol = t.currency.symbol;
+					const coin = base.get('coin')[t.other_currency]
+					t.coin = coin;
+					t.fiat = t.coin.type === 'fiat';
 					const amount = t.other_amount
 					var title;
 					if(dir === 'OWN'||t.owner){
@@ -205,35 +209,35 @@ class BuySell extends Component {
 									<Divider light />
 									<div className = 'cardrow'>
 										<Typography component = 'span' color = 'primary'>
-											<Babel cat = 'cards'>You have no open offers</Babel>:
+											<Babel cat = 'cards'>market</Babel>:
 										</Typography>
 										<Typography component = 'span'>{t.other_currency}</Typography>
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
 										<Typography color = 'primary'>
-											<Babel cat = 'cards'>price</Babel> / 1 BTC:
+											<Babel cat = 'cards'>price</Babel> / 1 {active}:
 										</Typography>
 										{t.price_detail.use_market_price && (
 											<span>
 												<Typography>({t.price_detail.market_price_margin}%) </Typography>
 												<div className = 'spacer'></div>
-												<Typography type="body2" > {M[t.other_currency].round(amount)}</Typography>
+												<Typography type="body2" > {coin.round(amount)}</Typography>
 											</span>
 										)}
-										{!t.price_detail.use_market_price && <Typography type="body2" > {M[t.other_currency].round(amount)}</Typography>}
+										{!t.price_detail.use_market_price && <Typography type="body2" > {coin.round(amount)}</Typography>}
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
-										<Typography component = 'span' color = 'primary'>BTC: {t.min_btc_amount!==t.btc_amount && "(min|max)"}</Typography>
+										<Typography component = 'span' color = 'primary'>{active}: {t.min_btc_amount!==t.btc_amount && "(min|max)"}</Typography>
 										<Typography component = 'span'>{t.min_btc_amount!==t.btc_amount && t.min_btc_amount+' | '}{t.btc_amount}</Typography>
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
 										<Typography component = 'span' color = 'primary'>{t.other_currency} <Babel cat = 'cards'>cost</Babel>: {t.min_btc_amount!==t.btc_amount && "(min|max)"} </Typography>
 										<Typography component = 'span'>
-											{t.min_btc_amount!==t.btc_amount && (M[t.other_currency].round(amount*t.min_btc_amount)+' | ')}
-											{M[t.other_currency].round(amount*t.btc_amount)}
+											{t.min_btc_amount!==t.btc_amount && (coin.round(amount*t.min_btc_amount)+' | ')}
+											{coin.round(amount*t.btc_amount)}
 										</Typography>
 									</div>
 									<Divider inset light />
