@@ -9,18 +9,18 @@ Table of Contents
    * [Proof of Concept (POC)](#proof-of-concept-poc)
    * [Usage scenarios](#usage-scenarios)
    * [Motivation](#motivation)
-  
+
 2. [Architecture](#architecture)
    * [Server](#server)
    * [Client](#client)
- 
+
 3. [Security](#security)
 
 4. [Accessibility](#accessibility)
    * [Devices](#devices)
    * [Language](#language)
    * [People with disabilities](#people-with-disabilities)
-   
+
 5. [Automated Trading](#automated-trading)
 
 6. [Install](#install)
@@ -135,7 +135,7 @@ Not in [POC](#proof-of-concept-poc)
 
 Using the [server](#server) layer, it is envisaged to connect to blockchain and [STRIPE](https://stripe.com) API's which can programmatically determine the status of payments.
 
-Stripe integration will be voluntary, and the user will need to set themselves up as a business on the Stripe network, then provide their API key into bisq-front. 
+Stripe integration will be voluntary, and the user will need to set themselves up as a business on the Stripe network, then provide their API key into bisq-front.
 
 Stripe has [payment charges](https://stripe.com/pricing) and the user will need to evaluate the following benefits:
 - Accept payments from any fiat currency to their own bank account via Visa, Mastercard, etc, etc.....
@@ -161,7 +161,7 @@ sudo apt-get install -y nodejs
 ```
 JAVA jdk, jfx >=8, APACHE Maven >= 3.5, git ([Detail instructions](https://github.com/bisq-network/exchange/blob/master/doc/build.md))
 ```
-sudo apt-get install openjdk-8-jdk libopenjfx-java maven git
+sudo apt-get install openjdk-8-jdk libopenjfx-java openjfx maven git
 
 ```
 Bitcoin core ([Details](https://bitcoin.org/en/download))
