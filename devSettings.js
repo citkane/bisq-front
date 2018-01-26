@@ -6,11 +6,13 @@ var devsettings = function(){
 	this.clients = {
 		Bob:{
 			gui:gui,
-			react:true
+			react:true,
+			url:'bob.openpoint.ie'
 		},
 		Alice:{
 			gui:gui,
-			react:true
+			react:true,
+			url:'alice.openpoint.ie'
 		},
 		Arbitrator:{
 			gui:gui,
@@ -29,7 +31,8 @@ devsettings.prototype.makeClients = function(){
 			dirname:'Bisq-Regtest-'+client,
 			port:this.startport+count,
 			gui:c.gui,
-			react:c.react
+			react:c.react,
+			url:c.url
 		}
 	})
 }

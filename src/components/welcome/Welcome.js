@@ -54,9 +54,11 @@ class Welcome extends Component {
 						<Babel cat = 'content'>This is a regtest demonstration with trading partners:</Babel>
 					</Typography>
 					{base.get('peers').map((peer,i)=>{
+						var location = window.location.hostname === 'localhost'?'localhost:'+peer.port:peer.url
 						return(
 							<div key = {i}>
-								<Typography><a href = {'http://localhost:'+peer.port} target = '_blank'>{peer.name}</a></Typography>
+								{}
+								<Typography><a href = {'http://'+location} target = '_blank'>{peer.name}</a></Typography>
 							</div>
 						)
 					})}
