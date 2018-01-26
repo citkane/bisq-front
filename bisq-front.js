@@ -133,7 +133,7 @@ function makeSocket(client2){
 
 	const http = require('http').Server(relay);
 	const io = require('socket.io')(http);
-	io.origins(['localhost:*',client2.url]);
+	io.origins(['localhost:'+port,client2.url+':'+port]);
 	io.on('connection', function(socket){
 		console.log('> '+name+' connected via websocket on localhost:'+(port+1));
 		var api = new Api(socket,port+3);
