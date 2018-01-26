@@ -19,19 +19,22 @@
  * along with bisq-front. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const app = require('express')();
+const path = require('path');
+global.appRoot = path.resolve(__dirname);
+
 const child = require('child_process');
 const devsettings = require('./devSettings.js');
 const dev = require('./server/makedev.js');
-var Api;
 const tools = require('./src/resources/modules/tools.js');
 const market = require('./server/market.js');
+const express = require('express');
+
+
 const production = process.env.NODE_ENV==='production'?true:false;
-const path = require('path');
 const headless = process.env.DESKTOP_SESSION?false:true;
-global.appRoot = path.resolve(__dirname);
+
 var ticker;
-//var coin;
+var Api;
 
 /* HACK - We need to get this from API as soon as it can provide enough detail */
 market.make('markets').then((data)=>{
@@ -40,6 +43,7 @@ market.make('markets').then((data)=>{
 	}
 	Api = require('./server/api.js');
 /* END HACK */
+
 	dev.make(devsettings.startport).then((port)=>{
 		console.log('> Started the seednode on localhost:'+port);
 		ticker = require('./server/ticker.js');
@@ -79,7 +83,21 @@ function makeInstance(client){
 			console.log('\n> Starting the http '+(production?'production':'DEVELOPMENT')+' server for '+name+'\nBrowse to http://localhost:'+port+' to view.\n');
 			makeSocket(client);
 			if(production){
-				child.fork('node_modules/.bin/serve',['-s','-p '+port,'build/'+name]);
+
+				var whitelist = ['localhost:'+port,client.url];
+
+				const app = express();
+				const pub = path.join(appRoot,'build',name);
+				var allowed = whitelist[0];
+				app.use(function(req,res,next){
+					var origin = req.get('host');
+					if(!origin || whitelist.indexOf(origin)!==-1){
+						next()
+					}else{
+						res.status(403).send('Blocked by CORS');
+					}
+				},express.static(pub));
+				app.listen(port);
 				return;
 			}else{
 				var env = tools.getEnv();
@@ -99,6 +117,7 @@ function makeInstance(client){
 }
 
 function makeSocket(client2){
+	const relay = express();
 	var {port,name,dirname,gui,react} = client2;
 	var settings = {
 		peers:devsettings.clients.filter((client2)=>{
@@ -111,8 +130,10 @@ function makeSocket(client2){
 		active_market:'BTC'
 	/*END TODO*/
 	}
-	const http = require('http').Server(app);
+
+	const http = require('http').Server(relay);
 	const io = require('socket.io')(http);
+	io.origins(['localhost:*',client2.url]);
 	io.on('connection', function(socket){
 		console.log('> '+name+' connected via websocket on localhost:'+(port+1));
 		var api = new Api(socket,port+3);
