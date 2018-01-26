@@ -21,6 +21,5 @@ yarn-debug.log*
 yarn-error.log*
 
 nohup.out
-package-lock.json
 twister
 server/language/api_key.txt
