@@ -19,9 +19,6 @@
  * along with bisq-front. If not, see <http://www.gnu.org/licenses/>.
  */
 
-console.log(process.env.DESKTOP_SESSION);
-return;
-
 const app = require('express')();
 const child = require('child_process');
 const devsettings = require('./devSettings.js');
