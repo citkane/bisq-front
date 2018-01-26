@@ -28,6 +28,7 @@ const tools = require('./src/resources/modules/tools.js');
 const market = require('./server/market.js');
 const production = process.env.NODE_ENV==='production'?true:false;
 const path = require('path');
+const headless = process.env.DESKTOP_SESSION?false:true;
 global.appRoot = path.resolve(__dirname);
 var ticker;
 //var coin;
@@ -67,7 +68,7 @@ return;
 var done = [];
 function makeInstance(client){
 	var {port,name,dirname,gui,react} = client;
-
+	if(headless) gui = false;
 	var user = dev.makeuser(dirname,port+2,gui,devsettings.startport);
 
 	user.stdout.on('data', function(data) {
