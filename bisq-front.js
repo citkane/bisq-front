@@ -29,7 +29,6 @@ const tools = require('./src/resources/modules/tools.js');
 const market = require('./server/market.js');
 const express = require('express');
 
-
 const production = process.env.NODE_ENV==='production'?true:false;
 const headless = process.env.DESKTOP_SESSION?false:true;
 
@@ -111,10 +110,17 @@ function makeInstance(client){
 		}
 		if(data.indexOf('ERROR') === 0){
 			console.log('\n> BISQ API error for '+name);
-			console.log(data);
+			console.error(data);
 		}
 	});
 }
+
+/*TODO build an authorisation system */
+	function Auth(){
+		return true;
+	}
+/* END TODO */
+
 
 function makeSocket(client2){
 	const relay = express();
@@ -133,7 +139,15 @@ function makeSocket(client2){
 
 	const http = require('http').Server(relay);
 	const io = require('socket.io')(http);
-	io.origins(['localhost:'+port,client2.url+':'+port]);
+
+	var allowed = ['http://localhost:'+port,'http://'+client2.url,'https://localhost:'+port,'https://'+client2.url]
+	io.origins((origin, callback) => {
+		if (allowed.indexOf(origin) === -1) {
+			return callback('origin not allowed', false);
+		}
+		callback(null, true);
+	});
+
 	io.on('connection', function(socket){
 		console.log('> '+name+' connected via websocket on localhost:'+(port+1));
 		var api = new Api(socket,port+3);

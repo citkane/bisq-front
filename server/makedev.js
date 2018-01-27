@@ -72,7 +72,7 @@ dev.prototype.log = function(){
 	})
 }
 dev.prototype.makeuser = function(appName,port,gui,seedport){
-	console.log('> Starting the BISQ API server '+appName+' in '+(gui?'GUI':'headless')+' mode at localhost:'+(port+1));
+	console.log('> Starting the BISQ API server '+appName+' in '+(gui?'GUI':'headless')+' mode at localhost:'+(port+1)+'\nPlease wait....\n');
 	var e = tools.getEnv();
 	e.BISQ_API_PORT = port+1;
 	gui = gui?'io.bisq.api.app.BisqApiWithUIMain':'io.bisq.api.app.ApiMain';
