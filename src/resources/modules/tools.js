@@ -80,6 +80,10 @@ tools.prototype.params = function(data){
 	return string;
 }
 tools.prototype.kill = function(psTree,cp){
+	if(!children) var children = {
+		exec:[],
+		spawn:[]
+	}
 	var count = children.exec.length;
 	//see https://www.npmjs.com/package/ps-tree
 	return new Promise((resolve,reject)=>{
