@@ -21,7 +21,12 @@
 
 const path = require('path');
 global.appRoot = path.resolve(__dirname);
-
+global.children = {
+	spawn:[],
+	exec:[]
+};
+const fs = require('fs');
+const psTree = require('ps-tree');
 const child = require('child_process');
 const devsettings = require('./devSettings.js');
 const dev = require('./server/makedev.js');
@@ -34,6 +39,15 @@ const headless = process.env.DESKTOP_SESSION?false:true;
 
 var ticker;
 var Api;
+
+process.on('uncaughtException', function(err) {
+	console.log('got the error')
+	console.error(err);
+	tools.kill(psTree,child).then(()=>{
+		process.exit(1);
+	});
+});
+
 
 /* HACK - We need to get this from API as soon as it can provide enough detail */
 market.make('markets').then((data)=>{
@@ -48,8 +62,7 @@ market.make('markets').then((data)=>{
 		ticker = require('./server/ticker.js');
 		devsettings.clients.forEach((client)=>{
 			new makeInstance(client);
-
-		})
+		});
 	});
 	//dev.log(); //enable logging to console for seednode and bicoin-core
 
@@ -72,8 +85,8 @@ var done = [];
 function makeInstance(client){
 	var {port,name,dirname,gui,react} = client;
 	if(headless) gui = false;
-	var user = dev.makeuser(dirname,port+2,gui,devsettings.startport);
 
+	var user = dev.makeuser(dirname,port+2,gui,devsettings.startport);
 	user.stdout.on('data', function(data) {
 
 	    if((data.indexOf('Start parse blocks:') !== -1 || data.indexOf('onBootstrapComplete') !== -1) && react && done.indexOf(name)===-1){

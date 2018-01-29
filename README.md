@@ -236,10 +236,17 @@ Hit ctr c to exit the terminal process (you will need to clear up stray processe
 ```
 npm run development
 ```
+Url's and endpoints will be logged to console.
+
+
 or
 ```
 npm run production
 ```
-Url's and endpoints will be logged to console.
+This will start a [Forever](https://github.com/foreverjs/forever) instance pointing to the production build, thus releasing the terminal. Logs will be under <bisq-front>/server/logs
+End the production process by running:
+```
+npm run stop
+```
 
 Headless mode is not yet working due to: https://github.com/mrosseel/bisq-api/issues/6

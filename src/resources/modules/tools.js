@@ -79,5 +79,22 @@ tools.prototype.params = function(data){
 	})
 	return string;
 }
+tools.prototype.kill = function(psTree,cp){
+	var count = children.exec.length;
+	//see https://www.npmjs.com/package/ps-tree
+	return new Promise((resolve,reject)=>{
+		children.spawn.forEach((child)=>{
+			child.kill();
+		})
+		children.exec.forEach((child)=>{
+			psTree(child.pid, function (err, Children) {
+				cp.spawnSync('kill', ['-9'].concat(Children.map(function (p) { return p.PID })));
+				count --
+				if(!count) resolve(true);
+			});
+		})
+	})
+
+}
 module.exports = new tools();
 //export default new tools();

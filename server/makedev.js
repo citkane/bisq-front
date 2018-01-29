@@ -36,9 +36,12 @@ function dev(){}
 
 dev.prototype.make = function(port,gui){
 	this.core = child.spawn(gui?'bitcoin-qt':'bitcoind',['-regtest','-server','-printtoconsole','-rpcuser=regtest','-rpcpassword=test']);
+	children.spawn.push(this.core);
 	this.seedNode = child.spawn('java',['-jar','SeedNode.jar','--baseCurrencyNetwork=BTC_REGTEST','--useLocalhost=true','--myAddress=localhost:'+port,'--nodePort='+port,'--appName=bisq_seed_node_localhost_'+port],{cwd:'/var/opt/bisq-network/seednode/target/'});
-	var count = 0;
 
+	children.spawn.push(this.seedNode);
+
+	var count = 0;
 	return new Promise((resolve,reject)=>{
 
 		this.seedNode.stdout.on('data',(data)=>{
@@ -77,10 +80,13 @@ dev.prototype.makeuser = function(appName,port,gui,seedport){
 	e.BISQ_API_PORT = port+1;
 	gui = gui?'io.bisq.api.app.BisqApiWithUIMain':'io.bisq.api.app.ApiMain';
 	var com = 'mvn exec:java -Dexec.mainClass="'+gui+'" -Dexec.args="--baseCurrencyNetwork=BTC_REGTEST --bitcoinRegtestHost localhost --nodePort '+port+' --useLocalhost true --appName '+appName+' --seedNodes=localhost:'+seedport+'"'
-	return child.exec(com,{
+
+	var user = child.exec(com,{
 		cwd:'/var/opt/bisq-api',
 		env:e
 	})
+	children.exec.push(user);
+	return user;
 }
 
 dev.prototype.generate = function(amount){
