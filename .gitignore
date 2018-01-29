@@ -19,8 +19,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-*.log*
 
 nohup.out
 twister
 server/language/api_key.txt
+server/logs/*.log
