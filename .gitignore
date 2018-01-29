@@ -23,4 +23,4 @@ yarn-error.log*
 nohup.out
 twister
 server/language/api_key.txt
-server/logs/*
+server/logs/*.log
