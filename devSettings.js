@@ -1,6 +1,6 @@
 "use strict"
 
-const gui = true;
+const gui = false;
 var devsettings = function(){
 	this.startport = 3100;
 	this.clients = {
@@ -10,7 +10,7 @@ var devsettings = function(){
 			url:'bob.openpoint.ie'
 		},
 		Alice:{
-			gui:gui,
+			gui:true,
 			react:true,
 			url:'alice.openpoint.ie'
 		},

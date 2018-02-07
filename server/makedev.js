@@ -36,10 +36,10 @@ function dev(){}
 
 dev.prototype.make = function(port,gui){
 	this.core = child.spawn(gui?'bitcoin-qt':'bitcoind',['-regtest','-server','-printtoconsole','-rpcuser=regtest','-rpcpassword=test']);
-	children.spawn.push(this.core);
+	if(typeof children !== 'undefined') children.spawn.push(this.core);
 	this.seedNode = child.spawn('java',['-jar','SeedNode.jar','--baseCurrencyNetwork=BTC_REGTEST','--useLocalhost=true','--myAddress=localhost:'+port,'--nodePort='+port,'--appName=bisq_seed_node_localhost_'+port],{cwd:'/var/opt/bisq-network/seednode/target/'});
 
-	children.spawn.push(this.seedNode);
+	if(typeof children !== 'undefined') children.spawn.push(this.seedNode);
 
 	var count = 0;
 	return new Promise((resolve,reject)=>{
@@ -85,7 +85,10 @@ dev.prototype.makeuser = function(appName,port,gui,seedport){
 		cwd:'/var/opt/bisq-api',
 		env:e
 	})
-	children.exec.push(user);
+	user.on('close',function(code,signal){
+		console.log(appName,'code:'+code,'signal:'+signal);
+	})
+	if(typeof children !== 'undefined') children.exec.push(user);
 	return user;
 }
 
