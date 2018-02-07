@@ -10,7 +10,7 @@ var devsettings = function(){
 			url:'bob.openpoint.ie'
 		},
 		Alice:{
-			gui:true,
+			gui:gui,
 			react:true,
 			url:'alice.openpoint.ie'
 		},

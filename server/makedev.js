@@ -93,6 +93,7 @@ dev.prototype.makeuser = function(appName,port,gui,seedport){
 }
 
 dev.prototype.generate = function(amount){
+	console.log('Generating: '+amount);
 	btc.generate(amount,(error, data) => {
 		if(error) console.error('\n> Bitcoin-core error while generating:\n'+error);
 		//console.log(data)

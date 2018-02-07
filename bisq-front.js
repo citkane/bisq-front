@@ -47,7 +47,16 @@ process.on('uncaughtException', function(err) {
 		process.exit(1);
 	});
 });
-
+process.on('exit',()=>{
+	tools.kill(psTree,child).then(()=>{
+		process.exit(1);
+	});
+});
+process.on('SIGINT',()=>{
+	tools.kill(psTree,child).then(()=>{
+		process.exit(1);
+	});
+});
 
 /* HACK - We need to get this from API as soon as it can provide enough detail */
 market.make('markets').then((data)=>{

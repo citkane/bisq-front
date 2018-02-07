@@ -380,7 +380,7 @@ class Forms extends Component {
 								</Button>
 								<Button raised color='primary' onClick={()=>{
 									base.get('FullScreenDialogClose')();
-									base.get('screen','Portfolio');
+									base.set('screen','Portfolio',true);
 								}} className={classes.button}>
 									<Babel cat = 'forms'>Open Trades</Babel>
 								</Button>
