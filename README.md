@@ -33,9 +33,9 @@ Proposal
 [top](#table-of-contents)
 
 
-With Bisq-front it is proposed to interface the Bisq-api to make manual and automated trading possible from anywhere and on any device.
+With Bisq-front it is proposed to interface the [Bisq-engine](https://github.com/citkane/bisq-engine) API to make manual and automated trading possible from anywhere and on any device.
 
-This is proposed to be a web-client / server model where a GUI is provided in a web browser. The server is singular for each client and is wholly owned and controlled by the human BISQ user.
+This is proposed to be a web-client / server model where a GUI is provided in a web browser or other native framework. The server is singular for each client and is wholly owned and controlled by the human BISQ user.
 
 ### Proof of Concept (POC) ###
 ##### To Do #####
@@ -104,10 +104,12 @@ Security
 [top](#table-of-contents)
 
 
-Initial security priorities for bisq-front are two-fold:
+Initial security priorities for bisq-front are three-fold:
 1. Protect the anonymity and content of the [data stream](#server) so that the nature of data passed over the internet cannot be identified as BISQ trading or interfered with.
 
 2. Provide token based and two-factor authentication to the web client to protect the user from unauthorised access. (Not implemented in [POC](#proof-of-concept-poc))
+
+3. Ensure that Bisq-core is accessible only from localhost and is running on the Onion network.
 
 
 Accessibility
@@ -179,27 +181,19 @@ mkdir <dir>
 
 cd <dir>
 
-mkdir bisq-front bisq-network bisq-api
+mkdir bisq-front bisq-engine
 ```
-#### bisq-network ####
-This will provide the seed node for the regtest local network. ([bisq-network](https://github.com/bisq-network/exchange))
+#### bisq-engine ####
+This will provide the seed node for the regtest local network ([bisq-network](https://github.com/bisq-network/exchange)) and the API endpoints.
 ```
-cd bisq-network
+cd bisq-engine
 
-git clone https://github.com/bisq-network/exchange.git ./
-
-mvn clean package verify -DskipTests -Dmaven.javadoc.skip=true
-
-```
-#### bisq-api ####
-This will provide the API clients ([bisq-api](https://github.com/mrosseel/bisq-api))
-```
-cd ../bisq-api
-
-git clone https://github.com/mrosseel/bisq-api.git ./
+git clone https://github.com/citkane/bisq-engine.git ./
 
 mvn clean install
+
 ```
+
 #### bisq-front ####
 This will provide the http frontend for the api ([bisq-front](https://github.com/citkane/bisq-front))
 ```
@@ -249,4 +243,3 @@ End the production process by running:
 npm run stop
 ```
 
-Headless mode is not yet working due to: https://github.com/mrosseel/bisq-api/issues/6

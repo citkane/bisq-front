@@ -34,10 +34,10 @@ market.prototype.get = function(command,params){
 			json:true,
 		},function(err,resp,body){
 			if(err){
-				reject(err);
+				reject({command:command,data:err});
 				return;
 			}
-			!body?reject('failed to process market data'):resolve(body);
+			!body?reject({command:command,data:'failed to process market data'}):resolve({command:command,data:body});
 		})
 	})
 }
@@ -87,7 +87,7 @@ market.prototype.make = function(){
 		this.get('markets').then((data)=>{
 			if(done) return;
 			clearTimeout(to);
-			data = this.formatMarkets(data);
+			data = this.formatMarkets(data.data);
 			data = JSON.stringify(data,null,'\t');
 			fs.writeFileSync(path.join(appRoot,'src/data/markets.json'),data);
 			resolve(false);

@@ -1,39 +1,39 @@
-"use strict"
+"use strict";
 
 const gui = false;
-var devsettings = function(){
-	this.startport = 3100;
-	this.clients = {
-		Bob:{
-			gui:gui,
-			react:true,
-			url:'bob.openpoint.ie'
-		},
-		Alice:{
-			gui:gui,
-			react:true,
-			url:'alice.openpoint.ie'
-		},
-		Arbitrator:{
-			gui:gui,
-			react:false
-		}
-	}
-	this.makeClients();
-}
-devsettings.prototype.makeClients = function(){
-	var count = 0;
+const devSettings = function () {
+    this.startport = 3100;
+    this.clients = {
+        Bob: {
+            gui: gui,
+            react: true,
+            url: 'bob.openpoint.ie'
+        },
+        Alice: {
+            gui: gui,
+            react: true,
+            url: 'alice.openpoint.ie'
+        },
+        Arbitrator: {
+            gui: gui,
+            react: false
+        }
+    };
+    this.makeClients();
+};
+devSettings.prototype.makeClients = function(){
+	let count = 0;
 	this.clients = Object.keys(this.clients).map((client)=>{
 		count = count+10;
-		var c = this.clients[client];
-		return {
+        let Client = this.clients[client];
+        return {
 			name:client,
 			dirname:'Bisq-Regtest-'+client,
 			port:this.startport+count,
-			gui:c.gui,
-			react:c.react,
-			url:c.url
+			gui:Client.gui,
+			react:Client.react,
+			url:Client.url
 		}
 	})
-}
-module.exports = new devsettings()
+};
+module.exports = new devSettings();

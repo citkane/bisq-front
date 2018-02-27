@@ -1,24 +1,24 @@
-var fees = {
-	/* HACK - we need to be able to get the fee data from the API, hardcoding it for now for development purposes */
-	SELL:{
-		security:2.73/100,
-		trading:.2/100,
-		mining:4.63/100
-	},
-	BUY:{
-		security:10/100,
-		trading:.2/100,
-		mining:5.14/100
-	}
-	/* END HACK */
-}
-var tools = function(){};
+const fees = {
+    /* HACK - we need to be able to get the fee data from the API, hardcoding it for now for development purposes */
+    SELL: {
+        security: 2.73 / 100,
+        trading: .2 / 100,
+        mining: 4.63 / 100
+    },
+    BUY: {
+        security: 10 / 100,
+        trading: .2 / 100,
+        mining: 5.14 / 100
+    }
+    /* END HACK */
+};
+const tools = function(){};
 
 //Shared Server and client
 
 tools.prototype.fees = function(dir,btc,func){
 
-	var fee = fees[dir]; /* See HACK at top of file */
+	let fee = fees[dir]; /* See HACK at top of file */
 
 	var sat = func.fromDecimal(btc);
 	var data =  {
@@ -61,7 +61,7 @@ tools.prototype.dateAgo = function(then){
 	if(ago.length === 1) ago = '0'+ago;
 	//return days+'d : '+hours+'h : '+minutes+'m : '+ago+'s'
 	return days+'d : '+hours+'h : '+minutes+'m'
-}
+};
 
 //Server
 tools.prototype.getEnv = function(){
@@ -72,33 +72,36 @@ tools.prototype.getEnv = function(){
 	return env;
 }
 tools.prototype.params = function(data){
-	if(!data) return '';
-	var string = ''
+	if(!data) return '/';
+	var string = '/'
 	Object.keys(data).forEach(function(key,i){
 		string+=(i===0?'?':'&')+key+'='+data[key];
 	})
 	return string;
 }
-tools.prototype.kill = function(psTree,cp){
-	if(!children) var children = {
-		exec:[],
-		spawn:[]
-	}
-	var count = children.exec.length;
-	//see https://www.npmjs.com/package/ps-tree
-	return new Promise((resolve,reject)=>{
-		children.spawn.forEach((child)=>{
-			child.kill();
-		})
-		children.exec.forEach((child)=>{
-			psTree(child.pid, function (err, Children) {
-				cp.spawnSync('kill', ['-9'].concat(Children.map(function (p) { return p.PID })));
-				count --
-				if(!count) resolve(true);
-			});
-		})
-	})
+tools.prototype.kill = function(ch){
 
+	for (const child of ch) child.kill();
+    /*
+    if(!children) var children = {
+        exec:[],
+        spawn:[]
+    }
+    var count = children.exec.length;
+    //see https://www.npmjs.com/package/ps-tree
+    return new Promise((resolve,reject)=>{
+        children.spawn.forEach((child)=>{
+            child.kill();
+        })
+        children.exec.forEach((child)=>{
+            psTree(child.pid, function (err, Children) {
+                cp.spawnSync('kill', ['-9'].concat(Children.map(function (p) { return p.PID })));
+                count --
+                if(!count) resolve(true);
+            });
+        })
+    })
+    */
 }
 module.exports = new tools();
 //export default new tools();

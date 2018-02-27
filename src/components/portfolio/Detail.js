@@ -84,14 +84,14 @@ class Transfer extends Component {
 			<div>
 				<Paper className = {classes.paper3}>
 					<div className = {classes.item} >
-						<Typography component='span'><Graphic />{trade.deposit[trade.type[0]]}</Typography>
+						<Typography component='span'><Graphic />{trade.deposit}</Typography>
 						<Typography type = 'caption'>
 							<Babel cat = 'forms'>Security deposit</Babel>
 						</Typography>
 					</div>
-					{trade.type[0]==='buying' && <div className = {classes.item}>+</div>}
-					{trade.type[0]==='buying' && <div className = {classes.item}>
-						<Typography component = 'span'><Graphic />{trade.amount}</Typography>
+					{trade.type==='BuyerTrade' && <div className = {classes.item}>+</div>}
+					{trade.type==='BuyerTrade' && <div className = {classes.item}>
+						<Typography component = 'span'><Graphic />{trade.money.amount}</Typography>
 						<Typography type = 'caption'>
 							<Babel cat = 'forms'>Purchased amount</Babel>
 						</Typography>
@@ -100,9 +100,8 @@ class Transfer extends Component {
 				<div className = {classes.bottom} >
 					<Button raised className = {classes.button2} color = 'accent' onClick = {
 						()=>{
-							console.error('move_funds_to_bisq_wallet',trade.id);
-							api.get('move_funds_to_bisq_wallet',{
-								trade_id:trade.id
+							api.post('trade/payment/movetobisq',{
+								tradeId:trade.id
 							}).then((data)=>{
 								api.ticker();
 								base.get('FullScreenDialogClose')()
@@ -133,18 +132,17 @@ class Received extends Component {
 		return (
 			<div>
 				<Typography gutterBottom type='title' className = {classes.top}>
-					<Babel cat = 'forms'>Please check that you have received from the following account:</Babel> ({trade.volume} {trade.base===active?trade.counter:trade.base} | {trade.method})
+					<Babel cat = 'forms'>Please check that you have received from the following account:</Babel> {trade.money.volume} {trade.money.code}
 				</Typography>
 				<Paper className = {classes.paper2}><AccountDetails trade = {trade} /></Paper>
-				{trade.base===active && <div className = {classes.bottom}>
+				{trade.fiat && <div className = {classes.bottom}>
 					<Babel cat = 'forms'>Ensure that the trading account holder\'s name matches that on your statement. If not, consider cancelling and opening a support ticket</Babel>
 				</div>}
 				<div className = {classes.bottom} >
 					<Button raised className = {classes.button2} color = 'accent' onClick = {
 						()=>{
-							console.error('payment_received',trade.id)
-							api.get('payment_received',{
-								trade_id:trade.id
+							api.post('trade/payment/received',{
+								tradeId:trade.id
 							}).then((data)=>{
 								api.ticker();
 								base.get('FullScreenDialogClose')()
@@ -175,23 +173,23 @@ class StartPayment extends Component {
 
 	render(){
 		const api = base.get('api');
-		const {trade,classes} = this.props;
-		var active = base.get('active_market').symbol;
+		const {classes,trade} = this.props;
+
 		return (
 			<div>
 				<Typography gutterBottom type='title' className = {classes.top}>
-					<Babel cat = 'forms'>Please deposit to the following account:</Babel> ({trade.volume} {trade.base===active?trade.counter:trade.base} | {trade.method})
+					<Babel cat = 'forms'>Please deposit to the following account:</Babel> {trade.money.volume} {trade.money.code}
 				</Typography>
 				<Paper className = {classes.paper2}><AccountDetails trade = {trade} /></Paper>
-					{trade.base===active && <div className = {classes.bottom}>
+					{trade.fiat && <div className = {classes.bottom}>
 						<Babel cat = 'forms'>Please ensure that your account name is exactly as entered on BISQ otherwise your trading partner may open a dispute</Babel>
 					</div>}
 				<div className = {classes.bottom} >
 					<Button raised className = {classes.button2} color = 'accent' onClick = {
 						()=>{
-							console.error('payment_started',trade.id)
-							api.get('payment_started',{
-								trade_id:trade.id
+
+							api.post('trade/payment/started',{
+								tradeId:trade.id
 							}).then((data)=>{
 								api.ticker();
 								base.get('FullScreenDialogClose')()
@@ -223,17 +221,12 @@ class AccountDetails extends Component {
 		const {trade} = this.props;
 		return (
 			<span>
-				<Typography type = 'body2' component = "span">{trade.method}</Typography>
-				{Object.keys(trade.account).filter((key)=>{
-					return typeof(trade.account[key]) === 'string'
-				}).map((key,i)=>{
-					return (
-						<span className = 'cardrow' key = {i}>
-							<Typography index={i} color='primary' component = "span">{key}:</Typography>
-							<Typography index={i} component = "span">{trade.account[key]}</Typography>
-						</span>
-					)
-				})}
+				<Typography type = 'body2' component = "span">{trade.paymentMethod}</Typography>
+                {trade.peer.account.paymentDetailsForTradePopup.split("\n").map((l,i)=>{
+                    return (
+                        <div key = {i}>{l}</div>
+                    )
+                })}
 			</span>
 		)
 	}
@@ -257,15 +250,16 @@ class Account extends Component{
 		const {classes,trade} = this.props;
 		const {anchorEl} = this.state;
 		const open = !!anchorEl;
-		const label = trade.type[0]==='buying'?
+		const label = trade.type === 'BuyerTrade'?
 			<Babel cat = 'forms'>Seller account details</Babel>:
 			<Babel cat = 'forms'>Buyer account details</Babel>
+        const address = trade.peer.nodeAddress.fullAddress;
 		return(
 			<div>
 				<Chip
 					avatar = {<Avatar onMouseOver={this.handlePopoverOpen} onMouseOut={this.handlePopoverClose} ><FaceIcon className={classes.svgIcon} /></Avatar>}
 					label={label}
-					onClick={()=>base.get('AlertDialog')(false,{title:label,description:<AccountDetails trade = {trade} />})}
+					onClick={()=>base.get('AlertDialog')(false,{title:label,description:<AccountDetails trade = {trade}/>})}
 				/>
 				<Popover
 					className={classes.popover}
@@ -284,7 +278,7 @@ class Account extends Component{
 					}}
 					onClose={this.handlePopoverClose}
 				>
-					<Typography>{trade.peer.hostName+':'+trade.peer.port}</Typography>
+					<Typography>{address}</Typography>
 				</Popover>
 			</div>
 		)
@@ -304,17 +298,29 @@ class Detail extends Component {
 			</Typography>
 		)
 		const Graphic = base.get('active_market').graphic;
+        const marketcoin = base.get("active_market");
+        const tools = base.get("tools");
 		return(
 			<div>
 				<Grid container spacing={16}>
 					{trades.map((t,i) => {
 
-						if(!t.fiat){
-							/* Invert the market representation for consistent human language representation */
-							Object.keys(t.invert).forEach((key)=>{
-								t[key] = t.invert[key];
-							})
-						}
+                        const types = {
+                            'sellerAsTakerTrade':['selling','taker'],
+                            'buyerAsTakerTrade':['buying','taker'],
+                            'sellerAsMakerTrade':['selling','maker'],
+                            'buyerAsMakerTrade':['buying','maker']
+                        };
+                        let type;
+                        if(t.type === "BuyerTrade"){
+                            type = t.isMyOffer?"buyerAsMakerTrade":"buyerAsTakerTrade";
+                        }else{
+                            type = t.isMyOffer?"sellerAsMakerTrade":"sellerAsTakerTrade";
+                        }
+                        let stage = 0;
+                        if (t.phase === 'DEPOSIT_CONFIRMED') stage = 1;
+                        if (t.phase === 'FIAT_SENT') stage = 2;
+                        if (t.phase === 'PAYOUT_PUBLISHED') stage = 3;
 
 						return (
 							<Grid item lg={3} md = {6} sm = {6} xs = {12} key = {i} className = 'card'>
@@ -322,93 +328,93 @@ class Detail extends Component {
 									<CardContent>
 										<div className = 'cardrow'>
 											<Typography type='title'>
-												<Babel cat = 'cards'>{t.type[0]}</Babel>
+												<Babel cat = 'cards'>{types[type][0]}</Babel>
 											</Typography>
-											<Typography component = 'span' type='body2'>&nbsp;&nbsp;<Graphic />{t.amount}</Typography>
+											<Typography component = 'span' type='body2'>&nbsp;&nbsp;<Graphic />{t.money.amount}</Typography>
 										</div>
 
 										<Divider light />
 										<Typography type = 'caption'>
-											<Babel cat = 'cards'>{t.type[1]}</Babel>
+											<Babel cat = 'cards'>{types[type][1]}</Babel>
 										</Typography>
 										<div className = 'cardrow'>
 											<Typography component = 'span' color = 'primary'>
 												<Babel cat = 'cards'>For</Babel>
 											</Typography>
-											<Typography component = 'span' type='body2'>{t.volume} {t.counter}</Typography>
+											<Typography component = 'span' type='body2'>{t.money.volume} {t.money.code}</Typography>
 										</div>
 										<Divider inset light />
 										<div className = 'cardrow'>
 											<Typography component = 'span' color = 'primary'>
 												<Babel cat = 'cards'>Rate</Babel>
 											</Typography>
-											<Typography component = 'span' type='caption' >{t.price} {t.counter} / {base.get('active_market').symbol}</Typography>
+											<Typography component = 'span' type='caption' >{t.money.price} {t.money.code} / {base.get("active_market").symbol}</Typography>
 										</div>
 										<Divider inset light />
 										<div className = 'cardrow'>
 											<Typography component = 'span' color = 'primary'>
 												<Babel cat = 'cards'>Time ago</Babel>
 											</Typography>
-											<Typography component = 'span' type='caption'>{t.ago}</Typography>
+											<Typography component = 'span' type='caption'>{tools.dateAgo(t.date)}</Typography>
 										</div>
 
 
 										<Divider light />
 										<div className = 'cardrow button'>
-											<Button className={classes.button} raised = {t.stage===0} disabled = {t.stage!==0} dense color='primary' onClick = {
+											<Button className={classes.button} raised = {stage===0} disabled = {stage!== 0} dense color='primary' onClick = {
 												()=>base.get('AlertDialog')(false,{
 													title:<Babel cat = 'cards'>Wait for blockchain confirmation</Babel>,
 													description:<Babel cat = 'cards'>Please wait until deposits have reached at least one blockchain confirmation.</Babel>
 												})
 											}>
-												<Babel cat = 'cards'>Wait for blockchain confirmation</Babel>&nbsp;&nbsp;{t.stage!==0 && <DoneIcon color = 'primary'/>}
+												<Babel cat = 'cards'>Wait for blockchain confirmation</Babel>&nbsp;&nbsp;{stage!==0 && <DoneIcon color = 'primary'/>}
 											</Button>
 										</div>
-										{t.type[0] ==='selling' && <div className = 'cardrow button'>
-											<Button className={classes.button} raised = {t.stage <=1} disabled = {t.stage!==1} dense color='primary' onClick = {
+										{types[type][0] ==='selling' && <div className = 'cardrow button'>
+											<Button className={classes.button} raised = {stage <=1} disabled = {stage!==1} dense color='primary' onClick = {
 												()=>base.get('AlertDialog')(false,{
 													title:<Babel cat = 'cards'>Wait until payment has started</Babel>,
 													description:<Babel cat = 'cards'>Please wait until your trading partner has indicated that they have started the payment into your wallet or account.</Babel>
 												})
 											}>
-												<Babel cat = 'cards'>Wait until payment has started</Babel>&nbsp;&nbsp;{t.stage > 1 && <DoneIcon color = 'primary'/>}
+												<Babel cat = 'cards'>Wait until payment has started</Babel>&nbsp;&nbsp;{stage > 1 && <DoneIcon color = 'primary'/>}
 											</Button>
 										</div>}
-										{t.type[0] ==='buying' && <div className = 'cardrow button'>
-											<Button className={classes.button} raised = {t.stage <=1} disabled = {t.stage!==1} dense color='accent' onClick = {
+										{types[type][0] ==='buying' && <div className = 'cardrow button'>
+											<Button className={classes.button} raised = {stage <=1} disabled = {stage!==1} dense color='accent' onClick = {
 												()=>base.get('FullScreenDialog')(<Babel cat='chrome'>Start payment</Babel>,<StartPayment trade = {t} />)
 											}>
-												<Babel cat = 'chrome'>Start payment</Babel>&nbsp;&nbsp;{t.stage > 1 && <DoneIcon color = 'primary'/>}
+												<Babel cat = 'chrome'>Start payment</Babel>&nbsp;&nbsp;{stage > 1 && <DoneIcon color = 'primary'/>}
 											</Button>
 										</div>}
 
-										{t.type[0] ==='selling' && <div className = 'cardrow button'>
-											<Button className={classes.button} raised = {t.stage <=2} disabled = {t.stage!==2} dense color='accent' onClick = {
+										{types[type][0] ==='selling' && <div className = 'cardrow button'>
+											<Button className={classes.button} raised = {stage <=2} disabled = {stage!==2} dense color='accent' onClick = {
 												()=>base.get('FullScreenDialog')(<Babel cat='chrome'>Confirm payment recieved</Babel>,<Received trade = {t} />)
 											}>
-												<Babel cat = 'chrome'>Confirm payment recieved</Babel>&nbsp;&nbsp;{t.stage > 2 && <DoneIcon color = 'primary'/>}
+												<Babel cat = 'chrome'>Confirm payment recieved</Babel>&nbsp;&nbsp;{stage > 2 && <DoneIcon color = 'primary'/>}
 											</Button>
 										</div>}
-										{t.type[0] ==='buying' && <div className = 'cardrow button'>
-											<Button className={classes.button} raised = {t.stage <=2} disabled = {t.stage!==2} dense color='primary' onClick = {
+										{types[type][0] ==='buying' && <div className = 'cardrow button'>
+											<Button className={classes.button} raised = {stage <=2} disabled = {stage!==2} dense color='primary' onClick = {
 												()=>base.get('AlertDialog')(false,{
 													title:<Babel cat = 'cards'>Wait until payment arrived</Babel>,
 													description:<Babel cat = 'cards'>Please wait until your trading partner has indicated that your payment has arrived into their wallet or account.</Babel>
 												})
 											}>
-												<Babel cat = 'cards'>Wait until payment arrived</Babel>&nbsp;&nbsp;{t.stage > 2 && <DoneIcon color = 'primary'/>}
+												<Babel cat = 'cards'>Wait until payment arrived</Babel>&nbsp;&nbsp;{stage > 2 && <DoneIcon color = 'primary'/>}
 											</Button>
 										</div>}
 
 										<div className = 'cardrow button'>
-											<Button className={classes.button} raised disabled = {t.stage!==3} dense color = 'accent' onClick = {
+											<Button className={classes.button} raised disabled = {stage!==3} dense color = 'accent' onClick = {
 												()=>base.get('FullScreenDialog')(<Babel cat='chrome'>Move Funds</Babel>,<Transfer trade = {t} />)
 											}>
 												<Babel cat = 'chrome'>Move Funds</Babel>
 											</Button>
 										</div>
 										<div className = 'cardrow bottom'>
-											<Account trade = {t} />
+											<Account trade = {t}/>
 										</div>
 									</CardContent>
 								</Card>

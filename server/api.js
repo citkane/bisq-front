@@ -24,72 +24,52 @@ const tools = require('../src/resources/modules/tools.js');
 const market = require('./market.js');
 const convert = require('./conversion_filters/bisq.js')
 
-var api = function(socket,port){
-	this.socket = socket;
-	this.endpoint = 'http://localhost:'+port+'/api/v1/';
-	var self = this;
-	this.socket.on('get',function(data){
-		if(data.command === 'offer_make'){
+const api = function (socket, port){
+    this.socket = socket;
+    this.endpoint = 'http://localhost:' + port + '/api/';
 
-			/*Invert percentages to suite offer conditions*/
-				data.params.percentage_from_market_price = data.params.direction === 'BUY'?
-					(data.params.percentage_from_market_price*-1)/100:
-					(data.params.percentage_from_market_price*1)/100;
-			/*END inversion */
+    this.socket.on('get', (data) => {
+        this.submit(data, "get").then(this.success,this.error);
+    });
+    this.socket.on('delete', (data) => {
+        this.submit(data, "delete").then(this.success,this.error);
+    });
+    this.socket.on('post', (data) => {
+        this.submit(data, "post").then(this.success,this.error);
+    });
+    this.socket.on('put', (data) => {
+        this.submit(data, "put").then(this.success,this.error);
+    });
 
-			/*HACK fiat currencies are two decimal places too low for bisq-api*/
-				if(data.params.price_type === 'FIXED' && data.params.fiat) data.params.fixed_price = data.params.fixed_price*100
-			/* End HACK */
+    this.socket.on('market', (data) => {
+        market.get(data.command, data.params).then(this.success,this.error);
+    });
 
-			delete data.params.fiat;
-		}
-		self.get(data).then(function(response){
-			self.socket.emit(data.command,response);
-		},(err)=>{
-			self.socket.emit(data.command,{error:err});
-		});
-	})
-	this.socket.on('delete',function(data){
-		self.delete(data).then(function(response){
-			self.socket.emit(data.command,response);
-		});
-	})
+    this.success = (msg)=>{
+        this.socket.emit(msg.command,msg.data);
+    }
 
-	this.socket.on('market',function(data){
-		market.get(data.command,data.params).then(function(response){
-			self.socket.emit(data.command,response);
-		},(err)=>{
-			self.socket.emit(data.command,{error:err});
-		});
-	})
-}
+    this.error = (err)=>{
+        this.socket.emit(err.command,{error:err.data});
+    };
+};
 
-api.prototype.get = function(data){
-	var url = this.endpoint+data.command+tools.params(data.params);
-	return new Promise(function(resolve,reject){
-		request.get({
+api.prototype.submit = function(data,type){
+    const url = this.endpoint + data.command + tools.params(data.params);
+    if(type === 'post') console.log(url);
+    return new Promise(function(resolve,reject){
+		request[type]({
 			url:url,
 			json:true,
 		},function(err,resp,body){
 			if(err || body.errors){
-				reject(err?err.toString():body.errors);
+				reject(err?{command:data.command,data:err.toString()}:{command:data.command,data:body.errors});
 				return;
 			}
-			var d = convert.get(data.command,body)
-			!d?reject('Failed to get '+data.command):resolve(d);
+            const d = convert.get(data.command, body);
+            !d?reject({command:data.command,data:'Failed to get '+data.command}):resolve({command:data.command,data:d});
 		})
 	})
-}
-api.prototype.delete = function(data){
-	var url = this.endpoint+data.command+tools.params(data.params);
-	return new Promise(function(resolve,reject){
-		request.delete({
-			url:url,
-			json:true,
-		},function(err,resp,body){
-			resolve(convert.get(data.command,body));
-		})
-	})
-}
+};
 
 module.exports = api;

@@ -19,6 +19,8 @@
  * along with bisq-front. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const path = require('path');
+global.appRoot = path.join(path.resolve(__dirname),"../");
 const child = require('child_process');
 const tools = require('../src/resources/modules/tools.js');
 const dev = require('../server/makedev.js');

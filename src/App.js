@@ -109,9 +109,9 @@ class App extends Component {
 			status: {
 				danger: 'orange',
 			},
-		})
+		});
 		return out;
-	}
+	};
 
 	componentDidMount(){
 		var log;

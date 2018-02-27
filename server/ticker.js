@@ -42,11 +42,12 @@ function ticker(socket,api){
 ticker.prototype.emit = function(){
 	var data = {};
 	var count = 0;
-	var endpoints = ['trade_list','account_list','wallet_tx_list','offer_list','wallet_detail'];
+	var endpoints = ['trade/list','account/list','wallet/transactions/list','offers/list','wallet/btcBalance'];
 	var error;
+
 	endpoints.forEach((end)=>{
-		this.api.get({command:end}).then((d)=>{
-			data[end]=d;
+		this.api.submit({command:end},"get").then((result)=>{
+			data[end.replace(/\//g,"_")]=result.data;
 			count++;
 			if(count === endpoints.length){
 				if(!error) this.socket.emit('ticker',data);

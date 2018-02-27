@@ -62,8 +62,8 @@ class Action extends Component {
 	};
 	reject = (id) =>{
 		var api = base.get('api')
-		api.delete('offer_cancel',{
-			offer_id:id
+		api.delete('offers/offerCancel',{
+            offerId:id
 		}).then(function(data){
 			api.ticker();
 		})
@@ -78,7 +78,7 @@ class Action extends Component {
 		const title = offer.direction === 'BUY'?
 			<Babel cat = 'chrome'>{"Sell "+active}</Babel>:
 			<Babel cat = 'chrome'>{"Buy "+active}</Babel>
-		const owner = offer.owner;
+		const owner = offer.isMyOffer;
 
 		return(
 			<CardActions disableActionSpacing className = 'action'>
@@ -106,12 +106,12 @@ class Action extends Component {
 							}}
 							onClose={this.handlePopoverClose}
 						>
-							<Typography>{offer.offerer}</Typography>
+							<Typography>{offer.makerNodeAddress}</Typography>
 						</Popover>
 					</div>
 				)}
 				{owner && <Button raised color="accent" className={classes.button} onClick = {
-					()=>base.get('AlertDialog')(()=>this.reject(offer.offer_id),
+					()=>base.get('AlertDialog')(()=>this.reject(offer.id),
 					{
 						title:<Babel cat = 'dialog'>cancel_title</Babel>,
 						description:<Babel cat = 'dialog'>cancel_description</Babel>,
@@ -135,28 +135,23 @@ class BuySell extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			trades:this.getList(this.props.data.offer_list),
+			offers:this.getList(this.props.data.offers_list),
 		}
 	}
-	getList = (offer_list) =>{
+	getList = (offers_list) =>{
 
-		var data = offer_list.filter((trade)=>{
-			var owner = trade.offerer.split(':')[1]*1===(process.env.SERVER_PORT*1+1);
+		let data = offers_list.filter((offer)=>{
 			if(this.props.dir==='OWN'){
-				return owner;
-			}else if(base.get('showown')){
-				return trade.direction === this.props.dir;
+				return offer.isMyOffer;
+			}else if(!base.get('showown') && offer.isMyOffer){
+                return false;
 			}else{
-				return trade.direction === this.props.dir && !owner
+				return offer.direction === this.props.dir;
 			}
-		}).map((trade)=>{
-			var owner = trade.offerer.split(':')[1]*1===(process.env.SERVER_PORT*1+1);
-			trade.owner = owner;
-			return trade;
 		});
 		data.sort(function(a,b){
-			if (a.other_amount < b.other_amount) return -1;
-			if (a.other_amount > b.other_amount) return 1;
+			if (a.money.price*1 < b.money.price*1) return -1;
+			if (a.money.price*1 > b.money.price*1) return 1;
 			return 0;
 		})
 		if(this.props.dir === 'BUY') data.reverse();
@@ -164,16 +159,16 @@ class BuySell extends Component {
 	}
 	componentWillReceiveProps(nextProps){
 		this.setState({
-			trades:this.getList(nextProps.data.offer_list),
+			offers:this.getList(nextProps.data.offers_list),
 		})
 	}
 
 	render(){
-		const {trades} = this.state;
+		const {offers} = this.state;
 		const {data,dir} = this.props;
 		var active = base.get('active_market').symbol;
 
-		if(!trades.length) return (
+		if(!offers.length) return (
 			<div>
 				<Create data ={data} dir = {dir}/>
 				{dir!=='OWN' && <Typography type = 'title'>
@@ -188,19 +183,19 @@ class BuySell extends Component {
 
 			<div>
 				<Create data ={data} dir = {dir}/>
-				<Grid container spacing={16}>{trades.map(t => {
-					const coin = base.get('coin')[t.other_currency]
+				<Grid container spacing={16}>{offers.map(t => {
+					const coin = base.get('coin')[t.currencies.currency];
 					t.coin = coin;
 					t.fiat = t.coin.type === 'fiat';
-					const amount = t.other_amount
+					const amount = t.money.price;
 					var title;
-					if(dir === 'OWN'||t.owner){
+					if(t.isMyOffer){
 						title = <Babel cat = 'cards'>{'You want to '+t.direction.toLowerCase()}</Babel>;
 					}else{
 						title = <Babel cat = 'cards'>{t.direction==='BUY'?'sell':'buy'}</Babel>;
 					}
 					return (
-						<Grid item lg={3} md = {6} sm = {6} xs = {12} key = {t.offer_id} className = 'card'>
+						<Grid item lg={3} md = {6} sm = {6} xs = {12} key = {t.id} className = 'card'>
 							<Card>
 								<CardContent>
 									<div className = 'cardrow'>
@@ -211,33 +206,33 @@ class BuySell extends Component {
 										<Typography component = 'span' color = 'primary'>
 											<Babel cat = 'cards'>market</Babel>:
 										</Typography>
-										<Typography component = 'span'>{t.other_currency}</Typography>
+										<Typography component = 'span'>{t.currencies.currency}</Typography>
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
 										<Typography color = 'primary'>
-											<Babel cat = 'cards'>price</Babel> / 1 {active}:
+											<Babel cat = 'cards'>price</Babel> / 1 {t.fiat?t.currencies.baseCurrency:t.currencies.counterCurrency}:
 										</Typography>
-										{t.price_detail.use_market_price && (
+										{t.money.useMarketPrice && (
 											<span>
-												<Typography>({t.price_detail.market_price_margin}%) </Typography>
+												<Typography>({t.money.marketPriceMargin}%) </Typography>
 												<div className = 'spacer'></div>
 												<Typography type="body2" > {coin.round(amount)}</Typography>
 											</span>
 										)}
-										{!t.price_detail.use_market_price && <Typography type="body2" > {coin.round(amount)}</Typography>}
+										{!t.money.useMarketPrice && <Typography type="body2" > {coin.round(amount)}</Typography>}
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
-										<Typography component = 'span' color = 'primary'>{active}: {t.min_btc_amount!==t.btc_amount && "(min|max)"}</Typography>
-										<Typography component = 'span'>{t.min_btc_amount!==t.btc_amount && t.min_btc_amount+' | '}{t.btc_amount}</Typography>
+										<Typography component = 'span' color = 'primary'>{active}: {t.money.amount!==t.money.minAmount && "(min|max)"}</Typography>
+										<Typography component = 'span'>{t.money.minAmount!==t.money.amount && t.money.minAmount+' | '}{t.money.amount}</Typography>
 									</div>
 									<Divider inset light />
 									<div className = 'cardrow'>
-										<Typography component = 'span' color = 'primary'>{t.other_currency} <Babel cat = 'cards'>cost</Babel>: {t.min_btc_amount!==t.btc_amount && "(min|max)"} </Typography>
+										<Typography component = 'span' color = 'primary'>{t.currencies.currency} <Babel cat = 'cards'>cost</Babel>: {t.money.amount!==t.money.minAmount && "(min|max)"} </Typography>
 										<Typography component = 'span'>
-											{t.min_btc_amount!==t.btc_amount && (coin.round(amount*t.min_btc_amount)+' | ')}
-											{coin.round(amount*t.btc_amount)}
+											{t.money.minAmount!==t.money.amount && (coin.round(amount*t.money.minAmount)+' | ')}
+											{coin.round(amount*t.money.amount)}
 										</Typography>
 									</div>
 									<Divider inset light />
@@ -245,7 +240,7 @@ class BuySell extends Component {
 										<Typography component = 'span' color = 'primary'>
 											<Babel cat = 'cards'>payment method</Babel>:
 										</Typography>
-										<Typography component = 'span'>???</Typography>
+										<Typography component = 'span'>{t.fiat?t.paymentMethod:t.currencies.baseCurrency}</Typography>
 									</div>
 									<Divider inset light />
 									<Action offer = {t} data = {data}/>

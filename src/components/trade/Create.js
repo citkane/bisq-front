@@ -104,8 +104,11 @@ class Form extends Component {
 		this.currency = [];
 		this.accounts.forEach((ac)=>{
 			//Get a list of available currencies for the user
-			if(this.currency.indexOf(ac.currency) === -1) this.currency.push(ac.currency)
-		})
+            ac.currencies.forEach((c)=>{
+                if(this.currency.indexOf(c) === -1) this.currency.push(c);
+            })
+
+		});
 		this.state = {
 			activeStep:0,
 			accountId:this.accounts[0].id,
@@ -116,19 +119,19 @@ class Form extends Component {
 			amount:"",
 			fixed:"",
 			percent:""
-		}
+		};
 	}
 
 	handleAccount = name => event => {
-		var account;
+		let account;
 		if(name === 'currency'){
 			this.accounts.some((ac)=>{
-				if(event.target.value === ac.currency){
+				if(ac.currencies.indexOf(event.target.value) > -1){
 					account = ac;
 					return true;
 				}
 				return false;
-			})
+			});
 			this.setState({
 				[name]:event.target.value,
 				account:account,
@@ -141,7 +144,7 @@ class Form extends Component {
 					return true;
 				}
 				return false;
-			})
+			});
 			this.setState({
 				[name]:event.target.value,
 				account:account,
@@ -164,22 +167,24 @@ class Form extends Component {
 		});
 	};
 	setVol = (event,min) => {
-		var account = this.state.account;
-		var val;
+		let account = this.state.account;
+		let val;
+		let Max = account.limits[this.state.currency].max;
+		let Min = account.limits[this.state.currency].min;
 		if(event.target.value === '0.'||event.target.value === '.'){
 			val = '0.'
 		}else{
 			val = event.target.value.length?event.target.value:""
 		}
-		if(val*1 && val*1 > account.limit.max) val = account.limit.max.toString()
-		if(val*1 && val*1 < account.limit.min) val = account.limit.min.toString()
+		if(val*1 && val*1 > Max) val = Max.toString();
+		if(val*1 && val*1 < Min) val = Min.toString();
 
 		if(!min) this.setState({
 			amount:val
-		})
+		});
 		if(min) this.setState({
 			min_amount:val
-		})
+		});
 	};
 	setPrice = (event,percent) => {
 
@@ -201,43 +206,35 @@ class Form extends Component {
 			if(!this.state.fixed.length) return false;
 		}
 		return true;
-	}
+	};
 	submit = () =>{
-		var {priceType,account,fixed,percent,amount,min_amount} = this.state;
-		const C = account.currency;
+		let {priceType,account,fixed,percent,amount,min_amount} = this.state;
+
+        const fiat = account.paymentmethod !== "BLOCK_CHAINS";
+		const C = this.state.currency;
 		const {dir} = this.props;
 		const api = base.get('api');
 		const active = base.get('active_market');
-
-		if(priceType === 'FIXED') fixed = account.fiat?
-		base.get('coin')[C].fromDecimal(fixed):
-		active.fromDecimal(
-			base.get('coin')[C].invert(
-				base.get('coin')[C].fromDecimal(fixed)
-			)
-		)
-
-		var data = {
-			fiat:account.fiat,
-			payment_account_id:account.id,
+		const data = {
+            paymentAccountId:account.id,
 			direction:dir,
-			price_type:priceType,
-			market_pair:account.pair,
-			percentage_from_market_price:percent*1||0,
-			amount:active.fromDecimal(amount*1||min_amount*1),
-			min_amount:active.fromDecimal(min_amount*1||amount*1),
-			fixed_price:fixed||0,
-		}
-		api.get('offer_make',data).then((data)=>{
+            amount:amount*1||min_amount*1,
+            minAmount:min_amount*1||amount*1,
+            priceModel:priceType,
+			price:priceType === "FIXED"?fixed*1:percent*1,
+			commit:true
+		};
 
-			if(data === true){
+		api.post('offers/offerMake',data).then((data)=>{
+
+			if(data.success === true){
 				api.ticker();
 				base.get('FullScreenDialogClose')();
 			}else{
 				console.error(data)
 			}
 		})
-	}
+	};
 	handlePanel = panel => (event, expanded) => {
 		this.setState({
 			expanded: expanded ? panel : false,
@@ -247,7 +244,7 @@ class Form extends Component {
 		this.setState({
 			accepted:this.state.accepted?false:true
 		})
-	}
+	};
 	render(){
 		const {dir,classes} = this.props;
 		const {activeStep,expanded,account,amount,min_amount,currency,accountId,priceType,percent,fixed,accepted} = this.state;
@@ -289,9 +286,9 @@ class Form extends Component {
 									input={<Input id="account_list" />}
 								>
 									{this.accounts.filter((ac)=>{
-										return currency === ac.currency;
+										return ac.currencies.indexOf(currency) > -1;
 									}).map((ac,i)=>{
-										return <option value={ac.id} key = {i}>{ac.type}: {ac.name}</option>
+										return <option value={ac.id} key = {i}>{ac.name}</option>
 									})}
 								</Select>
 							</FormControl>
@@ -302,7 +299,6 @@ class Form extends Component {
 					if(min_amount.length && isNaN(min_amount*1)) proceed = 0;
 					if(amount.length && isNaN(amount*1)) proceed = 0;
 					var active = base.get('active_market').symbol;
-
 					return(
 						<Paper className = {classes.paper2}>
 							<div className = {classes.row}>
@@ -318,7 +314,7 @@ class Form extends Component {
 										value={min_amount}
 										onChange={(e)=>this.setVol(e,true)}
 										className={classes.item}
-										helperText={'min: '+account.limit.min+' '+active}
+										helperText={'min: '+account.limits[this.state.currency].min+' '+active}
 										margin="normal"
 									/>
 								</form>
@@ -333,7 +329,7 @@ class Form extends Component {
 										value={amount}
 										onChange={(e)=>this.setVol(e)}
 										className={classes.item}
-										helperText={'max: '+account.limit.max+' '+active}
+										helperText={'max: '+account.limits[this.state.currency].max+' '+active}
 										margin="normal"
 										classes = {{root:classes.formControl2}}
 									/>
@@ -413,7 +409,7 @@ class Form extends Component {
 									<Babel cat = 'forms'>{'Offer to '+dir}</Babel> {min!==max && min+' - '}
 									{max} {active} {base.get('active_market').symbol} @ {priceType === 'PERCENTAGE' && perc}
 									{priceType === 'PERCENTAGE' && (<span>{currency} <Babel cat = 'forms'>market</Babel></span>)}
-									{priceType === 'FIXED' && fixed+' '+currency+' / '+active}
+									{priceType === 'FIXED' && fixed+' '+currency+' / '+base.get("active_market").symbol}
 								</Typography>
 							</Paper>
 							<div className={classes.panels}>

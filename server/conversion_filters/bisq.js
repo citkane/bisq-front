@@ -157,7 +157,7 @@ const types = {
 	'buyerAsTakerTrade':['buying','taker'],
 	'sellerAsMakerTrade':['selling','maker'],
 	'buyerAsMakerTrade':['buying','maker']
-}
+};
 function formatTrade(trade){
 
 	try {

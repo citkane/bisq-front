@@ -21,10 +21,8 @@
 
 const path = require('path');
 global.appRoot = path.resolve(__dirname);
-global.children = {
-	spawn:[],
-	exec:[]
-};
+global.children = [];
+
 const fs = require('fs');
 const psTree = require('ps-tree');
 const child = require('child_process');
@@ -34,28 +32,25 @@ const tools = require('./src/resources/modules/tools.js');
 const market = require('./server/market.js');
 const express = require('express');
 
-const production = process.env.NODE_ENV==='production'?true:false;
-const headless = process.env.DESKTOP_SESSION?false:true;
+const production = process.env.NODE_ENV === 'production';
+const headless = !process.env.DESKTOP_SESSION;
 
-var ticker;
-var Api;
+let ticker;
+let Api;
 
-process.on('uncaughtException', function(err) {
-	console.log('got the error')
+process.on("uncaughtException", err => {
+	console.log("got the error");
 	console.error(err);
-	tools.kill(psTree,child).then(()=>{
-		process.exit(1);
-	});
+	tools.kill(children);
+    process.exit(1);
 });
 process.on('exit',()=>{
-	tools.kill(psTree,child).then(()=>{
-		process.exit(1);
-	});
+    tools.kill(children);
+    process.exit(1);
 });
 process.on('SIGINT',()=>{
-	tools.kill(psTree,child).then(()=>{
-		process.exit(1);
-	});
+    tools.kill(children);
+    process.exit(1);
 });
 
 /* HACK - We need to get this from API as soon as it can provide enough detail */
@@ -63,22 +58,25 @@ market.make('markets').then((data)=>{
 	if(data){
 		console.log('> Could not connect to BISQ market api\n'+data+'\n\nMarket already on file, continuing...\n\n')
 	}
+
 	Api = require('./server/api.js');
 /* END HACK */
 
-	dev.make(devsettings.startport).then((port)=>{
+	dev.make(devsettings.startport,false).then((port)=>{
 		console.log('> Started the seednode on localhost:'+port);
 		ticker = require('./server/ticker.js');
+
 		devsettings.clients.forEach((client)=>{
-			new makeInstance(client);
+			new MakeInstance(client);
 		});
 	});
+
 	//dev.log(); //enable logging to console for seednode and bicoin-core
 
 /* HACK */
 },(err)=>{
 	console.error('> Could not connect to BISQ market api\n'+err+'\n\nAborting...\n\n');
-})
+});
 /* END HACK */
 
 /* TODO implement twister as communication layer for support (not dispute)
@@ -90,14 +88,14 @@ devsettings.clients.forEach((client)=>{
 return;
 */
 
-var done = [];
-function makeInstance(client){
-	var {port,name,dirname,gui,react} = client;
+const done = [];
+
+function MakeInstance(client){
+	let {port,name,dirname,gui,react} = client;
 	if(headless) gui = false;
 
-	var user = dev.makeuser(dirname,port+2,gui,devsettings.startport);
-	user.stdout.on('data', function(data) {
-
+    const user = dev.makeuser(dirname,(port + 2),gui,devsettings.startport);
+    user.stdout.on('data', function(data) {
 	    if((data.indexOf('Start parse blocks:') !== -1 || data.indexOf('onBootstrapComplete') !== -1) && react && done.indexOf(name)===-1){
 			done.push(name);
 			console.log('\n> Started the BISQ API server '+dirname+'\nBrowse the API at http://localhost:'+(port+3)+'/swagger');
@@ -105,14 +103,13 @@ function makeInstance(client){
 			makeSocket(client);
 			if(production){
 
-				var whitelist = ['localhost:'+port,client.url];
-
-				const app = express();
+                const whitelist = ['localhost:' + port, client.url];
+                const app = express();
 				const pub = path.join(appRoot,'build',name);
-				var allowed = whitelist[0];
-				app.use(function(req,res,next){
-					var origin = req.get('host');
-					if(!origin || whitelist.indexOf(origin)!==-1){
+                const allowed = whitelist[0];
+                app.use(function(req,res,next){
+                    const origin = req.get('host');
+                    if(!origin || whitelist.indexOf(origin)!==-1){
 						next()
 					}else{
 						res.status(403).send('Blocked by CORS');
@@ -121,11 +118,11 @@ function makeInstance(client){
 				app.listen(port);
 				return;
 			}else{
-				var env = tools.getEnv();
-				env.PORT = port;
+                const env = tools.getEnv();
+                env.PORT = port;
 				env.SERVER_PORT = port+1;
-				var web = child.spawn('node',['scripts/start.js'],{env:env});
-				web.stderr.on('data', (data) => {
+                const web = child.spawn('node', ['scripts/start.js'], {env: env});
+                web.stderr.on('data', (data) => {
 					console.error(`stderr: ${data}`);
 				});
 			}
@@ -157,7 +154,7 @@ function makeSocket(client2){
 		base_markets:['BTC','DOGE','DASH','LTC'],
 		active_market:'BTC'
 	/*END TODO*/
-	}
+	};
 
 	const http = require('http').Server(relay);
 	const io = require('socket.io')(http);

@@ -81,16 +81,16 @@ class Forms extends Component {
 		tools = base.get('tools');
 		const {data,offer} = this.props
 		this.accounts = data.account_list.filter((ac)=>{
-			return ac.trade_currencies.indexOf(offer.other_currency)!==-1;
+			return ac.currencies.indexOf(offer.currencies.currency)!==-1;
 		}).map((ac)=>{
 			return {
 				id:ac.id,
-				name:offer.other_currency+': '+ac.name
+				name:ac.name
 			}
 		});
 		this.state = {
 			activeStep:0,
-			btc:this.props.offer.btc_amount,
+			btc:offer.money.amount,
 			accepted:false,
 			expanded:null,
 			account:this.accounts[0].id
@@ -125,27 +125,30 @@ class Forms extends Component {
 		this.setState({
 			accepted:this.state.accepted?false:true
 		})
-	}
+	};
 	acceptOffer = (id) =>{
-		base.get('api').get('offer_take',{
-			offer_id:id,
-			payment_account_id:this.state.account,
-			amount:base.get('active_market').fromDecimal(this.state.btc)
+
+		base.get('api').post('offers/offerTake',{
+            offerId:id,
+            accountId:this.state.account,
+			Amount:this.state.btc
 		}).then((data)=>{
-			if(data === true){
+		    console.log(data);
+			if(data.success === true){
 				this.handleNext();
 			}
 		})
-	}
+	};
 	render(){
 		const {btc} = this.state;
 		const {type,offer,classes} = this.props;
 
-		const fixed = offer.btc_amount === offer.min_btc_amount;
-		const market = offer.price_detail.use_market_price;
-		const deviation = offer.price_detail.market_price_margin*100;
-		const fiat = offer.coin.type === 'fiat';
-		const total = base.get('coin')[offer.other_currency].round(btc*offer.other_amount)
+		const fixed = offer.money.amount === offer.money.minAmount;
+		const market = offer.money.useMarketPrice;
+		const deviation = offer.money.marketPriceMargin*100;
+		const fiat = offer.fiat;
+		const total = offer.coin.round(btc*offer.money.price);
+		const marketcoin = base.get("active_market");
 
 		switch(type){
 			case 'BUY':
@@ -176,13 +179,13 @@ class Forms extends Component {
 												<Babel cat = 'forms'>Amount to sell</Babel>:
 												<Babel cat = 'forms'>Amount to buy</Babel>
 											}
-											defaultValue={offer.btc_amount}
+											defaultValue={offer.money.amount.toString()}
 											onChange={this.setVal}
 											className={classes.item}
 											helperText={
 												fixed?
 													<Babel cat = 'forms'>Volume is fixed</Babel>:
-													offer.min_btc_amount+' - '+offer.btc_amount
+													offer.money.minAmount+' - '+offer.money.amount
 											}
 											margin="normal"
 										/>
@@ -199,11 +202,17 @@ class Forms extends Component {
 										</Typography>
 									</div>
 									<div className = {classes.item}> = </div>
-									<Typography type = 'title' className = {classes.item}>{total} {offer.other_currency}</Typography>
+									<Typography type = 'title' className = {classes.item}>{offer.money.price*1} {offer.coin.name}</Typography>
 								</Paper>
 							)
 						case 1:
-							var fees = tools.fees(type,btc,base.get('active_market'))
+							//var fees = tools.fees(type,btc,base.get('active_market'))
+                            const fees = {
+                                deposit:type==='SELL'?offer.fees.buyerSecurityDeposit:offer.fees.sellerSecurityDeposit,
+                                transactionFee:offer.fees.transactionFee,
+                                minerFee:offer.fees.minerFee
+                            };
+                            fees.total = marketcoin.round(fees.deposit+fees.transactionFee+fees.minerFee);
 							return(
 								<div>
 									<Typography type = 'body1'>
@@ -211,23 +220,23 @@ class Forms extends Component {
 									</Typography>
 									<Paper className = {classes.paper}>
 										<div className = {classes.item}>
-											<Typography type = 'body1'>{fees.security.btc}</Typography>
+											<Typography type = 'body1'>{fees.deposit}</Typography>
 											<Typography type = 'caption'>
-												<Babel cat = 'forms'>Security deposit</Babel> @{fees.security.rate}
+												<Babel cat = 'forms'>Security deposit</Babel> @{type==='BUY'?offer.fees.buyerPercent:offer.fees.sellerPercent}
 											</Typography>
 										</div>
 										<div className = {classes.item}>+</div>
 										<div className = {classes.item}>
-											<Typography type = 'body1'>{fees.trading.btc}</Typography>
+											<Typography type = 'body1'>{fees.transactionFee}</Typography>
 											<Typography type = 'caption'>
-												<Babel cat = 'forms'>Trading fee</Babel> @{fees.trading.rate}
+												<Babel cat = 'forms'>Trading fee</Babel> @{offer.fees.transactionPercent}
 											</Typography>
 										</div>
 										<div className = {classes.item}>+</div>
 										<div className = {classes.item}>
-											<Typography type = 'body1'>{fees.mining.btc}</Typography>
+											<Typography type = 'body1'>{fees.minerFee}</Typography>
 											<Typography type = 'caption'>
-												<Babel cat = 'forms'>Mining fee</Babel> @{fees.mining.rate}
+												<Babel cat = 'forms'>Mining fee</Babel> @{offer.fees.minerPercent}
 											</Typography>
 										</div>
 										{type==='BUY' && <div className = {classes.item}>+</div>}
@@ -238,7 +247,7 @@ class Forms extends Component {
 											</Typography>
 										</div>}
 										<div className = {classes.item}>=</div>
-										<Typography type = 'title' className = {classes.item}>{fees.total.btc} {base.get('active_market').symbol}</Typography>
+										<Typography type = 'title' className = {classes.item}>{fees.total} {base.get('active_market').symbol}</Typography>
 									</Paper>
 									<Paper className = {classes.paper}>
 										<FormControl className={classes.formControl}>
@@ -264,7 +273,7 @@ class Forms extends Component {
 										</FormControl>
 									</Paper>
 								</div>
-							)
+							);
 						case 2:
 						return (
 							<div>
@@ -320,11 +329,11 @@ class Forms extends Component {
 									</FormGroup>
 								</Paper>
 							</div>
-						)
+						);
 						default:
 						return 'Unknown step';
 					}
-				}
+				};
 				return(
 					<div>
 						<Stepper activeStep={activeStep} orientation="vertical" className = {classes.stepper}>
@@ -355,7 +364,7 @@ class Forms extends Component {
 														disabled = {!this.state.accepted}
 														raised
 														color="primary"
-														onClick = {()=>this.acceptOffer(offer.offer_id)}
+														onClick = {()=>this.acceptOffer(offer.id)}
 														className={classes.button}
 													>
 														{type === 'BUY'?

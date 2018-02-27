@@ -161,9 +161,9 @@ class Wallet extends Component{
 		const {wallet} = this.props;
 		return(
 			<List>
-				<Balance balance = {wallet.available_balance} title = {<Babel cat = 'wallet'>available</Babel>} />
-				<Balance balance = {wallet.reserved_balance} title = {<Babel cat = 'wallet'>reserved</Babel>} />
-				<Balance balance = {wallet.locked_balance} title = {<Babel cat = 'wallet'>locked</Babel>} />
+				<Balance balance = {wallet.available.shortval} title = {<Babel cat = 'wallet'>available</Babel>} />
+				<Balance balance = {wallet.reservedForOffers.shortval} title = {<Babel cat = 'wallet'>reserved</Babel>} />
+				<Balance balance = {wallet.lockedInTrades.shortval} title = {<Babel cat = 'wallet'>locked</Babel>} />
 			</List>
 		)
 	}
@@ -191,7 +191,7 @@ class Chrome extends Component {
 						<Bisq id = 'logo' action = {()=>base.set('screen','Welcome',true)} />
 					</div>
 				</div>
-				<Wallet wallet = {data.wallet_detail}/>
+				<Wallet wallet = {data.wallet_btcBalance}/>
 				<Divider />
 				<SideDrawer />
 			</div>
@@ -227,7 +227,7 @@ class Chrome extends Component {
 					</AppBar>
 					<Hidden mdUp>
 						<Drawer
-							type="temporary"
+                            type="temporary"
 							open={this.state.mobileOpen}
 							className={classes.drawerInner}
 							classes={{

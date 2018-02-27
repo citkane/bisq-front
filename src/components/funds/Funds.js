@@ -31,11 +31,7 @@ const styles = theme => ({
 	},
 	paper:{
 		padding:theme.spacing.unit,
-		marginBottom:theme.spacing.unit,
-		display:'flex',
-		alignItems:'center',
-		justifyContent:'space-between',
-		flexWrap:'wrap'
+		marginBottom:theme.spacing.unit
 	},
 	amount:{
 		display:'flex',
@@ -45,29 +41,17 @@ const styles = theme => ({
 		textDecoration:'none',
 		color:theme.palette.text.primary,
 	}
-})
+});
 class Funds extends Component {
 
 	render(){
-		const {data,classes} = this.props
-		var wallet = data.wallet_tx_list;
+		const {data,classes} = this.props;
+		var wallet = data.wallet_transactions_list;
 
 		const tools = base.get('tools');
-		wallet = wallet.filter((trans)=>{
-			return trans.confidence && trans.confidence.indexOf('height')!==-1 && trans.confidence.indexOf('depth')!==-1
-		}).map((trans)=>{
-			var dir = trans.value > 0?'+':'-';
-			trans.value = dir==='-'?trans.value*-1:trans.value;
-			return {
-				value:base.get('active_market').toDecimal(trans.value),
-				height:trans.confidence.split('height')[1].split(',')[0].trim()*1000+trans.confidence.split('depth')[1].split('.')[0].trim()*1,
-				dir:dir,
-				fee:trans.fee > 0?base.get('active_market').toDecimal(trans.fee):false,
-				hash:trans.hash
-			}
-		}).sort((a,b)=>{
-			if(a.height > b.height)return -1;
-			if(a.height < b.height)return 1;
+		wallet = wallet.sort((a,b)=>{
+			if(a.date > b.date)return -1;
+			if(a.date < b.date)return 1;
 			return 0;
 		})
 		const Graphic = base.get('active_market').graphic;
@@ -75,14 +59,15 @@ class Funds extends Component {
 			<div className = {classes.main}>
 				{wallet.map((trans,i)=>{
 					return <Paper key = {i} className = {classes.paper}>
-						<div className = {classes.amount}>
-							<Typography component='span'>{trans.dir}</Typography>
-							<Typography component='span' color = {trans.dir==='-'?'accent':'default'}><Graphic />{trans.value}&nbsp;</Typography>
-							{trans.fee && <Typography component='span' type='caption'> (fee:{trans.fee})</Typography>}
-						</div>
-						<Typography type='caption'>
-							<a className = {classes.link} href={'https://live.blockcypher.com/btc-testnet/tx/'+trans.hash} target='_blank'>{trans.hash}</a>
-						</Typography>
+                        <Typography>{new Date(trans.date*1).toString()}</Typography>
+                        <Typography>
+							<span>{trans.direction} </span>
+                            <a className = {classes.link} href={'https://live.blockcypher.com/btc-testnet/tx/'+trans.address} target='_blank'>{trans.address}</a>
+                        </Typography>
+                        <Typography>{trans.details}</Typography>
+                        <Typography>Amount: {trans.amount}</Typography>
+                        <Typography>Confirmations: {trans.confirmations}</Typography>
+                        <Typography>Id: {trans.id}</Typography>
 					</Paper>
 				})}
 			</div>

@@ -53,11 +53,14 @@ class OfferBook extends Component {
 		this.pair = base.get('market').pair_market;
 		const api = base.get('api');
 		api.market('offers',{market:this.pair}).then((data)=>{
+		    console.log(data);
 			this.setState({
 				offers:data[Object.keys(data)[0]]
 			})
-		})
-	}
+		},(err)=>{
+            console.error(err);
+        })
+	};
 	componentDidMount(){
 		this.getOffers();
 	}
