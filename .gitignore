@@ -25,3 +25,5 @@ twister
 server/language/api_key.txt
 server/logs/*.log
 /nbproject
+.idea
+*/.idea

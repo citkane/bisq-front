@@ -2,25 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="356308f7-cdeb-4a6d-aed8-16e4384ac11e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change beforePath="$PROJECT_DIR$/bisq-front.js" afterPath="$PROJECT_DIR$/bisq-front.js" />
-      <change beforePath="$PROJECT_DIR$/devSettings.js" afterPath="$PROJECT_DIR$/devSettings.js" />
-      <change beforePath="$PROJECT_DIR$/scripts/setup.js" afterPath="$PROJECT_DIR$/scripts/setup.js" />
-      <change beforePath="$PROJECT_DIR$/server/api.js" afterPath="$PROJECT_DIR$/server/api.js" />
-      <change beforePath="$PROJECT_DIR$/server/conversion_filters/bisq.js" afterPath="$PROJECT_DIR$/server/conversion_filters/bisq.js" />
-      <change beforePath="$PROJECT_DIR$/server/makedev.js" afterPath="$PROJECT_DIR$/server/makedev.js" />
-      <change beforePath="$PROJECT_DIR$/server/market.js" afterPath="$PROJECT_DIR$/server/market.js" />
-      <change beforePath="$PROJECT_DIR$/server/ticker.js" afterPath="$PROJECT_DIR$/server/ticker.js" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" afterPath="$PROJECT_DIR$/src/App.js" />
-      <change beforePath="$PROJECT_DIR$/src/components/chrome/Chrome.js" afterPath="$PROJECT_DIR$/src/components/chrome/Chrome.js" />
-      <change beforePath="$PROJECT_DIR$/src/components/funds/Funds.js" afterPath="$PROJECT_DIR$/src/components/funds/Funds.js" />
-      <change beforePath="$PROJECT_DIR$/src/components/market/OfferBook.js" afterPath="$PROJECT_DIR$/src/components/market/OfferBook.js" />
-      <change beforePath="$PROJECT_DIR$/src/components/portfolio/Detail.js" afterPath="$PROJECT_DIR$/src/components/portfolio/Detail.js" />
-      <change beforePath="$PROJECT_DIR$/src/components/trade/BuySell.js" afterPath="$PROJECT_DIR$/src/components/trade/BuySell.js" />
-      <change beforePath="$PROJECT_DIR$/src/components/trade/Create.js" afterPath="$PROJECT_DIR$/src/components/trade/Create.js" />
-      <change beforePath="$PROJECT_DIR$/src/components/trade/Forms.js" afterPath="$PROJECT_DIR$/src/components/trade/Forms.js" />
-      <change beforePath="$PROJECT_DIR$/src/resources/modules/api.js" afterPath="$PROJECT_DIR$/src/resources/modules/api.js" />
-      <change beforePath="$PROJECT_DIR$/src/resources/modules/tools.js" afterPath="$PROJECT_DIR$/src/resources/modules/tools.js" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -72,7 +55,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="FIRST">
@@ -81,6 +64,16 @@
                 <folding />
               </first_editor>
               <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="504">
+              <caret line="28" column="7" lean-forward="false" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -140,6 +133,7 @@
         <option value="$PROJECT_DIR$/server/makedev.js" />
         <option value="$PROJECT_DIR$/devSettings.js" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -357,12 +351,12 @@
       <workItem from="1519723487056" duration="979000" />
       <workItem from="1519725171460" duration="11102000" />
       <workItem from="1519751172638" duration="326000" />
-      <workItem from="1519751562893" duration="1097000" />
+      <workItem from="1519751562893" duration="1214000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="67499000" />
+    <option name="totallyTimeSpent" value="67616000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="184" y="0" width="1920" height="1082" extended-state="6" />
@@ -381,7 +375,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -408,13 +402,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/portfolio/Portfolio.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/conversion_filters/bisq.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1350">
@@ -771,6 +758,14 @@
             <folding />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="28" column="7" lean-forward="false" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
