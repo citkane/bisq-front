@@ -1,5 +1,3 @@
-**Early work to create a web based GUI for BISQ using the bisq-api**
-
 ![bisq-front](https://user-images.githubusercontent.com/998947/35113983-2c8a7e78-fc7b-11e7-88cf-855d2478b1b2.jpg)
 
 Table of Contents
@@ -38,9 +36,9 @@ With Bisq-front it is proposed to interface the [Bisq-engine](https://github.com
 This is proposed to be a web-client / server model where a GUI is provided in a web browser or other native framework. The server is singular for each client and is wholly owned and controlled by the human BISQ user.
 
 ### Proof of Concept (POC) ###
-##### To Do #####
-Serve each regtest instance to URL as public demo from headless server.
-Awaiting resolution of issue: https://github.com/mrosseel/bisq-api/issues/6
+The REGTEST proof of concept is live at the following urls:
+- http://bob.openpoint.ie/
+- http://alice.openpoint.ie/
 
 ### Usage scenarios ###
 
@@ -97,6 +95,9 @@ The client uses established frameworks and typologies to provide a consistent in
 - [Material Design](https://material.io/): a unified system that combines theory, resources, and tools for crafting digital experiences.
 
 - [Material-UI](https://material-ui-next.com/): React components that implement Google's Material Design.
+
+
+![bisq-front](https://user-images.githubusercontent.com/998947/35625534-941ab652-068a-11e8-8b36-9924f891d5e1.jpg)
 
 
 Security

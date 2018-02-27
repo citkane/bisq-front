@@ -60,7 +60,7 @@
     "setup": "node scripts/setup.js",
     "production": "NODE_ENV=production ./node_modules/.bin/forever -a -n 1000 -p ./ -t -l ./server/logs/forever.log -o ./server/logs/out.log -e ./server/logs/error.log start bisq-front.js",
     "development": "NODE_ENV=development node bisq-front.js",
-	"stop":"./node_modules/.bin/forever stop bisq-front.js"
+    "stop": "./node_modules/.bin/forever stop bisq-front.js"
   },
   "devDependencies": {
     "bitcoin-core": "^2.0.0"
