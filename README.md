@@ -33,7 +33,7 @@ Proposal
 
 With Bisq-front it is proposed to interface the [Bisq-engine](https://github.com/citkane/bisq-engine) API to make manual and automated trading possible from anywhere and on any device.
 
-This is proposed to be a web-client / server model where a GUI is provided in a web browser or other native framework. The server is singular for each client and is wholly owned and controlled by the human BISQ user.
+This is proposed to be a web-client / server model where a GUI is provided in a web browser or other native framework. The server is singular for each client and is wholly owned and controlled by the human Bisq user.
 
 ### Proof of Concept (POC) ###
 The REGTEST proof of concept is live at the following urls:
@@ -43,23 +43,23 @@ The REGTEST proof of concept is live at the following urls:
 ### Usage scenarios ###
 
 ##### Local Network #####
-A user can have a permanently running instance of BISQ away from their day to day devices and then access trading functionality from any device on the network, eg:
+A user can have a permanently running instance of Bisq away from their day to day devices and then access trading functionality from any device on the network, eg:
 
 - I run bisq-front on my home media server and do trading from my phone while in my study.
 
 ##### Remote Server ####
 A user can install bisq-front on a remote (cloud, vm or physical) server and then access trading functionality from any device connected to the internet, eg:
 - I am travelling and wish to trade without bringing my "always on" device along with me physically.
-- I am behind a corporate or national firewall preventing me from trading on the BISQ network
+- I am behind a corporate or national firewall preventing me from trading on the Bisq network
 - It is inconvenient for me to run and access an always on desktop / laptop device and be physically located with it in order to trade.
 
 ### Motivation ###
-I am of the opinion that in order for BISQ trading adoption to grow towards mainstream, a few user experience factors need to evolve:
+I am of the opinion that in order for Bisq trading adoption to grow towards mainstream, a few user experience factors need to evolve:
 - **Convenience:** Being unbound from the need to be physically located with an "always on" desktop / laptop can be a major contribution to adoption. Bisq-front can facilitate this and eventually make it trivial for non-technical users to access this functionality without the need for VNC solutions.
 
 - **Always on:** If the bisq-front model is widely adopted, the amount of reliably "always on" and "always connected" exchanges will increase, thus lowering the incidents of trade dispute due to technical failures.
 
-- **Trust:** Bisq-front could afford users the chance to "play trade" in their browsers on regtest under the BISQ brand. This will comfort them regarding fears of the unknown in decentralised trading, as well as providing risk free self training.
+- **Trust:** Bisq-front could afford users the chance to "play trade" in their browsers on regtest under the Bisq brand. This will comfort them regarding fears of the unknown in decentralised trading, as well as providing risk free self training.
 
 - **Always available:** As political intervention remains unforeseeable, bisq-front could afford the user the possibility to locate their exchange in any friendly juristriction and continue trading regardless of their own geo-political circumstance.
 
@@ -106,7 +106,7 @@ Security
 
 
 Initial security priorities for bisq-front are three-fold:
-1. Protect the anonymity and content of the [data stream](#server) so that the nature of data passed over the internet cannot be identified as BISQ trading or interfered with.
+1. Protect the anonymity and content of the [data stream](#server) so that the nature of data passed over the internet cannot be identified as Bisq trading or interfered with.
 
 2. Provide token based and two-factor authentication to the web client to protect the user from unauthorised access. (Not implemented in [POC](#proof-of-concept-poc))
 
@@ -215,7 +215,7 @@ Run
 ```
 npm run setup
 ```
-This will open (GUI) instances of Bitcoin core, BISQ for an arbitrator, Bob and Alice. Do the following:
+This will open (GUI) instances of Bitcoin core, Bisq for an arbitrator, Bob and Alice. Do the following:
 
 1. Fund the network by going to Bitcoin core 'Help / Debug window / Console' and run 'generate 101'
 
@@ -243,4 +243,3 @@ End the production process by running:
 ```
 npm run stop
 ```
-
