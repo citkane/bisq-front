@@ -20,6 +20,9 @@
  */
 
 const path = require('path');
+
+/*global appRoot children:true*/
+/*eslint no-undef: "error"*/
 global.appRoot = path.resolve(__dirname);
 global.children = [];
 
@@ -96,6 +99,7 @@ function MakeInstance(client){
 
     const user = dev.makeuser(dirname,(port + 2),gui,devsettings.startport);
     user.stdout.on('data', function(data) {
+        console.log(data.toString());
 	    if((data.indexOf('Start parse blocks:') !== -1 || data.indexOf('onBootstrapComplete') !== -1) && react && done.indexOf(name)===-1){
 			done.push(name);
 			console.log('\n> Started the BISQ API server '+dirname+'\nBrowse the API at http://localhost:'+(port+3)+'/swagger');
@@ -159,7 +163,7 @@ function makeSocket(client2){
 	const http = require('http').Server(relay);
 	const io = require('socket.io')(http);
 
-	var allowed = ['http://localhost:'+port,'http://'+client2.url,'https://localhost:'+port,'https://'+client2.url]
+	var allowed = ['http://localhost:'+port,'http://'+client2.url,'https://localhost:'+port,'https://'+client2.url];
 	io.origins((origin, callback) => {
 		if (allowed.indexOf(origin) === -1) {
 			return callback('origin not allowed', false);
@@ -176,17 +180,17 @@ function makeSocket(client2){
 
 		socket.on('settings',function(data){
 			Object.keys(data).forEach((key)=>{
-				if(key === 'active_market') data[key] = data[key].symbol
+				if(key === 'active_market') data[key] = data[key].symbol;
 				settings[key] = data[key];
 			})
-		})
+		});
 		socket.on('getSettings',function(){
 			socket.emit('getSettings',settings);
-		})
+		});
 		socket.on('disconnect',function(){
 			console.log('> '+name+' disconnected websocket from localhost:'+(port+1));
 			api = null;
-		})
+		});
 		socket.on('generate',function(data){
 			dev.generate(data);
 		})

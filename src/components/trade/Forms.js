@@ -79,7 +79,7 @@ class Forms extends Component {
 	constructor(props){
 		super(props);
 		tools = base.get('tools');
-		const {data,offer} = this.props
+		const {data,offer} = this.props;
 		this.accounts = data.account_list.filter((ac)=>{
 			return ac.currencies.indexOf(offer.currencies.currency)!==-1;
 		}).map((ac)=>{
@@ -93,10 +93,25 @@ class Forms extends Component {
 			btc:offer.money.amount,
 			accepted:false,
 			expanded:null,
-			account:this.accounts[0].id
+			account:this.accounts[0].id,
+            Fees:false
 		}
 	}
-	handleAccount = name => event => {
+
+
+    componentDidMount(){
+	    const {offer} = this.props;
+        base.get('api').get('offers/fees',{
+            offerId:offer.id
+        }).then((data)=>{
+            this.setState({
+                Fees:data
+            });
+        })
+    }
+
+
+    handleAccount = name => event => {
 		this.setState({[name]:event.target.value});
 	};
 	handlePanel = panel => (event, expanded) => {
@@ -123,7 +138,7 @@ class Forms extends Component {
 	};
 	consent = () =>{
 		this.setState({
-			accepted:this.state.accepted?false:true
+			accepted:!this.state.accepted
 		})
 	};
 	acceptOffer = (id) =>{
@@ -140,7 +155,9 @@ class Forms extends Component {
 		})
 	};
 	render(){
-		const {btc} = this.state;
+
+		const {btc,Fees} = this.state;
+		if(!Fees) return null;
 		const {type,offer,classes} = this.props;
 
 		const fixed = offer.money.amount === offer.money.minAmount;
@@ -205,12 +222,11 @@ class Forms extends Component {
 									<Typography type = 'title' className = {classes.item}>{offer.money.price*1} {offer.coin.name}</Typography>
 								</Paper>
 							)
-						case 1:
-							//var fees = tools.fees(type,btc,base.get('active_market'))
+                        case 1:
                             const fees = {
-                                deposit:type==='SELL'?offer.fees.buyerSecurityDeposit:offer.fees.sellerSecurityDeposit,
-                                transactionFee:offer.fees.transactionFee,
-                                minerFee:offer.fees.minerFee
+                                deposit:type==='SELL'?Fees.buyerSecurityDeposit:Fees.sellerSecurityDeposit,
+                                transactionFee:Fees.transactionFee,
+                                minerFee:Fees.minerFee
                             };
                             fees.total = marketcoin.round(fees.deposit+fees.transactionFee+fees.minerFee);
 							return(
@@ -222,21 +238,21 @@ class Forms extends Component {
 										<div className = {classes.item}>
 											<Typography type = 'body1'>{fees.deposit}</Typography>
 											<Typography type = 'caption'>
-												<Babel cat = 'forms'>Security deposit</Babel> @{type==='BUY'?offer.fees.buyerPercent:offer.fees.sellerPercent}
+												<Babel cat = 'forms'>Security deposit</Babel> @{type==='BUY'?Fees.buyerPercent:Fees.sellerPercent}
 											</Typography>
 										</div>
 										<div className = {classes.item}>+</div>
 										<div className = {classes.item}>
 											<Typography type = 'body1'>{fees.transactionFee}</Typography>
 											<Typography type = 'caption'>
-												<Babel cat = 'forms'>Trading fee</Babel> @{offer.fees.transactionPercent}
+												<Babel cat = 'forms'>Trading fee</Babel> @{Fees.transactionPercent}
 											</Typography>
 										</div>
 										<div className = {classes.item}>+</div>
 										<div className = {classes.item}>
 											<Typography type = 'body1'>{fees.minerFee}</Typography>
 											<Typography type = 'caption'>
-												<Babel cat = 'forms'>Mining fee</Babel> @{offer.fees.minerPercent}
+												<Babel cat = 'forms'>Mining fee</Babel> @{Fees.minerPercent}
 											</Typography>
 										</div>
 										{type==='BUY' && <div className = {classes.item}>+</div>}
