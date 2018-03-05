@@ -53,8 +53,10 @@ import base from './resources/modules/base.js';
 
 const Colors = {'teal':teal,'blue':blue,'purple':purple,'indigo':indigo,'cyan':cyan,'green':green,'amber':amber,'brown':brown};
 const colors = ['teal','blue','purple','indigo','cyan','green','amber','brown'];
-const s = document.location.protocol+'//'+document.location.hostname+':'+process.env.SERVER_PORT;
+const s = /*document.location.protocol+*/'http://'+document.location.hostname+':'+process.env.SERVER_PORT;
+console.log(s);
 const socket = socketIOClient(s);
+console.log(socket);
 const api = new Api(socket);
 
 
@@ -167,6 +169,7 @@ class App extends Component {
 				Connecting to backend at port:{process.env.SERVER_PORT}
 			</div>
 		);
+
 		return (
 			<MuiThemeProvider theme={this.state.theme}>
 				<Chrome data = {this.state.data} colors = {colors}/>

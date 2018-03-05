@@ -7,12 +7,14 @@ const devSettings = function () {
         Bob: {
             gui: gui,
             react: true,
-            url: 'bob.openpoint.ie'
+            url: 'bob.openpoint.ie',
+            onion:'i3atnku27f37azc4.onion'
         },
         Alice: {
             gui: gui,
             react: true,
-            url: 'alice.openpoint.ie'
+            url: 'alice.openpoint.ie',
+            onion:'tomk52rmb7bzuaun.onion'
         },
         Arbitrator: {
             gui: gui,
@@ -32,7 +34,8 @@ devSettings.prototype.makeClients = function(){
 			port:this.startport+count,
 			gui:Client.gui,
 			react:Client.react,
-			url:Client.url
+			url:Client.url,
+            onion:Client.onion
 		}
 	})
 };

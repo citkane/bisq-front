@@ -99,7 +99,7 @@ function MakeInstance(client){
 
     const user = dev.makeuser(dirname,(port + 2),gui,devsettings.startport);
     user.stdout.on('data', function(data) {
-        console.log(data.toString());
+        //console.log(data.toString());
 	    if((data.indexOf('Start parse blocks:') !== -1 || data.indexOf('onBootstrapComplete') !== -1) && react && done.indexOf(name)===-1){
 			done.push(name);
 			console.log('\n> Started the BISQ API server '+dirname+'\nBrowse the API at http://localhost:'+(port+3)+'/swagger');
@@ -107,12 +107,13 @@ function MakeInstance(client){
 			makeSocket(client);
 			if(production){
 
-                const whitelist = ['localhost:' + port, client.url];
+                const whitelist = ['localhost:' + port, client.url, client.onion];
                 const app = express();
 				const pub = path.join(appRoot,'build',name);
-                const allowed = whitelist[0];
+                //const allowed = whitelist[0];
                 app.use(function(req,res,next){
                     const origin = req.get('host');
+                    console.log("Http origin: "+origin,whitelist,whitelist.indexOf(origin));
                     if(!origin || whitelist.indexOf(origin)!==-1){
 						next()
 					}else{
@@ -163,8 +164,17 @@ function makeSocket(client2){
 	const http = require('http').Server(relay);
 	const io = require('socket.io')(http);
 
-	var allowed = ['http://localhost:'+port,'http://'+client2.url,'https://localhost:'+port,'https://'+client2.url];
+	var allowed = [
+	    'http://localhost:'+port,
+        'http://'+client2.url,
+        'http://'+client2.onion,
+        'https://localhost:'+port,
+        'https://'+client2.url,
+        'https://'+client2.onion,
+        'https://localhost:'+port
+    ];
 	io.origins((origin, callback) => {
+        console.log("Origin: "+origin);
 		if (allowed.indexOf(origin) === -1) {
 			return callback('origin not allowed', false);
 		}
