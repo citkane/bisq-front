@@ -62,9 +62,7 @@
     "development": "NODE_ENV=development node bisq-front.js",
     "stop": "./node_modules/.bin/forever stop bisq-front.js"
   },
-  "devDependencies": {
-    "bitcoin-core": "^2.0.0"
-  },
+  "devDependencies": {},
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,mjs}"

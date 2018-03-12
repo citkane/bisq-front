@@ -68,7 +68,6 @@ market.make('markets').then((data)=>{
 	dev.make(devsettings.startport,false).then((port)=>{
 		console.log('> Started the seednode on localhost:'+port);
 		ticker = require('./server/ticker.js');
-
 		devsettings.clients.forEach((client)=>{
 			new MakeInstance(client);
 		});
@@ -186,7 +185,7 @@ function makeSocket(client2){
 		var api = new Api(socket,port+3);
 		//socket.emit('market',market);
 
-		new ticker(socket,api);
+		const tick = new ticker(socket,api);
 
 		socket.on('settings',function(data){
 			Object.keys(data).forEach((key)=>{
@@ -198,6 +197,7 @@ function makeSocket(client2){
 			socket.emit('getSettings',settings);
 		});
 		socket.on('disconnect',function(){
+			clearInterval(tick.tock);
 			console.log('> '+name+' disconnected websocket from localhost:'+(port+1));
 			api = null;
 		});

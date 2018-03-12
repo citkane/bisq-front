@@ -23,22 +23,11 @@ const child = require('child_process');
 const tools = require('../src/resources/modules/tools.js');
 const path = require('path');
 
-const Btc = require('bitcoin-core');
-const btc = new Btc({
-	network:'regtest',
-	host:'localhost',
-	username:'regtest',
-	password:'test'
-});
-
-//btc.generate(7);
-//btc.getInfo().then((help) => console.log(help));
-
-
 function Dev(){}
 
 Dev.prototype.make = function(port,gui){
 	this.core = child.spawn(gui?'bitcoin-qt':'bitcoind',['-regtest','-server','-printtoconsole','-rpcuser=regtest','-rpcpassword=test']);
+	
 	if(typeof children !== 'undefined') children.push(this.core);
 	this.seedNode = child.spawn(
 		'java',[
@@ -66,8 +55,10 @@ Dev.prototype.make = function(port,gui){
 		});
 		this.core.stdout.on('data', function(data) {
 			data = `${data}`;
+			
 			if(data.indexOf('msghand thread start')!== -1){
 				count++;
+				
 				if(count === 2) resolve(port)
 			}
 		})
@@ -116,10 +107,7 @@ Dev.prototype.makeuser = function(appName,port,gui,seedport){
 
 Dev.prototype.generate = function(amount){
 	console.log('Generating: '+amount);
-	btc.generate(amount,(error, data) => {
-		if(error) console.error('\n> Bitcoin-core error while generating:\n'+error);
-		//console.log(data)
-	});
+	child.spawn('bitcoin-cli',['-regtest','-rpcuser=regtest','-rpcpassword=test','generate',amount]);
 };
 
 module.exports = new Dev();
