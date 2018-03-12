@@ -37,8 +37,8 @@ This is proposed to be a web-client / server model where a GUI is provided in a 
 
 ### Proof of Concept (POC) ###
 The REGTEST proof of concept is live at the following urls:
-- http://bob.openpoint.ie/
-- http://alice.openpoint.ie/
+- http://bob.openpoint.ie/ | TOR: http://opv2wax24oxf5kwt.onion/
+- http://alice.openpoint.ie/ | TOR: http://yelqrkex5q654vl6.onion/
 
 ### Usage scenarios ###
 
